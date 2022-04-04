@@ -6,6 +6,19 @@ import matplotlib.pyplot as plt
 
 class OpticalElement:
     def __init__(self, R, C, pitch, wvl, device, name="not defined",B=1):
+        """
+        Base class for various optical elements. Any optical element change the wavefront of incident light
+        The change of the wavefront is stored as amplitude and phase tensors
+        Note that he number of channels is one for the wavefront modulation.
+        Args:
+            R: row
+            C: column
+            pitch: pixel pitch in meter
+            wvl: wavelength of light in meter
+            device: device to store the wavefront of light. 'cpu', 'cuda:0', ...
+            name: name of the current optical element
+            B: batch size
+        """
 
         self.name = name
         self.B = B
@@ -13,18 +26,34 @@ class OpticalElement:
         self.C = C
         self.pitch = pitch
         self.device = device
-
         self.amplitude_change = torch.ones((B, 1, R, C), device=self.device)
         self.phase_change = torch.zeros((B, 1, R, C), device=self.device)
         self.wvl = wvl
 
     def shape(self):
+        """
+        Returns the shape of light-wavefront modulation. The nunmber of channels is one
+        Returns:
+            shape
+        """
         return (self.B,1,self.R,self.C)
 
     def set_pitch(self, pitch):
+        """
+        Set the pixel pitch of the complex tensor
+        Args:
+            pitch: pixel pitch in meter
+        """
         self.pitch = pitch
 
-    def resize(self, target_pitch, interp_mode='bilinear'):
+    def resize(self, target_pitch, interp_mode='nearest'):
+        '''
+        Resize the wavefront change by changing the pixel pitch. 
+        Args:
+            target_pitch: new pixel pitch to use
+            interp_mode: interpolation method used in torch.nn.functional.interpolate 'bilinear', 'nearest'
+        '''
+
         scale_factor = self.pitch / target_pitch
         self.amplitude_change = F.interpolate(self.amplitude_change, scale_factor=scale_factor,
                                               mode=interp_mode)
@@ -35,20 +64,50 @@ class OpticalElement:
         self.C = self.amplitude_change.shape[-1]
 
     def get_amplitude_change(self):
+        '''
+        Return the amplitude change of the wavefront
+        Returns:
+            amplitude change: ampiltude change
+        '''
+
         return self.amplitude_change
 
     def get_phase_change(self):
+        '''
+        Return the phase change of the wavefront
+        Returns:
+            phase change: phase change
+        '''
+
         return self.phase_change
 
     def set_amplitude_change(self, amplitude):
+        """
+        Set the amplitude change 
+        Args:
+            amplitude change: amplitude change in the polar representation of the complex number 
+        """
+
         assert amplitude.shape[2] == self.R and amplitude.shape[3] == self.C
         self.amplitude_change = amplitude
 
     def set_phase_change(self, phase):
+        """
+        Set the phase change 
+        Args:
+            phase change: phase change in the polar representation of the complex number 
+        """
+
         assert phase.shape[2] == self.R and phase.shape[3] == self.C
         self.phase_change = phase
 
     def pad(self, pad_width, padval=0):
+        """
+        Pad the wavefront change with a constant value by pad_width
+        Args:
+            pad_width: (tuple) pad width of the tensor following torch functional pad 
+            padval: value to pad. default is zero
+        """
         if padval == 0:
             self.amplitude_change = torch.nn.functional.pad(self.get_amplitude_change(), pad_width)
             self.phase_change = torch.nn.functional.pad(self.get_phase_change(), pad_width)
@@ -58,7 +117,16 @@ class OpticalElement:
         self.R += pad_width[0] + pad_width[1]
         self.C += pad_width[2] + pad_width[3]
 
-    def forward(self, light, interp_mode='bilinear'):
+    def forward(self, light, interp_mode='nearest'):
+        """
+        Forward the incident light with the optical element. 
+        Args:
+            light: incident light 
+            interp_mode: interpolation method used in torch.nn.functional.interpolate 'bilinear', 'nearest'
+        Returns:
+            light after interaction with the optical element
+        """
+
         if light.pitch > self.pitch:
             light.resize(self.pitch, interp_mode)
             light.set_pitch(self.pitch)
@@ -91,6 +159,12 @@ class OpticalElement:
         return light
 
     def visualize(self, b=0):
+        """
+        Visualize the wavefront modulation of the optical element
+        Args:
+            b: batch index to visualize default is 0
+        """
+
         plt.figure(figsize=(13,6))
 
         plt.subplot(121)

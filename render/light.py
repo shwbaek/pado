@@ -304,5 +304,7 @@ class Light:
     def shape(self):
         """
         Returns the shape of light wavefront
+        Returns:
+            shape
         """
         return self.field.shape()
