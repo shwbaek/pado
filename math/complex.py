@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import torch.nn.functional as F
 import numpy as np
 from scipy.io import savemat
+import matplotlib
 
 class Complex:
     
@@ -531,23 +532,10 @@ class Complex:
             print('extension in %s is unknown'%fn)
         print('light saved to %s\n'%fn)
 
-
-
-
-import pandas as pd
-import matplotlib
-
 # colormap of a complex value
 cmap_path = './pado/math/cmap_phase.txt'
-data_frame = pd.read_csv(cmap_path, header=None)  
-
-dat = data_frame.values
-cmap_p = np.zeros((dat.shape[0], 3))
-for i in range(dat.shape[0]):
-    c = dat[i][0].split(' ')
-    for j in range(3):
-        cmap_p[i, j] = float(c[j])
-cmap_a = np.linspace(0, 1, dat.shape[0])[..., np.newaxis].repeat(3, axis=1)
+cmap_p = np.loadtxt(cmap_path)  
+cmap_a = np.linspace(0, 1, cmap_p.shape[0])[..., np.newaxis].repeat(3, axis=1)
 cmap_phase = matplotlib.colors.ListedColormap(cmap_p, name='phase')
 
 def vis_complex(arr_c, amin=None, amax=None):

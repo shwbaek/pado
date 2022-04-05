@@ -133,9 +133,6 @@ class Propagator:
         # Propagation with the convolution kernel
         pad_width = compute_pad_width(field_input, linear)
         
-        #field_input.visualize()
-        #conv_kernel.visualize()
-        
         field_propagated = conv_fft(field_input, conv_kernel, pad_width)
 
         # return the propagated light
