@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 class OpticalElement:
     def __init__(self, R, C, pitch, wvl, device, name="not defined",B=1):
         """
-        Base class for various optical elements. Any optical element change the wavefront of incident light
+        Base class for optical elements. Any optical element change the wavefront of incident light
         The change of the wavefront is stored as amplitude and phase tensors
         Note that he number of channels is one for the wavefront modulation.
         Args:
@@ -184,15 +184,40 @@ class OpticalElement:
 
 class RefractiveLens(OpticalElement):
     def __init__(self, R, C, pitch, focal_length, wvl, device):
+        """
+        Thin refractive lens
+        Args:
+            R: row
+            C: column
+            pitch: pixel pitch in meter
+            focal_length: focal length of the lens in meter
+            wvl: wavelength of light in meter
+            device: device to store the wavefront of light. 'cpu', 'cuda:0', ...
+        """
+
         super().__init__(R, C, pitch, wvl, device, name="refractive_lens")
 
         self.set_focal_length(focal_length)
         self.set_phase_change( self.compute_phase(self.wvl, shift_x=0, shift_y=0) )
 
     def set_focal_length(self, focal_length):
+        """
+        Set the focal length of the lens
+        Args:
+            focal_length: focal length in meter 
+        """
+
         self.focal_length = focal_length
 
     def compute_phase(self, wvl, shift_x=0, shift_y=0):
+        """
+        Set the phase of a thin lens
+        Args:
+            wvl: wavelength of light in meter
+            shift_x: x displacement of the lens w.r.t. incident light
+            shift_y: y displacement of the lens w.r.t. incident light
+        """
+
         bw_R = self.R*self.pitch
         bw_C = self.C*self.pitch
 
@@ -210,6 +235,14 @@ class RefractiveLens(OpticalElement):
         return theta_change
 
 def height2phase(height, wvl, RI, wrap=True):
+    """
+    Convert the height of a material to the corresponding phase shift 
+    Args:
+        height: height of the material in meter
+        wvl: wavelength of light in meter
+        RI: refractive index of the material at the wavelength
+        wrap: return the wrapped phase [0,2pi]
+    """
     dRI = RI - 1
     wv_n = 2. * np.pi / wvl
     phi = wv_n * dRI * height
@@ -218,6 +251,13 @@ def height2phase(height, wvl, RI, wrap=True):
     return phi
 
 def phase2height(phase, wvl, RI):
+    """
+    Convert the phase change to the height of a material
+    Args:
+        phase: phase change of light 
+        wvl: wavelength of light in meter
+        RI: refractive index of the material at the wavelength
+    """
     dRI = RI - 1
     return wvl * phase / (2 * np.pi) / dRI
 
@@ -225,10 +265,20 @@ def radius2phase(r, f, wvl):
     return (2 * np.pi * (np.sqrt(r * r + f * f) - f) / wvl) % (2 * np.pi)
 
 class DOE(OpticalElement):
-    '''
-    DOE with complex wavefront modulation
-    '''
     def __init__(self, R, C, pitch, material, wvl, device, height=None, phase=None, amplitude=None):
+        """
+        Diffractive optical element (DOE)
+        Args:
+            R: row
+            C: column
+            pitch: pixel pitch in meter
+            material: material of the DOE
+            wvl: wavelength of light in meter
+            device: device to store the wavefront of light. 'cpu', 'cuda:0', ...
+            height: height map of the material in meter
+            phase: phase change of light 
+            amplitude: amplitude change of light 
+        """
 
         super().__init__(R, C, pitch, wvl, device, name="doe")
 
@@ -254,12 +304,25 @@ class DOE(OpticalElement):
 
 
     def change_wvl(self, wvl):
+        """
+        Change the wavelength of phase change
+        Args:
+            wvl: wavelength of phase change
+        """
         height = self.get_height()
         self.wvl = wvl
         phase = height2phase(height, self.wvl, self.material.get_RI(self.wvl))
         self.set_phase_change(phase, self.wvl)
 
     def set_diffraction_grating_1d(self, slit_width, minh, maxh):
+        """
+        Set the wavefront modulation as 1D diffraction grating 
+        Args:
+            slit_width: width of slit in meter
+            minh: minimum height in meter
+            maxh: maximum height in meter
+        """
+
         slit_width_px = np.round(slit_width / self.pitch)
         slit_space_px = slit_width_px
 
@@ -278,6 +341,14 @@ class DOE(OpticalElement):
         self.set_phase_change(pc, self.wvl)
 
     def set_diffraction_grating_2d(self, slit_width, minh, maxh):
+        """
+        Set the wavefront modulation as 2D diffraction grating 
+        Args:
+            slit_width: width of slit in meter
+            minh: minimum height in meter
+            maxh: maximum height in meter
+        """
+
         slit_width_px = np.round(slit_width / self.pitch)
         slit_space_px = slit_width_px
 
@@ -300,11 +371,13 @@ class DOE(OpticalElement):
         self.set_phase_change(pc, self.wvl)
 
     def set_Fresnel_lens(self, focal_length, shift_x=0, shift_y=0):
-        '''
-        focal_length: in meter
-        shift_x: in meter
-        shift_y: in meter
-        '''
+        """
+        Set the wavefront modulation as a fresnel lens 
+        Args:
+            focal_length: focal length in meter 
+            shift_x: x displacement of the lens w.r.t. incident light
+            shift_y: y displacement of the lens w.r.t. incident light
+        """
 
         x = np.arange(-self.C*self.pitch/2, self.C*self.pitch/2, self.pitch)
         y = np.arange(-self.R*self.pitch/2, self.R*self.pitch/2, self.pitch)
@@ -319,36 +392,12 @@ class DOE(OpticalElement):
 
         self.set_phase_change(phase, self.wvl)
 
-    def set_zone_plate(self, radius_R, radius_C, focal_length):
-
-        X = np.linspace(0, radius_C, self.C)
-        Y = np.linspace(0, radius_R, self.R)
-
-        xv, yv = np.meshgrid(X, Y)
-
-        # Radius from center
-        rxv = (xv - radius_C/2)
-        ryv = (yv - radius_R/2)
-
-        r = 2 * np.hypot(rxv, ryv)  # Half width as radius
-
-        phase = radius2phase(r, focal_length, self.wvl)
-        phase = torch.tensor(phase.astype(np.float32), device=self.device).unsqueeze(0).unsqueeze(0)
-
-        self.set_phase_change(phase, self.wvl)
-
-        # transmission = np.zeros((self.R, self.C))
-        # height = np.zeros((self.R, self.C))
-        # transmission[:, :] = 1
-        # height_phase = (2 * np.pi) - phase
-        # height[:, :] = phase2height(height_phase, self.wvl, self.material.get_RI(self.wvl))
-
-        # height[r > radius] = 0
-        # phase[r > radius] = 0
-
-        # return height
-
     def resize(self, target_pitch):
+        '''
+        Resize the wavefront by changing the pixel pitch. 
+        Args:
+            target_pitch: new pixel pitch to use
+        '''
         scale_factor = self.pitch / target_pitch
         super().resize(target_pitch)
 
@@ -360,6 +409,12 @@ class DOE(OpticalElement):
             NotImplementedError('Mode is not set.')
 
     def get_height(self):
+        """
+        Return the height map of the DOE
+        Returns:
+            height map: height map in meter
+        """
+
         if self.mode == 'height':
             return self.height
         elif self.mode == 'phase':
@@ -369,17 +424,34 @@ class DOE(OpticalElement):
             NotImplementedError('Mode is not set.')
 
     def get_phase_change(self):
+        """
+        Return the phase change induced by the DOE
+        Returns:
+            phase change: phase change
+        """
         if self.mode == 'height':
             self.to_phase_mode()
         return self.phase_change
 
     def set_height(self, height):
+        """
+        Set the height map of the DOE
+        Args:
+            height map: height map in meter
+        """
+
         if self.mode == 'height':
             self.height = height
         elif self.mode == 'phase':
             self.set_phase_change(height2phase(height, self.wvl, self.material.get_RI(self.wvl)), self.wvl)
 
     def set_phase_change(self, phase_change, wvl):
+        """
+        Set the phase change induced by the DOE
+        Args:
+            phase change: phase change
+        """
+
         if self.mode == 'height':
             self.set_height(phase2height(phase_change, wvl, self.material.get_RI(wvl)))
         if self.mode == 'phase':
@@ -387,12 +459,18 @@ class DOE(OpticalElement):
             self.phase_change = phase_change
 
     def to_phase_mode(self):
+        """
+        Change the mode to phase change
+        """
         if self.mode == 'height':
             self.phase_change = height2phase(self.height, self.wvl, self.material.get_RI(self.wvl))
             self.mode = 'phase'
             self.height = None
 
     def to_height_mode(self):
+        """
+        Change the mode to height 
+        """
         if self.mode == 'phase':
             self.height = phase2height(self.phase_change, self.wvl, self.material.get_RI(self.wvl))
             self.mode = 'height'
@@ -400,14 +478,27 @@ class DOE(OpticalElement):
 
 class SLM(OpticalElement):
     def __init__(self, R, C, pitch, wvl, device, B=1):
+        """
+        Spatial light modulator (SLM)
+        Args:
+            R: row
+            C: column
+            pitch: pixel pitch in meter
+            wvl: wavelength of light in meter
+            device: device to store the wavefront of light. 'cpu', 'cuda:0', ...
+            B: batch size
+        """
+
         super().__init__(R, C, pitch, wvl, device, name="SLM", B=B)
 
     def set_lens(self, focal_length, shift_x=0, shift_y=0):
-        '''
-        focal_length: in meter
-        shift_x: in meter
-        shift_y: in meter
-        '''
+        """
+        Set the phase of a thin lens
+        Args:
+            wvl: wavelength of light in meter
+            shift_x: x displacement of the lens w.r.t. incident light
+            shift_y: y displacement of the lens w.r.t. incident light
+        """
 
         x = np.arange(-self.C*self.pitch/2, self.C*self.pitch/2, self.pitch)
         y = np.arange(-self.R*self.pitch/2, self.R*self.pitch/2, self.pitch)
@@ -421,16 +512,40 @@ class SLM(OpticalElement):
         self.set_phase_change(phase, self.wvl)
 
     def set_amplitude_change(self, amplitude, wvl):
+        """
+        Set the amplitude change 
+        Args:
+            amplitude change: amplitude change in the polar representation of the complex number 
+            wvl: wavelength of light in meter
+
+        """
         self.wvl = wvl
         super().set_amplitude_change(amplitude)
 
     def set_phase_change(self, phase_change, wvl):
+        """
+        Set the phase change 
+        Args:
+            phase change: phase change in the polar representation of the complex number 
+            wvl: wavelength of light in meter
+        """
         self.wvl = wvl
         super().set_phase_change(phase_change)
 
 
 class Aperture(OpticalElement):
     def __init__(self, R, C, pitch, aperture_diameter, aperture_shape, wvl, device='cpu'):
+        """
+        Aperture
+        Args:
+            R: row
+            C: column
+            pitch: pixel pitch in meter
+            aperture_diameter: diamater of the aperture in meter
+            aperture_shape: shape of the aperture. {'square', 'circle'}
+            wvl: wavelength of light in meter
+            device: device to store the wavefront of light. 'cpu', 'cuda:0', ...
+        """
 
         super().__init__(R, C, pitch, wvl, device, name="aperture")
 
@@ -445,6 +560,10 @@ class Aperture(OpticalElement):
             return NotImplementedError
 
     def set_square(self):
+        """
+        Set the amplitude modulation of the aperture as square
+        """
+
         self.aperture_shape = 'square'
 
         [x, y] = np.mgrid[-self.R // 2:self.R // 2, -self.C // 2:self.C // 2].astype(np.float32)
@@ -457,10 +576,12 @@ class Aperture(OpticalElement):
         self.amplitude_change = torch.tensor(amp, device=self.device)
 
     def set_circle(self, cx=0, cy=0, dia=None):
-        '''
-        cx, cy: relative center position of the circle with respect to the center of the grid
-        aperture_diameter: circle diameter
-        '''
+        """
+        Set the amplitude modulation of the aperture as circle
+        Args:
+            cx, cy: relative center position of the circle with respect to the center of the light wavefront
+            dia: circle diameter
+        """
         [x, y] = np.mgrid[-self.R // 2:self.C // 2, -self.R // 2:self.C // 2].astype(np.float32)
         r2 = (x-cx) ** 2 + (y-cy) ** 2
         r2[r2 < 0] = 1e-20
@@ -477,8 +598,14 @@ class Aperture(OpticalElement):
 
 def quantize(x, levels, vmin=None, vmax=None, include_vmax=True):
     """
-    include_vmax: False: quantize x with the space of 1/levels-1. 
-    include_vmax: True: quantize x with the space of 1/levels 
+    Quantize the floating array
+    Args:
+        levels: number of quantization levels 
+        vmin: minimum value for quantization
+        vmax: maximum value for quantization
+        include_vmax: include vmax for the quantized levels
+            False: quantize x with the space of 1/levels-1.  
+            True: quantize x with the space of 1/levels
     """
 
     if include_vmax is False:
