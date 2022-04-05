@@ -1,13 +1,20 @@
 import torch
 import numpy as np
-from PyImaging.math import fourier
-from PyImaging.math.complex import Complex
-from PyImaging.math.conv import conv_fft
-from PyImaging.render.light import Light
-import matplotlib.pyplot as plt
+from pado.math import fourier
+from pado.math.complex import Complex
+from pado.math.conv import conv_fft
 
 
 def compute_pad_width(field, linear):
+    """
+    Compute the pad width of an array for FFT-based convolution
+    Args:
+        field: (B,Ch,R,C) complex tensor
+        linear: True or False, flag for linear convolution (zero padding) or circular convolution (no padding)
+    Returns:
+        pad_width: pad-width tensor
+    """
+
     if linear:
         R,C = field.shape()[-2:]
         pad_width = (C//2, C//2, R//2, R//2)
@@ -16,14 +23,39 @@ def compute_pad_width(field, linear):
     return pad_width 
 
 def unpad(field_padded, pad_width):
+    """
+    Unpad the already-padded complex tensor 
+    Args:
+        field_padded: (B,Ch,R,C) padded complex tensor 
+        pad_width: pad-width tensor
+    Returns:
+        field: unpadded complex tensor
+    """
+
     field = field_padded[...,pad_width[2]:-pad_width[3],pad_width[0]:-pad_width[1]]
     return field
 
 class Propagator:
     def __init__(self, mode):
+        """
+        Free-space propagator of light waves
+        One can simulate the propagation of light waves on free space (no medium change at all).
+        Args:
+            mode: type of propagator. currently, we support "Fraunhofer" propagation or "Fresnel" propagation. Use Fraunhofer for far-field propagation and Fresnel for near-field propagation. 
+        """
         self.mode = mode
 
     def forward(self, light, z, linear=True):
+        """
+        Forward the incident light with the propagator. 
+        Args:
+            light: incident light 
+            z: propagation distance in meter
+            linear: True or False, flag for linear convolution (zero padding) or circular convolution (no padding)
+        Returns:
+            light: light after propagation
+        """
+
         if self.mode == 'Fraunhofer':
             return self.forward_Fraunhofer(light, z, linear)
         if self.mode == 'Fresnel':
@@ -33,10 +65,17 @@ class Propagator:
 
 
     def forward_Fraunhofer(self, light, z, linear=True):
-        '''
-            The propagated wavefront is independent w.r.t. the travel distance z.
-            The distance z only affects the size of the "pixel", effectively adjusting the entire image size.
-        '''
+        """
+        Forward the incident light with the Fraunhofer propagator. 
+        Args:
+            light: incident light 
+            z: propagation distance in meter. 
+                The propagated wavefront is independent w.r.t. the travel distance z.
+                The distance z only affects the size of the "pixel", effectively adjusting the entire image size.
+            linear: True or False, flag for linear convolution (zero padding) or circular convolution (no padding)
+        Returns:
+            light: light after propagation
+        """
 
         pad_width = compute_pad_width(light.field, linear)
         field_propagated = fourier.fft(light.field, pad_width=pad_width)
@@ -67,9 +106,15 @@ class Propagator:
         return light_propagated
 
     def forward_Fresnel(self, light, z, linear):
-        '''
-            The propagated wavefront is independent w.r.t. the travel distance z.
-        '''
+        """
+        Forward the incident light with the Fresnel propagator. 
+        Args:
+            light: incident light 
+            z: propagation distance in meter. 
+            linear: True or False, flag for linear convolution (zero padding) or circular convolution (no padding)
+        Returns:
+            light: light after propagation
+        """
         field_input = light.field
 
         # compute the convolutional kernel 
