@@ -533,7 +533,7 @@ class Complex:
         print('light saved to %s\n'%fn)
 
 # colormap of a complex value
-cmap_path = './pado/math/cmap_phase.txt'
+cmap_path = './pado/cmap_phase.txt'
 cmap_p = np.loadtxt(cmap_path)  
 cmap_a = np.linspace(0, 1, cmap_p.shape[0])[..., np.newaxis].repeat(3, axis=1)
 cmap_phase = matplotlib.colors.ListedColormap(cmap_p, name='phase')

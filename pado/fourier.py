@@ -1,5 +1,5 @@
 import torch
-from pado.math.complex import Complex
+from .complex import Complex
 import matplotlib.pyplot as plt
 
 
@@ -32,7 +32,7 @@ def fft(arr_c, normalized=False, pad_width=None, padval=0, shift=True):
         normalized = "backward"
     else:
         normalized = "forward"
-    arr_c_shifted_fft = torch.fft.fft2(arr_c_shifted.get_ctorch() , norm=normalized)
+    arr_c_shifted_fft = torch.fft.fft2(arr_c_shifted.get_native() , norm=normalized)
     arr_c_shifted_fft_c = Complex(real=arr_c_shifted_fft.real, imag=arr_c_shifted_fft.imag)
     if shift:
         arr_c_fft = fftshift(arr_c_shifted_fft_c)
@@ -66,7 +66,7 @@ def ifft(arr_c, normalized=False, pad_width=None, shift=True):
         normalized = "backward"
     else:
         normalized = "forward"
-    arr_c_shifted_fft = torch.fft.ifft2(arr_c_shifted.get_ctorch(), norm=normalized)
+    arr_c_shifted_fft = torch.fft.ifft2(arr_c_shifted.get_native(), norm=normalized)
     arr_c_shifted_fft_c = Complex(real=arr_c_shifted_fft.real, imag=arr_c_shifted_fft.imag)
     if shift:
         arr_c_fft = fftshift(arr_c_shifted_fft_c)

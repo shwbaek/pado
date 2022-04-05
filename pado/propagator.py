@@ -1,8 +1,8 @@
 import torch
 import numpy as np
-from pado.math import fourier
-from pado.math.complex import Complex
-from pado.math.conv import conv_fft
+from .fourier import fft
+from .complex import Complex
+from .conv import conv_fft
 
 
 def compute_pad_width(field, linear):
@@ -78,7 +78,7 @@ class Propagator:
         """
 
         pad_width = compute_pad_width(light.field, linear)
-        field_propagated = fourier.fft(light.field, pad_width=pad_width)
+        field_propagated = fft(light.field, pad_width=pad_width)
         field_propagated = unpad(field_propagated, pad_width)
 
         # based on the Fraunhofer reparametrization (u=x/wvl*z) and the Fourier frequency sampling (1/bandwidth)

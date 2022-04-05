@@ -1,4 +1,4 @@
-from pado.math.fourier import fft, ifft
+from .fourier import fft, ifft
 
 def conv_fft(img_c, kernel_c, pad_width=None):
     """

@@ -11,7 +11,7 @@ Pado provides high-level abstractions of light-wave simulation, which is useful 
 Pado is a Korean word for wave.
 
 # How to use Pado
-We are planning to provide jupyter notebooks on how to use Pado. 
+We provide a jupyter notebook ([`./example/tutorial.ipynb`]((./example/tutorial.ipynb))). More examples will be added later.
 
 # Prerequisites
 - Python 
