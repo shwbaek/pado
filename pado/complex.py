@@ -72,6 +72,8 @@ class Complex:
             return self.mag.dim()
         elif self.mode == 'native':
             return self.native.dim()
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def get_mag(self):
         """
@@ -99,6 +101,8 @@ class Complex:
             return self.ang
         elif self.mode == 'polar':
             return self.ang
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def get_real(self):
         """
@@ -113,6 +117,8 @@ class Complex:
             return self.native.real
         elif self.mode == 'rect':
             return self.real
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def get_imag(self):
         """
@@ -127,6 +133,8 @@ class Complex:
             return self.native.imag
         elif self.mode == 'rect':
             return self.imag
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def get_native(self):
         """
@@ -152,6 +160,8 @@ class Complex:
             self.native = mag*torch.exp(1j*self.get_ang())
         elif self.mode == 'polar':
             self.mag = mag
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def set_ang(self, ang):
         """
@@ -164,8 +174,10 @@ class Complex:
             self.ang = ang
         elif self.mode == 'native':
             self.native = self.get_mag()*torch.exp(1j*ang)
-        elif self.mode == 'rect':
+        elif self.mode == 'polar':
             self.ang = ang
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def set_real(self, real):
         """
@@ -180,6 +192,8 @@ class Complex:
             self.real = real
         elif self.mode == 'native':
             self.native = real + self.get_imag()*1j
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def set_imag(self, imag):
         """
@@ -194,6 +208,8 @@ class Complex:
             self.imag = imag
         elif self.mode == 'native':
             self.native = self.get_real() + imag*1j
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def to_rect(self):
         """
@@ -241,7 +257,9 @@ class Complex:
             return self.real.shape
         elif self.mode == 'native':
             return self.native.shape
-            
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
+
     def size(self, dim=None):
         """
         Returns the size of the complex tensor  
@@ -268,6 +286,8 @@ class Complex:
             self.imag = torch.nn.functional.pad(self.imag, pad_width)
         elif self.mode == 'native':
             self.native = torch.nn.functional.pad(self.native, pad_width)
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def crop(self, crop_width):
         """
@@ -301,6 +321,8 @@ class Complex:
             return Complex(real=self.real[key], imag=self.imag[key])
         elif self.mode == 'native':
             return Complex(native=self.native[key])
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def reshape(self, new_shape):
         """
@@ -316,7 +338,9 @@ class Complex:
             self.imag = self.imag.reshape(new_shape)
         elif self.mode == 'native':
             self.native = self.native.reshape(new_shape)
-    
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
+
     def resize(self, scale_factor, interp_method='nearest'):
         """
         Resize the complex tensor
@@ -337,6 +361,8 @@ class Complex:
         elif self.mode == 'native':
             self.native = F.interpolate(self.native, scale_factor=scale_factor,
                                                 mode=interp_method)
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
     def cat(self, other, dim):
         """
@@ -361,6 +387,9 @@ class Complex:
         elif self.mode == 'native':
             other.to_native()
             self.native = torch.cat((self.native, other.native), dim)
+ 
+        else:
+            return NotImplementedError('Mode should be either "rect", "native", "polar"')
 
         return self
 
@@ -628,6 +657,3 @@ if __name__ == '__main__':
         loss = (c_mag - d).abs().sum()
         loss.backward()
         optimizer.step()
-
-
-

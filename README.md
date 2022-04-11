@@ -11,7 +11,7 @@ Pado provides high-level abstractions of light-wave simulation, which is useful 
 Pado is a Korean word for wave.
 
 # How to use Pado
-We provide a jupyter notebook ([`./example/tutorial.ipynb`]((./example/tutorial.ipynb))). More examples will be added later.
+We provide a jupyter notebook (`./example/tutorial.ipynb`). More examples will be added later.
 
 # Prerequisites
 - Python 
@@ -21,8 +21,7 @@ We provide a jupyter notebook ([`./example/tutorial.ipynb`]((./example/tutorial.
 - Scipy
 
 # About
-Pado is maintained and developed by [Seung-Hwan Baek](http://www.shbaek.com) at [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/). Pado was started as a personal project for differentiable cameras and displays. 
-
+Pado is maintained and developed by [Seung-Hwan Baek](http://www.shbaek.com) at [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/). 
 If you use Pado in your research, please cite Pado using the following BibText template:
 
 ```bib
