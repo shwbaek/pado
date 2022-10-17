@@ -1,6 +1,7 @@
 import torch
 import numpy as np
-from .fourier import fft
+import scipy
+from .fourier import fft, ifft, fftshift, ifftshift
 from .complex import Complex
 from .conv import conv_fft
 
@@ -35,6 +36,12 @@ def unpad(field_padded, pad_width):
     field = field_padded[...,pad_width[2]:-pad_width[3],pad_width[0]:-pad_width[1]]
     return field
 
+def fresnel_number(wid, z, wvl):
+    return (wid * wid) / (z * wvl)
+
+def critical_sampling(z, wvl, length):
+    return wvl * z / length
+
 class Propagator:
     def __init__(self, mode):
         """
@@ -56,10 +63,21 @@ class Propagator:
             light: light after propagation
         """
 
-        if self.mode == 'Fraunhofer':
+        if self.mode == 'auto':
+            f_num = fresnel_number(light.R*light.pitch/2, z, light.wvl)
+            if f_num > 5:
+                return self.forward_asm(light, z)
+            elif f_num < 0.2:
+                return self.forward_Fraunhofer(light, z, linear)
+            else:
+                return self.forward_Fresnel(light, z, linear)
+
+        elif self.mode == 'Fraunhofer':
             return self.forward_Fraunhofer(light, z, linear)
-        if self.mode == 'Fresnel':
+        elif self.mode == 'Fresnel':
             return self.forward_Fresnel(light, z, linear)
+        elif self.mode == 'ASM':
+            return self.forward_asm(light, z)
         else:
             return NotImplementedError('%s propagator is not implemented'%self.mode)
 
@@ -99,6 +117,7 @@ class Propagator:
             scale_c = pitch_c_after_propagation/pitch_r_after_propagation
             pitch_after_propagation = pitch_r_after_propagation
 
+        field_propagated.to_polar()
         light_propagated.set_field(field_propagated)
         light_propagated.magnify((scale_r,scale_c))
         light_propagated.set_pitch(pitch_after_propagation)
@@ -117,7 +136,7 @@ class Propagator:
         """
         field_input = light.field
 
-        # compute the convolutional kernel 
+        # compute the convolutional kernel
         sx = light.C / 2
         sy = light.R / 2
         x = np.arange(-sx, sx, 1)
@@ -141,3 +160,35 @@ class Propagator:
 
         return light_propagated
 
+    def forward_asm(self, light, z):
+        """
+        Forward the incident light with the ASM propagator.
+        Args:
+            light: incident light
+            z: propagation distance in meter.
+        Returns:
+            light: light after propagation
+        """
+
+        field_input = light.field
+        fft_c = fft(field_input)
+        c = fftshift(fft_c)
+
+        fx = np.fft.fftfreq(light.R, d=light.pitch)
+        fy = np.fft.fftfreq(light.C, d=light.pitch)
+        fxx, fyy = np.meshgrid(fx, fy)
+
+        arg = (2*np.pi)**2 * ((1. / light.wvl) ** 2 - fxx ** 2 - fyy ** 2)
+
+        tmp = np.sqrt(np.abs(arg))
+        kz = np.where(arg >= 0, tmp, 1j*tmp)
+
+        c.to_native()
+        c.native = c.native * torch.from_numpy(np.exp(1j*kz*z)).to(light.device)
+        c.to_polar()
+        field_propagated = ifft(ifftshift(c))
+
+        light_propagated = light.clone()
+        light_propagated.set_field(field_propagated)
+
+        return light_propagated

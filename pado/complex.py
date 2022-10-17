@@ -95,7 +95,7 @@ class Complex:
             ang: angle in the polar representation of the complex number
         """
         if self.mode == 'native':
-            return torch.ang(self.native)
+            return torch.angle(self.native)
         elif self.mode == 'rect':
             self.to_polar()
             return self.ang
@@ -231,7 +231,7 @@ class Complex:
             self.mag, self.ang = rect2polar(self.real, self.imag)
             self.real, self.imag = None, None
         elif self.mode == 'native':
-            self.mag, self.ang = torch.abs(self.native), torch.ang(self.native)
+            self.mag, self.ang = torch.abs(self.native), torch.angle(self.native)
             self.native = None
         self.mode = 'polar'
 

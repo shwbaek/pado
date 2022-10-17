@@ -296,7 +296,7 @@ class DOE(OpticalElement):
             self.mode = 'height'
             self.set_height(height)
             self.set_amplitude_change(amplitude)
-        elif (height is None) and (phase is None) and (amplitude is None):
+        elif (height is None) and phase is None:
             self.mode = 'phase'
             phase = torch.zeros((1, 1, self.R, self.C), device=self.device)
             self.set_amplitude_change(amplitude)

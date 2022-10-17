@@ -281,7 +281,7 @@ class Light:
 
         plt.subplot(132)
         phase = self.get_phase().data.cpu()[b,c,...].squeeze()
-        plt.imshow(self.get_phase().data.cpu()[b,c,...].squeeze(),
+        plt.imshow(phase.squeeze(),
                    extent=[0,bw[0]*1e3, 0, bw[1]*1e3], cmap='hsv', vmin=-np.pi, vmax=np.pi)  # cyclic colormap
         plt.title('phase')
         plt.xlabel('mm')
