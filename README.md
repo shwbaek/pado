@@ -21,7 +21,7 @@ We provide a jupyter notebook (`./example/tutorial.ipynb`). More examples will b
 - Scipy
 
 # About
-Pado is maintained and developed by [Seung-Hwan Baek](http://www.shbaek.com) at [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/). 
+Pado is maintained and developed by [Seung-Hwan Baek](http://www.shbaek.com) and Yujin Jeon at [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/). 
 If you use Pado in your research, please cite Pado using the following BibText template:
 
 ```bib
