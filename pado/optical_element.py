@@ -221,16 +221,13 @@ class RefractiveLens(OpticalElement):
         bw_R = self.R*self.pitch
         bw_C = self.C*self.pitch
 
-        x = np.arange(-bw_C/2, bw_C/2, self.pitch)
-        x = x[:self.R]
-        y = np.arange(-bw_R/2, bw_R/2, self.pitch)
-        y = y[:self.C]
-        xx,yy = np.meshgrid(x,y)
+        x = np.arange(-self.C/2, self.C/2) * self.pitch
+        y = np.arange(-self.R/2, self.R/2) * self.pitch
+        xx, yy = np.meshgrid(x, y, indexing='xy')
 
         theta_change = torch.tensor((-2*np.pi / wvl)*((xx-shift_x)**2 + (yy-shift_y)**2), device=self.device) / (2*self.focal_length)
+        theta_change = (theta_change + np.pi) % (np.pi * 2) - np.pi
         theta_change = torch.unsqueeze(torch.unsqueeze(theta_change, axis=0), axis=0)
-        theta_change %= 2*np.pi
-        theta_change -= np.pi
         
         return theta_change
 
