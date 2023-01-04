@@ -171,22 +171,21 @@ class Propagator:
         """
 
         field_input = light.field
-        fft_c = fft(field_input)
-        c = fftshift(fft_c)
-
-        fx = np.fft.fftfreq(light.R, d=light.pitch)
-        fy = np.fft.fftfreq(light.C, d=light.pitch)
+        c = fft(field_input)
+        
+        fx = np.arange(-light.C//2, light.C//2) / (light.pitch * light.C)
+        fy = np.arange(-light.R//2, light.R//2) / (light.pitch * light.R)
         fxx, fyy = np.meshgrid(fx, fy)
 
         arg = (2*np.pi)**2 * ((1. / light.wvl) ** 2 - fxx ** 2 - fyy ** 2)
 
         tmp = np.sqrt(np.abs(arg))
-        kz = np.where(arg >= 0, tmp, 1j*tmp)
 
-        c.to_native()
-        c.native = c.native * torch.from_numpy(np.exp(1j*kz*z)).to(light.device)
         c.to_polar()
-        field_propagated = ifft(ifftshift(c))
+        k = (tmp * z+np.pi) % (np.pi*2) - np.pi
+        c.set_ang(c.get_ang() + torch.from_numpy(k).to(light.device))
+        
+        field_propagated = ifft(c)
 
         light_propagated = light.clone()
         light_propagated.set_field(field_propagated)
