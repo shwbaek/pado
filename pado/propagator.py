@@ -37,9 +37,28 @@ def unpad(field_padded, pad_width):
     return field
 
 def fresnel_number(wid, z, wvl):
+    """
+    Calculate Fresnel Number to determine propagation method
+    Args:
+        wid: physical width of the light
+        z: propagation distance
+        wvl: wavelength of the light
+    Return:
+         Fresnel Number
+    """
     return (wid * wid) / (z * wvl)
 
 def critical_sampling(z, wvl, length):
+    """
+    Calculate critical sampling to determine
+    Impulse Response or Transfer Function for Fresnel
+    Args:
+        z: propagation distance
+        wvl: wavelength of the light
+        length: array length of the light
+    Return:
+         Critical Sampling
+    """
     return wvl * z / length
 
 class Propagator:
@@ -66,7 +85,7 @@ class Propagator:
         if self.mode == 'auto':
             f_num = fresnel_number(light.R*light.pitch/2, z, light.wvl)
             if f_num > 5:
-                return self.forward_asm(light, z)
+                return self.forward_asm(light, z, linear)
             elif f_num < 0.2:
                 return self.forward_Fraunhofer(light, z, linear)
             else:
@@ -77,7 +96,7 @@ class Propagator:
         elif self.mode == 'Fresnel':
             return self.forward_Fresnel(light, z, linear)
         elif self.mode == 'ASM':
-            return self.forward_asm(light, z)
+            return self.forward_asm(light, z, linear)
         else:
             return NotImplementedError('%s propagator is not implemented'%self.mode)
 
@@ -124,7 +143,7 @@ class Propagator:
 
         return light_propagated
 
-    def forward_Fresnel(self, light, z, linear):
+    def forward_Fresnel(self, light, z, linear=True):
         """
         Forward the incident light with the Fresnel propagator. 
         Args:
@@ -160,7 +179,7 @@ class Propagator:
 
         return light_propagated
 
-    def forward_asm(self, light, z):
+    def forward_asm(self, light, z, linear):
         """
         Forward the incident light with the ASM propagator.
         Args:
@@ -171,23 +190,20 @@ class Propagator:
         """
 
         field_input = light.field
-        c = fft(field_input)
         
         fx = np.arange(-light.C//2, light.C//2) / (light.pitch * light.C)
         fy = np.arange(-light.R//2, light.R//2) / (light.pitch * light.R)
-        fxx, fyy = np.meshgrid(fx, fy)
-
-        arg = (2*np.pi)**2 * ((1. / light.wvl) ** 2 - fxx ** 2 - fyy ** 2)
-
-        tmp = np.sqrt(np.abs(arg))
-
-        c.to_polar()
-        k = (tmp * z+np.pi) % (np.pi*2) - np.pi
-        c.set_ang(c.get_ang() + torch.from_numpy(k).to(light.device))
+        fxx, fyy = np.meshgrid(fx, fy, indexing='xy')
         
-        field_propagated = ifft(c)
+        k = 2*np.pi / light.wvl
+        gamma = np.sqrt(np.abs(1. - (light.wvl*fxx)**2 - (light.wvl*fyy)**2))
+        H = np.fft.fftshift(np.fft.ifft2(np.fft.fftshift(np.exp(1j*k*z*gamma))))
+        conv_kernel = Complex(real=torch.Tensor(H.real).to(light.device), 
+                                  imag=torch.Tensor(H.imag).to(light.device))
+            
+        pad_width = compute_pad_width(field_input)
+        field_propagated = conv_fft(field_input, conv_kernel, pad_width)
 
         light_propagated = light.clone()
         light_propagated.set_field(field_propagated)
-
         return light_propagated
