@@ -21,13 +21,13 @@ We provide a jupyter notebook (`./example/tutorial.ipynb`). More examples will b
 - Scipy
 
 # About
-Pado is maintained and developed by [Seung-Hwan Baek](http://www.shbaek.com) and Yujin Jeon at [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/). 
+Pado is maintained and developed by [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/). 
 If you use Pado in your research, please cite Pado using the following BibText template:
 
 ```bib
 @misc{Pado,
-   Author = {Seung-Hwan baek},
-   Year = {2022},
+   Author = {Seung-Hwan Baek, Yujin Jeon},
+   Year = {2023},
    Note = {https://github.com/shwbaek/pado},
    Title = {Pado: Differentiable Light-wave Simulation}
 }
