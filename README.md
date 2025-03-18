@@ -18,7 +18,7 @@
   <img alt="NumPy" src="https://img.shields.io/badge/NumPy-1.16.0%2B-013243?style=for-the-badge&logo=numpy&logoColor=white">
   <img alt="Matplotlib" src="https://img.shields.io/badge/Matplotlib-3.3.0%2B-FF5733?style=for-the-badge&logo=matplotlib&logoColor=white">
   <img alt="SciPy" src="https://img.shields.io/badge/SciPy-1.0.0%2B-8CAAE6?style=for-the-badge&logo=scipy&logoColor=white">
-  <img alt="License" src="https://img.shields.io/badge/license-Custom-F7DF1E?style=for-the-badge">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-F7DF1E?style=for-the-badge">
 </p>
 
 ---
@@ -58,7 +58,6 @@ For development installation:
 ```bash
 git clone https://github.com/shwbaek/pado.git
 cd pado
-pip install -e .
 ```
 
 ---
@@ -92,7 +91,7 @@ If you use Pado in your research, please cite Pado using the following BibText t
 ```bib
 @misc{Pado,
    Author = {Seung-Hwan Baek, Dong-Ha Shin, Yujin Jeon, Seung-Woo Yoon, Gawoon Ban, Hyunmo Kang},
-   Year = {2023},
+   Year = {2025},
    Note = {https://github.com/shwbaek/pado},
    Title = {Pado: Pytorch Automatic Differentiable Optics}
 }
