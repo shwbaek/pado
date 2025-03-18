@@ -95,14 +95,6 @@ Browse our examples by category:
 - **[5. Advanced Applications](./example/5_Advanced_Applications/)**
   - [5.1 Chromatic aberration singlet](./example/5_Advanced_Applications/5.1_chromatic_aberration_singlet.ipynb) - Chromatic aberration simulation
 
-### Getting Started
-
-For beginners, we recommend starting with [1.1 Pado fundamentals](./example/1_Basics/1.1_Pado_fundamentals.ipynb) to understand the core concepts and API.
-
-```bash
-jupyter notebook ./example/1_Basics/1.1_Pado_fundamentals.ipynb
-```
-
 ---
 
 ## 📚 About
