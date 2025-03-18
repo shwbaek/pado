@@ -1,0 +1,4 @@
+docs/** linguist-documentation=true
+example/** linguist-documentation=true
+*.md linguist-documentation=true
+*.ipynb linguist-documentation=true
