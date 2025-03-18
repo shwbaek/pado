@@ -27,8 +27,6 @@
 
 🌊**PADO** (파도) is a cutting-edge framework for differentiable optical simulations powered by PyTorch. Inspired by the Korean word for "wave," PADO enables seamless and fully differentiable simulation workflows, perfect for researchers and developers in optical physics, computational imaging, and beyond.
 
-> 🌐 **Open-source version:** Check out [PADO Public](https://github.com/shwbaek/pado)
-
 ---
 
 ## ✨ Features
@@ -43,7 +41,25 @@
 
 ## ⚙️ Installation
 
-Simply place the `pado` folder in your project:
+You can install PADO via pip:
+
+```bash
+pip install pado
+```
+
+Or install directly from GitHub:
+
+```bash
+pip install git+https://github.com/shwbaek/pado.git
+```
+
+For development installation:
+
+```bash
+git clone https://github.com/shwbaek/pado.git
+cd pado
+pip install -e .
+```
 
 ---
 
@@ -65,8 +81,7 @@ Developed and maintained by the [POSTECH Computer Graphics Lab](http://cg.postec
 
 ## 📄 License
 
-Use of this software is limited to research-collaboration projects with POSTECH Computer Graphics Lab.
-See [LICENSE](./LICENSE) for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ---
 
@@ -79,7 +94,7 @@ If you use Pado in your research, please cite Pado using the following BibText t
    Author = {Seung-Hwan Baek, Dong-Ha Shin, Yujin Jeon, Seung-Woo Yoon, Gawoon Ban, Hyunmo Kang},
    Year = {2023},
    Note = {https://github.com/shwbaek/pado},
-   Title = {Pado: Differentiable Light-wave Simulation}
+   Title = {Pado: Pytorch Automatic Differentiable Optics}
 }
 ```
 
