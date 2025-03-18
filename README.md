@@ -64,10 +64,43 @@ cd pado
 
 ## 🚀 Quickstart
 
-Start exploring optics with our interactive Jupyter notebook tutorial:
+PADO includes a comprehensive set of example notebooks organized by topic:
+
+### Exploring Examples
+
+Browse our examples by category:
+
+- **[1. Basics](./example/1_Basics/)**
+  - [1.1 Pado fundamentals](./example/1_Basics/1.1_Pado_fundamentals.ipynb) - Learn about core components and building blocks
+  - [1.2 RGB multi-wavelength](./example/1_Basics/1.2_RGB_multi_wavelength.ipynb) - Working with multiple wavelengths
+  - [1.3 4-F with batch](./example/1_Basics/1.3_4-F_with_batch.ipynb) - Batch processing in 4-F systems
+  - [1.4 How to use ASM options](./example/1_Basics/1.4_How2use_ASM_options.ipynb) - Angular Spectrum Method configuration
+
+- **[2. Computer Generated Holography](./example/2_Computer_Generated_Holography/)**
+  - [2.1 DPAC](./example/2_Computer_Generated_Holography/2.1_DPAC.ipynb) - Double Phase Amplitude Coding
+  - [2.2 Multi-depth CGH](./example/2_Computer_Generated_Holography/2.2_multi_depth_cgh.ipynb) - Multi-plane holography
+  - [2.3 CGH optimization](./example/2_Computer_Generated_Holography/2.3_cgh_optimization_gs_sgd_adam.ipynb) - GS, SGD, and Adam methods
+  - [2.4 Multi-depth hologram with Adam](./example/2_Computer_Generated_Holography/2.4_multi_depth_hologram_generation_using_adam.ipynb) - Complex loss-based optimization
+  - [2.5 Phase-only SLM optimization](./example/2_Computer_Generated_Holography/2.5_cgh_optimization_with_phase_only_slm.ipynb) - Optimization with phase-only spatial light modulators
+  - [2.6 Multi-depth hologram with phase-only SLM](./example/2_Computer_Generated_Holography/2.6_multi_depth_hologram_generation_using_adam_with_phase_only_slm.ipynb) - Multi-plane optimization with phase-only SLMs
+
+- **[3. Coded Imaging](./example/3_Coded_Imaging/)**
+  - [3.1 Lens comparison](./example/3_Coded_Imaging/3.1_lens_comparison.ipynb) - Different lens models and wavefront observation
+  - [3.2 Coded aperture comparison](./example/3_Coded_Imaging/3.2_coded_aperture_comparison.ipynb) - Coded aperture techniques
+  - [3.3 Seeing through DOE](./example/3_Coded_Imaging/3.3_seeing_through_doe.ipynb) - Imaging through diffractive optical elements
+
+- **[4. Polarization Imaging](./example/4_Polarization_Imaging/)**
+  - [4.1 Polarization light](./example/4_Polarization_Imaging/4.1_polarization_light.ipynb) - Polarized light simulation
+
+- **[5. Advanced Applications](./example/5_Advanced_Applications/)**
+  - [5.1 Chromatic aberration singlet](./example/5_Advanced_Applications/5.1_chromatic_aberration_singlet.ipynb) - Chromatic aberration simulation
+
+### Getting Started
+
+For beginners, we recommend starting with [1.1 Pado fundamentals](./example/1_Basics/1.1_Pado_fundamentals.ipynb) to understand the core concepts and API.
 
 ```bash
-jupyter notebook ./example/tutorial.ipynb
+jupyter notebook ./example/1_Basics/1.1_Pado_fundamentals.ipynb
 ```
 
 ---
