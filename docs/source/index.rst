@@ -77,4 +77,5 @@ Indices and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search` 
+* :ref:`search`
+* `Pado GitHub repo <https://github.com/shwbaek/pado>`_

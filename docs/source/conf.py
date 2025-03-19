@@ -8,8 +8,8 @@ sys.path.insert(0, project_root)
 
 # Project information
 project = 'PADO Documentation'
-copyright = f'{datetime.now().year}, Seung-Hwan Baek and contributors'
-author = 'Seung-Hwan Baek and contributors'
+copyright = f'{datetime.now().year}, Seung-Hwan Baek, Dong-Ha Shin, and contributors'
+author = 'Seung-Hwan Baek, Dong-Ha Shin, and contributors'
 release = '1.0.0'
 
 # General configuration
