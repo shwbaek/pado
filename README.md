@@ -65,12 +65,7 @@ cd pado
 
 ## 📚 Documentation
 
-Comprehensive documentation is available at [https://shwbaek.github.io/pado](https://shwbaek.github.io/pado), including:
-
-- Installation guide
-- API reference with detailed explanation of all components
-- Practical examples with step-by-step tutorials
-- License information
+Comprehensive documentation is available at [https://shwbaek.github.io/pado](https://shwbaek.github.io/pado).
 
 ---
 
@@ -109,7 +104,7 @@ Browse our examples by category:
 
 ---
 
-## 📚 About
+## ℹ️ About
 
 Developed and maintained by the [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/).
 
