@@ -1,5 +1,17 @@
 /* Custom styles for PADO documentation */
 
+/* Logo styles */
+.sidebar-logo {
+    max-width: 150px;
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 /* Grid Layout */
 .main-grid {
     display: grid;

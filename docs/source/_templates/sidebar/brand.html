@@ -1,0 +1,14 @@
+{% if pagename != 'index' %}
+<a class="sidebar-brand" href="{{ pathto(master_doc) }}">
+  <div class="sidebar-brand-container">
+    <img class="sidebar-logo" src="{{ pathto('_static/logo_1.0.0.svg', 1) }}" alt="Logo"/>
+    <p class="sidebar-brand-text">{{ project }}</p>
+  </div>
+</a>
+{% else %}
+<a class="sidebar-brand" href="{{ pathto(master_doc) }}">
+  <div class="sidebar-brand-container">
+    <p class="sidebar-brand-text">{{ project }}</p>
+  </div>
+</a>
+{% endif %} 
