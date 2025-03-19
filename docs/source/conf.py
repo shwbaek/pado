@@ -45,8 +45,6 @@ try:
     extensions.append('sphinxext.opengraph')
     # OpenGraph settings
     ogp_site_url = "https://shwbaek.github.io/pado/"
-    ogp_image = "_static/logo_1.0.0.png"
-    ogp_use_first_image = True
 except ImportError:
     pass
 
@@ -97,7 +95,7 @@ html_logo = '../images/logo_1.0.0.png'
 
 # Furo theme options
 html_theme_options = {
-    "announcement": "PADO: Pytorch Automatic Differentiable Optics",
+    "announcement": "Pytorch Automatic Differentiable Optics",
     "sidebar_hide_name": False,
     "light_css_variables": {
         "font-stack": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
