@@ -6,9 +6,10 @@
 <h3 align="center">Pytorch Automatic Differentiable Optics</h3>
 
 <p align="center">
-  <a href="#-installation">⚙️ Installation</a> •
+  <a href="#%EF%B8%8F-installation">⚙️ Installation</a> •
   <a href="#-quickstart">🚀 Quickstart</a> •
   <a href="#-features">✨ Features</a> •
+  <a href="https://shwbaek.github.io/pado">📚 Documentation</a> •
   <a href="#-license">📄 License</a>
 </p>
 
@@ -59,6 +60,17 @@ For development installation:
 git clone https://github.com/shwbaek/pado.git
 cd pado
 ```
+
+---
+
+## 📚 Documentation
+
+Comprehensive documentation is available at [https://shwbaek.github.io/pado](https://shwbaek.github.io/pado), including:
+
+- Installation guide
+- API reference with detailed explanation of all components
+- Practical examples with step-by-step tutorials
+- License information
 
 ---
 
