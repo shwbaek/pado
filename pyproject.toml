@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pado"
+version = "1.0.0"
+description = "Pytorch Automatic Differentiable Optics"
+authors = [
+    { name = "Seung-Hwan Baek", email = "shwbaek@postech.ac.kr" },
+    { name = "Dong-Ha Shin", email = "0218sdh@gmail.com"  },
+    { name = "Yujin Jeon" },
+    { name = "Seung-Woo Yoon" },
+    { name = "Eunsue Choi" },
+    { name = "Gawoon Ban" },
+    { name = "Hyunmo Kang" }
+]
+requires-python = ">=3.6"
+dependencies = [
+    "torch>=1.10.0",
+    "numpy>=1.16.0",
+    "matplotlib>=3.3.0",
+    "scipy>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/shwbaek/pado"
+Repository = "https://github.com/shwbaek/pado.git" 

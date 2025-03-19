@@ -1,0 +1,38 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main  # or your default branch
+    paths:
+      - 'docs/**'  # Only trigger on changes to docs directory
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sphinx furo sphinx-copybutton sphinx-design myst-parser nbsphinx sphinx-autodoc-typehints
+          pip install -e .  # Install the package itself
+          
+      - name: Build documentation
+        run: |
+          cd docs
+          make html
+          touch build/html/.nojekyll  # Disable Jekyll processing
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/build/html
+          force_orphan: true 

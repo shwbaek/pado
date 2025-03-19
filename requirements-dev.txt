@@ -1,0 +1,16 @@
+-r requirements-docs.txt
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=4.0.0
+pytest-xdist>=3.0.0
+
+# Code Quality
+black>=23.0.0
+isort>=5.0.0
+flake8>=6.0.0
+mypy>=1.0.0
+
+# Development Tools
+pre-commit>=3.0.0
+tox>=4.0.0 

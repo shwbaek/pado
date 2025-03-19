@@ -1,0 +1,14 @@
+Metadata-Version: 2.2
+Name: pado
+Version: 1.0.0
+Summary: Pytorch Automatic Differentiable Optics
+Author: Yujin Jeon, Seung-Woo Yoon, Eunsue Choi, Gawoon Ban, Hyunmo Kang
+Author-email: Seung-Hwan Baek <shwbaek@postech.ac.kr>, Dong-Ha Shin <0218sdh@gmail.com>
+Project-URL: Homepage, https://github.com/shwbaek/pado
+Project-URL: Repository, https://github.com/shwbaek/pado.git
+Requires-Python: >=3.6
+License-File: LICENSE
+Requires-Dist: torch>=1.10.0
+Requires-Dist: numpy>=1.16.0
+Requires-Dist: matplotlib>=3.3.0
+Requires-Dist: scipy>=1.0.0
