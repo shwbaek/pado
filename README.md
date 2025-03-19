@@ -115,7 +115,7 @@ If you use Pado in your research, please cite Pado using the following BibText t
 
 ```bib
 @misc{Pado,
-   Author = {Seung-Hwan Baek, Dong-Ha Shin, Yujin Jeon, Seung-Woo Yoon, Gawoon Ban, Hyunmo Kang},
+   Author = {Seung-Hwan Baek, Dong-Ha Shin, Yujin Jeon, Seung-Woo Yoon, Eunsue Choi, Gawoon Ban, Hyunmo Kang},
    Year = {2025},
    Note = {https://github.com/shwbaek/pado},
    Title = {Pado: Pytorch Automatic Differentiable Optics}
