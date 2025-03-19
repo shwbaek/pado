@@ -9,6 +9,8 @@ __pycache__/
 dist/
 build/
 *.egg-info/
+*.egg
+pado.egg-info/
 
 # Sphinx documentation
 docs/build/
@@ -27,3 +29,29 @@ ENV/
 # OS specific files
 .DS_Store
 Thumbs.db 
+
+# Conda environment
+.conda/
+.conda-env/
+.conda-envs/
+.conda-envs-*/
+
+# Conda build
+conda-forge-recipe/
+conda/
+
+# Distribution
+dist/
+
+# Noarch
+noarch/
+
+# win-64
+win-64/
+
+# osx-64
+osx-64/
+
+channeldata.json
+
+

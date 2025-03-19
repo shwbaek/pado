@@ -3,9 +3,11 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pado"
+name = "pado-optics"
 version = "1.0.0"
 description = "Pytorch Automatic Differentiable Optics"
+readme = "README.md"
+license = {text = "MIT"}
 authors = [
     { name = "Seung-Hwan Baek", email = "shwbaek@postech.ac.kr" },
     { name = "Dong-Ha Shin", email = "0218sdh@gmail.com"  },
@@ -25,4 +27,8 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/shwbaek/pado"
-Repository = "https://github.com/shwbaek/pado.git" 
+Repository = "https://github.com/shwbaek/pado.git"
+Documentation = "https://shwbaek.github.io/pado"
+
+[tool.setuptools]
+packages = ["pado"] 

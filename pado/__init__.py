@@ -28,6 +28,8 @@
 #
 ########################################################
 
+__version__ = '1.0.0'
+
 from .light import *
 from .optical_element import *
 from .propagator import *
