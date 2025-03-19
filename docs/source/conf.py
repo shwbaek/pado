@@ -12,6 +12,10 @@ copyright = f'{datetime.now().year}, Seung-Hwan Baek and contributors'
 author = 'Seung-Hwan Baek and contributors'
 release = '1.0.0'
 
+# GitHub Pages URL Settings
+html_baseurl = 'https://shwbaek.github.io/pado/'
+html_use_opensearch = 'https://shwbaek.github.io/pado/'
+
 # General configuration
 extensions = [
     'sphinx.ext.autodoc',
@@ -39,6 +43,10 @@ except ImportError:
 try:
     import sphinxext.opengraph
     extensions.append('sphinxext.opengraph')
+    # OpenGraph settings
+    ogp_site_url = "https://shwbaek.github.io/pado/"
+    ogp_image = "_static/logo_1.0.0.png"
+    ogp_use_first_image = True
 except ImportError:
     pass
 
@@ -84,9 +92,17 @@ html_css_files = [
     'custom.css',
 ]
 
+# Add logo
+html_logo = '../images/logo_1.0.0.png'
+
 # Furo theme options
 html_theme_options = {
-    "announcement": "Pytorch Automatic Differentiable Optics",
+    "announcement": "PADO: Pytorch Automatic Differentiable Optics",
+    "sidebar_hide_name": False,
+    "light_css_variables": {
+        "font-stack": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+        "font-stack--monospace": "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    },
 }
 
 # Notebook execution settings
