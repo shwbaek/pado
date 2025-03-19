@@ -49,16 +49,15 @@ Citation Guidelines
 
 Contributing Authors
 ------------------------------
-
 The following people have contributed to PADO:
 
-- Seung-Hwan Baek
-- Dong-Ha Shin
-- Yujin Jeon
-- Seung-Woo Yoon
-- Eunsue Choi
-- Gawoon Ban
-- Hyunmo Kang
+- Seung-Hwan Baek (shwbaek@postech.ac.kr) - Corresponding Author
+- Dong-Ha Shin (0218sdh@gmail.com) - Lead Developer
+- Yujin Jeon (jyj7913@postech.ac.kr)
+- Seung-Woo Yoon (ysw1110@postech.ac.kr)
+- Eunsue Choi (ches7283@postech.ac.kr)
+- Gawoon Ban (bestban04@postech.ac.kr)
+- Hyunmo Kang (gusah7787@postech.ac.kr)
 
 If you have used PADO in your research and would like to be added to this list, please contact the maintainers through GitHub.
 
