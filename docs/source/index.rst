@@ -2,14 +2,17 @@
    :width: 100%
    :class: banner-image
 
-.. grid:: 1
+.. grid:: 1 1 1 4
+   :gutter: 3
+   :class-container: grid-container
 
-   .. grid-item:: 
-      :columns: 3
+   .. grid-item::
+      :class: grid-item-card
 
-      .. grid-item-card::
+      .. card::
          :link: installation
          :link-type: doc
+         :class-card: custom-card
 
          🚀 Installation
          ^^^^^^^^^^^^^^
@@ -17,11 +20,12 @@
          Get started with PADO by following our installation guide.
 
    .. grid-item::
-      :columns: 3
+      :class: grid-item-card
 
-      .. grid-item-card::
+      .. card::
          :link: api/index
          :link-type: doc
+         :class-card: custom-card
 
          📚 API Reference
          ^^^^^^^^^^^^^^
@@ -29,11 +33,12 @@
          Detailed documentation of all PADO components and functions.
 
    .. grid-item::
-      :columns: 3
+      :class: grid-item-card
 
-      .. grid-item-card::
+      .. card::
          :link: examples/index
          :link-type: doc
+         :class-card: custom-card
 
          🎯 Examples
          ^^^^^^^^^^
@@ -41,11 +46,12 @@
          Explore practical examples and use cases.
 
    .. grid-item::
-      :columns: 3
+      :class: grid-item-card
 
-      .. grid-item-card::
+      .. card::
          :link: license
          :link-type: doc
+         :class-card: custom-card
 
          📄 License
          ^^^^^^^^^

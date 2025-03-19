@@ -62,10 +62,30 @@
     color: var(--color-foreground-secondary);
 }
 
+/* 카드 스타일링 */
+.custom-card {
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-5px);
+}
+
+/* 그리드 컨테이너 */
+.grid-container {
+  margin: 2rem 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .main-grid {
         grid-template-columns: 1fr;
+    }
+    
+    /* 모바일에서의 추가 간격 */
+    .grid-item-card {
+        margin-bottom: 1rem;
     }
 }
 
