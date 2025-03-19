@@ -4,19 +4,30 @@ Installation Guide
 Basic Installation
 ------------------------------
 
-To install PADO, you can use pip:
+You can install PADO via pip:
 
 .. code-block:: bash
 
-   pip install pado
+   pip install pado-optics
 
-For development installation, clone the repository and install in editable mode:
+Or via conda:
+
+.. code-block:: bash
+
+   conda install -c conda-forge pado-optics
+
+Or install directly from GitHub:
+
+.. code-block:: bash
+
+   pip install git+https://github.com/shwbaek/pado.git
+
+For development installation:
 
 .. code-block:: bash
 
    git clone https://github.com/shwbaek/pado.git
    cd pado
-   pip install -e .
 
 Dependencies
 ------------------------------

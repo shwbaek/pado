@@ -45,7 +45,13 @@
 You can install PADO via pip:
 
 ```bash
-pip install pado
+pip install pado-optics
+```
+
+Or via conda:
+
+```bash
+conda install -c conda-forge pado-optics
 ```
 
 Or install directly from GitHub:
