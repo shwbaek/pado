@@ -34,7 +34,7 @@ Dependencies
 
 PADO requires the following dependencies:
 
-- Python 3.6 or higher
+- Python 3.7 or higher
 - PyTorch 1.10.0 or higher
 - NumPy 1.16.0 or higher
 - Matplotlib 3.3.0 or higher
