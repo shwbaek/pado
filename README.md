@@ -27,6 +27,10 @@
 
 🌊**PADO** (파도) is a cutting-edge framework for differentiable optical simulations powered by PyTorch. Inspired by the Korean word for "wave," PADO enables seamless and fully differentiable simulation workflows, perfect for researchers and developers in optical physics, computational imaging, and beyond.
 
+<div align="center">
+  <img src="docs/images/interconnection.svg" width="100%">
+</div>
+
 ---
 
 ## ✨ Features
