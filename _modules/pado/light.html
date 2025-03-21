@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>pado.light - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
@@ -331,7 +331,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <div class="viewcode-block" id="Light">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Light</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Light wave with complex field wavefront.</span>
 <span class="sd">    </span>
@@ -340,7 +340,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Light.__init__">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.__init__">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
                  <span class="n">wvl</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cpu&#39;</span><span class="p">):</span>
@@ -381,7 +381,7 @@
 
 
 <div class="viewcode-block" id="Light.crop">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.crop">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.crop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_width</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Crop light wavefront.</span>
 
@@ -406,7 +406,7 @@
 
 
 <div class="viewcode-block" id="Light.clone">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.clone">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.clone">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Light&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create deep copy of light instance.</span>
 
@@ -420,7 +420,7 @@
 
 
 <div class="viewcode-block" id="Light.pad">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.pad">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.pad">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">padval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pad light field with constant value.</span>
 
@@ -447,7 +447,7 @@
 
 
 <div class="viewcode-block" id="Light.set_real">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_real">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_real">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_real</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set real part of light wavefront.</span>
 
@@ -487,7 +487,7 @@
 
 
 <div class="viewcode-block" id="Light.set_imag">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_imag">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_imag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_imag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imag</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set imaginary part of light wavefront.</span>
 
@@ -528,7 +528,7 @@
 
         
 <div class="viewcode-block" id="Light.set_amplitude">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_amplitude">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_amplitude">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set amplitude of light wavefront (keeps phase unchanged) without maintaining computation graph.</span>
 <span class="sd">        </span>
@@ -558,7 +558,7 @@
 
 
 <div class="viewcode-block" id="Light.set_phase">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_phase">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_phase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set phase of light wavefront (keeps amplitude unchanged).</span>
 
@@ -600,7 +600,7 @@
 
 
 <div class="viewcode-block" id="Light.set_field">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_field">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_field">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set complex field of light wavefront.</span>
 
@@ -641,7 +641,7 @@
 
 
 <div class="viewcode-block" id="Light.set_pitch">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_pitch">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_pitch">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set pixel pitch of light field.</span>
 
@@ -657,7 +657,7 @@
 
 
 <div class="viewcode-block" id="Light.get_channel">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_channel">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_channel">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_channel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return number of channels in light field.</span>
 
@@ -671,7 +671,7 @@
 
 
 <div class="viewcode-block" id="Light.get_amplitude">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_amplitude">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_amplitude">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get amplitude of light wavefront.</span>
 
@@ -702,7 +702,7 @@
 
 
 <div class="viewcode-block" id="Light.get_phase">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_phase">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_phase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get phase of light wavefront.</span>
 
@@ -733,7 +733,7 @@
 
         
 <div class="viewcode-block" id="Light.get_intensity">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_intensity">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_intensity">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_intensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get intensity (amplitude squared) of light wavefront.</span>
 
@@ -764,7 +764,7 @@
 
 
 <div class="viewcode-block" id="Light.get_field">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_field">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_field">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get complex field of light wavefront.</span>
 
@@ -795,7 +795,7 @@
 
         
 <div class="viewcode-block" id="Light.get_device">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_device">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_device">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_device</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return device of light field.</span>
 
@@ -809,7 +809,7 @@
 
 
 <div class="viewcode-block" id="Light.get_bandwidth">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_bandwidth">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_bandwidth">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_bandwidth</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return spatial bandwidth of light wavefront.</span>
 
@@ -823,7 +823,7 @@
 
     
 <div class="viewcode-block" id="Light.get_ideal_angle_limit">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.get_ideal_angle_limit">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.get_ideal_angle_limit">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ideal_angle_limit</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return ideal angle limit of light wavefront based on optical axis.</span>
 
@@ -849,7 +849,7 @@
 
 
 <div class="viewcode-block" id="Light.magnify">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.magnify">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.magnify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">magnify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">interp_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Change wavefront resolution without changing pixel pitch.</span>
 
@@ -885,7 +885,7 @@
 
 
 <div class="viewcode-block" id="Light.resize">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.resize">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.resize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">resize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_pitch</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">interp_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resize wavefront by changing pixel pitch.</span>
 
@@ -909,7 +909,7 @@
 
 
 <div class="viewcode-block" id="Light.set_spherical_light">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_spherical_light">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_spherical_light">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_spherical_light</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">dy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set spherical wavefront from point source.</span>
 
@@ -958,7 +958,7 @@
 
 
 <div class="viewcode-block" id="Light.set_plane_light">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_plane_light">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_plane_light">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_plane_light</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set plane wave with unit amplitude.</span>
 
@@ -995,7 +995,7 @@
 
 
 <div class="viewcode-block" id="Light.set_amplitude_ones">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_amplitude_ones">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_amplitude_ones">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_amplitude_ones</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set amplitude to ones.</span>
 
@@ -1006,7 +1006,7 @@
 
 
 <div class="viewcode-block" id="Light.set_amplitude_zeros">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_amplitude_zeros">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_amplitude_zeros">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_amplitude_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set amplitude to zeros.</span>
 
@@ -1017,7 +1017,7 @@
 
 
 <div class="viewcode-block" id="Light.set_phase_zeros">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_phase_zeros">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_phase_zeros">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_phase_zeros</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set phase to zeros.</span>
 
@@ -1028,7 +1028,7 @@
 
 
 <div class="viewcode-block" id="Light.set_phase_random">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.set_phase_random">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.set_phase_random">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_phase_random</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set random phase with specified distribution.</span>
 
@@ -1135,7 +1135,7 @@
 
 
 <div class="viewcode-block" id="Light.save">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.save">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.save">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save light field to file.</span>
 
@@ -1175,7 +1175,7 @@
 
 
 <div class="viewcode-block" id="Light.adjust_amplitude_to_other_light">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.adjust_amplitude_to_other_light">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.adjust_amplitude_to_other_light">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">adjust_amplitude_to_other_light</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_light</span><span class="p">:</span> <span class="s1">&#39;Light&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Scale amplitude to match average of another light field.</span>
 
@@ -1201,7 +1201,7 @@
 
 
 <div class="viewcode-block" id="Light.load_image">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.load_image">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.load_image">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">random_phase</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">std</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">distribution</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;uniform&#39;</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load image as amplitude pattern with optional random phase.</span>
 
@@ -1302,7 +1302,7 @@
 
 
 <div class="viewcode-block" id="Light.visualize">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.visualize">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.visualize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">uniform_scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
                  <span class="n">vmin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">vmax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">fix_noise</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">amp_threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1407,7 +1407,7 @@
 
 
 <div class="viewcode-block" id="Light.visualize_image">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.visualize_image">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.visualize_image">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualize_image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualize amplitude, phase, and intensity as RGB images.</span>
 
@@ -1475,7 +1475,7 @@
 
         
 <div class="viewcode-block" id="Light.shape">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.shape">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.shape">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return shape of light wavefront.</span>
 
@@ -1489,7 +1489,7 @@
 
 
 <div class="viewcode-block" id="Light.load">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.Light.html#pado.light.Light.load">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.Light.load">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load light field from file.</span>
 <span class="sd">        </span>
@@ -1532,7 +1532,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PolarizedLight</span><span class="p">(</span><span class="n">Light</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Light wave with polarized complex field wavefront.</span>
 <span class="sd">    </span>
@@ -1541,7 +1541,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PolarizedLight.__init__">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.__init__">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wvl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
                  <span class="n">fieldX</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fieldY</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
                  <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;cuda:0&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1599,7 +1599,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.clone">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.clone">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.clone">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;PolarizedLight&#39;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create deep copy of polarized light instance.</span>
 
@@ -1613,7 +1613,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.crop">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.crop">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.crop">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">crop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">crop_width</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Crop light wavefront.</span>
 
@@ -1630,7 +1630,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_amplitude">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_amplitude">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_amplitude">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return total amplitude of polarized field.</span>
 <span class="sd">        </span>
@@ -1641,7 +1641,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_amplitudeX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_amplitudeX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_amplitudeX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_amplitudeX</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return amplitude of X-polarized field.</span>
 <span class="sd">        </span>
@@ -1652,7 +1652,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_amplitudeY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_amplitudeY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_amplitudeY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_amplitudeY</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return amplitude of Y-polarized field.</span>
 <span class="sd">        </span>
@@ -1663,7 +1663,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_field">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_field">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_field">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return complex field.</span>
 
@@ -1679,7 +1679,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_fieldX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_fieldX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_fieldX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_fieldX</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return X-polarized field component.</span>
 
@@ -1693,7 +1693,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_fieldY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_fieldY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_fieldY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_fieldY</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return Y-polarized field component.</span>
 
@@ -1707,7 +1707,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_imag">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_imag">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_imag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_imag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get imaginary part of field for both components.</span>
 
@@ -1723,7 +1723,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_intensity">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_intensity">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_intensity">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_intensity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return total intensity of polarized field.</span>
 <span class="sd">        </span>
@@ -1734,7 +1734,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_intensityX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_intensityX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_intensityX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_intensityX</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return intensity of X-polarized field.</span>
 <span class="sd">        </span>
@@ -1745,7 +1745,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_intensityY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_intensityY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_intensityY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_intensityY</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return intensity of Y-polarized field.</span>
 <span class="sd">        </span>
@@ -1756,7 +1756,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_lightX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_lightX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_lightX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_lightX</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Light</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return X-polarized Light instance.</span>
 
@@ -1770,7 +1770,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_lightY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_lightY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_lightY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_lightY</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Light</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return Y-polarized Light instance.</span>
 
@@ -1784,7 +1784,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_phase">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_phase">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_phase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return phase of field.</span>
 
@@ -1800,7 +1800,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_phaseX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_phaseX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_phaseX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_phaseX</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return phase of X-polarized field.</span>
 <span class="sd">        </span>
@@ -1811,7 +1811,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_phaseY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_phaseY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_phaseY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_phaseY</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return phase of Y-polarized field.</span>
 <span class="sd">        </span>
@@ -1822,7 +1822,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.get_real">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.get_real">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.get_real">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_real</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get real part of field for both components.</span>
 
@@ -1838,7 +1838,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.magnify">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.magnify">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.magnify">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">magnify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">interp_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Change wavefront resolution without changing pixel pitch.</span>
 
@@ -1855,7 +1855,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.pad">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.pad">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.pad">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">pad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">padval</span><span class="p">:</span> <span class="nb">complex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Pad light field.</span>
 <span class="sd">        </span>
@@ -1872,7 +1872,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.resize">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.resize">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.resize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">resize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pitch</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">interp_mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;nearest&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resize light field to match new pixel pitch.</span>
 <span class="sd">        </span>
@@ -1890,7 +1890,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_amplitude">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_amplitude">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_amplitude">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_amplitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set amplitude for both X and Y components.</span>
 
@@ -1911,7 +1911,7 @@
 
     
 <div class="viewcode-block" id="PolarizedLight.set_amplitudeX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_amplitudeX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_amplitudeX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_amplitudeX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set amplitude for X component.</span>
 
@@ -1931,7 +1931,7 @@
 
     
 <div class="viewcode-block" id="PolarizedLight.set_amplitudeY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_amplitudeY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_amplitudeY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_amplitudeY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">amplitude</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set amplitude for Y component.</span>
 
@@ -1951,7 +1951,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_field">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_field">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_field">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set both X and Y field components.</span>
 
@@ -1980,7 +1980,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_fieldX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_fieldX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_fieldX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_fieldX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set X-polarized field.</span>
 
@@ -2001,7 +2001,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_fieldY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_fieldY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_fieldY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_fieldY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set Y-polarized field.</span>
 
@@ -2022,7 +2022,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_imag">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_imag">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_imag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_imag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imag</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set imaginary part for both X and Y components.</span>
 
@@ -2043,7 +2043,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_imagX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_imagX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_imagX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_imagX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imag</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set imaginary part of X-polarized field.</span>
 
@@ -2057,7 +2057,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_imagY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_imagY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_imagY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_imagY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imag</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set imaginary part of Y-polarized field.</span>
 
@@ -2071,7 +2071,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_lightX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_lightX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_lightX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_lightX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">light</span><span class="p">:</span> <span class="n">Light</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set X-polarized Light instance.</span>
 
@@ -2085,7 +2085,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_lightY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_lightY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_lightY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_lightY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">light</span><span class="p">:</span> <span class="n">Light</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set Y-polarized Light instance.</span>
 
@@ -2099,7 +2099,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_phase">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_phase">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_phase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set phase for both X and Y components.</span>
 
@@ -2120,7 +2120,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_phaseX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_phaseX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_phaseX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_phaseX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set phase of X-polarized field.</span>
 
@@ -2134,7 +2134,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_phaseY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_phaseY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_phaseY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_phaseY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set phase of Y-polarized field.</span>
 
@@ -2148,7 +2148,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_pitch">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_pitch">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_pitch">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_pitch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pitch</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set pixel pitch.</span>
 <span class="sd">        </span>
@@ -2163,7 +2163,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_plane_light">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_plane_light">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_plane_light">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_plane_light</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set plane wave with unit amplitude and zero phase.</span>
 
@@ -2175,7 +2175,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_real">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_real">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_real">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_real</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set real part for both X and Y components.</span>
 
@@ -2196,7 +2196,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_realX">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_realX">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_realX">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_realX</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set real part of X-polarized field.</span>
 
@@ -2210,7 +2210,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_realY">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_realY">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_realY">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_realY</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set real part of Y-polarized field.</span>
 
@@ -2224,7 +2224,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.set_spherical_light">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.set_spherical_light">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.set_spherical_light">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_spherical_light</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dy</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set spherical wavefront from point source.</span>
 
@@ -2241,7 +2241,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.shape">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.shape">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.shape">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">shape</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return shape of light wavefront.</span>
 
@@ -2255,7 +2255,7 @@
 
 
 <div class="viewcode-block" id="PolarizedLight.visualize">
-<a class="viewcode-back" href="../../api/_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight.visualize">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.light.PolarizedLight.visualize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualize polarized light components.</span>
 
@@ -2399,7 +2399,7 @@
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

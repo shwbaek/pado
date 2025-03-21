@@ -3,9 +3,18 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="pado.propagator.Propagator" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="api/_autosummary/pado.propagator.Propagator.html" />
+<meta property="og:site_name" content="PADO Documentation" />
+<meta property="og:image:width" content="1146" />
+<meta property="og:image:height" content="600" />
+<meta property="og:image" content="/_images/social_previews/summary_api__autosummary_pado.propagator.Propagator_26271b16.png" />
+<meta property="og:image:alt" content="" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="pado.propagator.compute_pad_width" href="pado.propagator.compute_pad_width.html" /><link rel="prev" title="Light Propagation" href="../propagator.html" />
 
-    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>pado.propagator.Propagator - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
@@ -355,7 +364,7 @@ Support complex field calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Incident light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Incident light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters for off-axis propagation</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag for linear convolution (with padding) or circular convolution (no padding)</p></li>
@@ -371,7 +380,7 @@ Support complex field calculations.</p>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -408,7 +417,7 @@ Support complex field calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters for off-axis propagation</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
@@ -424,7 +433,7 @@ Support complex field calculations.</p>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -439,7 +448,7 @@ affect the output pixel pitch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
 </ul>
@@ -448,7 +457,7 @@ affect the output pixel pitch.</p>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -462,7 +471,7 @@ Valid when z &gt;&gt; (x² + y²)_max/λ.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
 </ul>
@@ -471,7 +480,7 @@ Valid when z &gt;&gt; (x² + y²)_max/λ.</p>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -485,7 +494,7 @@ or padding. Used for basic Fourier transform of the input field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Not used in this method</p></li>
 </ul>
 </dd>
@@ -493,7 +502,7 @@ or padding. Used for basic Fourier transform of the input field.</p>
 <dd class="field-even"><p>FFT of input field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -507,7 +516,7 @@ depending on the scaling factor b and offset requirements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution</p></li>
@@ -519,7 +528,7 @@ depending on the scaling factor b and offset requirements.</p>
 <dd class="field-even"><p>Propagated light field using selected ASM method</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -533,7 +542,7 @@ Support multi-wavelength channels and linear/circular convolution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
@@ -543,7 +552,7 @@ Support multi-wavelength channels and linear/circular convolution.</p>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -557,7 +566,7 @@ off-axis propagation. Based on Matsushima’s method.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – offset (y, x) between source and target plane in meters for off-axis propagation</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
@@ -567,7 +576,7 @@ off-axis propagation. Based on Matsushima’s method.</p>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 <div class="admonition-references admonition">
@@ -590,7 +599,7 @@ for far-field and focal analysis,” Opt. Continuum 3, 935-947 (2024)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scaling factor for observation plane (b&gt;1)</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
@@ -600,7 +609,7 @@ for far-field and focal analysis,” Opt. Continuum 3, 935-947 (2024)</p>
 <dd class="field-even"><p>Propagated light field with scaled observation plane</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 <div class="admonition-references admonition">
@@ -621,7 +630,7 @@ multi-wavelength channels and linear/circular convolution.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scaling factor (b&lt;1 for focusing to smaller plane)</p></li>
 <li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
@@ -631,7 +640,7 @@ multi-wavelength channels and linear/circular convolution.</p>
 <dd class="field-even"><p>Propagated light field at focusing plane</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -645,7 +654,7 @@ but accurate for both near and far field. Support arbitrary target plane geometr
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates of target plane points</p></li>
 <li><p><strong>sampling_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Spatial sampling ratio for computation (&gt;1 for faster calculation)</p></li>
@@ -657,7 +666,7 @@ but accurate for both near and far field. Support arbitrary target plane geometr
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -669,7 +678,7 @@ but accurate for both near and far field. Support arbitrary target plane geometr
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
 <li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
 <li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates of target plane points</p></li>
 <li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – How many steps to divide computation into to manage memory usage</p></li>
@@ -679,7 +688,7 @@ but accurate for both near and far field. Support arbitrary target plane geometr
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -772,7 +781,7 @@ but accurate for both near and far field. Support arbitrary target plane geometr
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>

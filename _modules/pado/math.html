@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <!-- Generated with Sphinx 7.4.7 and Furo 2024.08.06 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>pado.math - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
@@ -341,7 +341,7 @@
 <span class="n">ns</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
 <div class="viewcode-block" id="wrap_phase">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.wrap_phase.html#pado.math.wrap_phase">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.wrap_phase">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">wrap_phase</span><span class="p">(</span><span class="n">phase_u</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">stay_positive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap phase values to [-π, π] or [0, 2π] range.</span>
 
@@ -364,7 +364,7 @@
 
 
 <div class="viewcode-block" id="fft">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.fft.html#pado.math.fft">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.fft">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">fft</span><span class="p">(</span><span class="n">arr_c</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">normalized</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;backward&quot;</span><span class="p">,</span> 
         <span class="n">pad_width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
         <span class="n">padval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
@@ -397,7 +397,7 @@
 
 
 <div class="viewcode-block" id="ifft">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.ifft.html#pado.math.ifft">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.ifft">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">ifft</span><span class="p">(</span><span class="n">arr_c</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">normalized</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;backward&quot;</span><span class="p">,</span> 
          <span class="n">pad_width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
          <span class="n">shift</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
@@ -431,7 +431,7 @@
 
 
 <div class="viewcode-block" id="calculate_psnr">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.calculate_psnr.html#pado.math.calculate_psnr">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.calculate_psnr">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_psnr</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">data_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Peak Signal-to-Noise Ratio between multi-channel tensors.</span>
 
@@ -474,7 +474,7 @@
 
 
 <div class="viewcode-block" id="calculate_ssim">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.calculate_ssim.html#pado.math.calculate_ssim">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.calculate_ssim">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_ssim</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> 
                   <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span> 
                   <span class="n">sigma</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
@@ -532,7 +532,7 @@
 
 
 <div class="viewcode-block" id="gaussian_window">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.gaussian_window.html#pado.math.gaussian_window">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.gaussian_window">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">gaussian_window</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create normalized 2D Gaussian window.</span>
 
@@ -556,7 +556,7 @@
 <span class="c1"># Additional Helper Functions for Sc-ASM(Scaled Angular Spectrum Method)</span>
 <span class="c1">##########################</span>
 <div class="viewcode-block" id="sc_dft_1d">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_dft_1d.html#pado.math.sc_dft_1d">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_dft_1d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_dft_1d</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute 1D scaled DFT for optical field propagation.</span>
 
@@ -600,7 +600,7 @@
 
 
 <div class="viewcode-block" id="sc_idft_1d">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_idft_1d.html#pado.math.sc_idft_1d">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_idft_1d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_idft_1d</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute 1D scaled inverse DFT for optical field reconstruction.</span>
 
@@ -643,7 +643,7 @@
 
 
 <div class="viewcode-block" id="sc_dft_2d">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_dft_2d.html#pado.math.sc_dft_2d">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_dft_2d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_dft_2d</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Mx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">My</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
              <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
              <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
@@ -674,7 +674,7 @@
 
 
 <div class="viewcode-block" id="sc_idft_2d">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_idft_2d.html#pado.math.sc_idft_2d">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_idft_2d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_idft_2d</span><span class="p">(</span><span class="n">U</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Mx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">My</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
               <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
               <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
@@ -705,7 +705,7 @@
 
 
 <div class="viewcode-block" id="compute_scasm_transfer_function">
-<a class="viewcode-back" href="../../api/_autosummary/pado.math.compute_scasm_transfer_function.html#pado.math.compute_scasm_transfer_function">[docs]</a>
+<a class="viewcode-back" href="../../api/pado.html#pado.math.compute_scasm_transfer_function">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_scasm_transfer_function</span><span class="p">(</span><span class="n">Mx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">My</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
                                    <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
                                    <span class="n">λ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
@@ -766,7 +766,7 @@
     </aside>
   </div>
 </div><script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
