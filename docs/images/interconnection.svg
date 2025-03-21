@@ -52,7 +52,7 @@
     <text x="300" y="250" font-family="Arial" font-size="12" fill="#2c5282" text-anchor="middle">Transform</text>
     
     <text x="500" y="160" font-family="Arial" font-size="12" fill="#2c5282" text-anchor="middle">Forward</text>
-    <text x="500" y="250" font-family="Arial" font-size="12" fill="#2c5282" text-anchor="middle">Propagated</text>
+    <text x="500" y="250" font-family="Arial" font-size="12" fill="#2c5282" text-anchor="middle">Propagate</text>
     
     <!-- Arrowhead marker definition -->
     <defs>
