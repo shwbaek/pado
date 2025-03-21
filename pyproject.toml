@@ -17,7 +17,7 @@ authors = [
     { name = "Gawoon Ban" },
     { name = "Hyunmo Kang" }
 ]
-requires-python = ">=3.6"
+requires-python = ">=3.9"
 dependencies = [
     "torch>=1.10.0",
     "numpy>=1.16.0",

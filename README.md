@@ -6,14 +6,14 @@
 <h3 align="center">Pytorch Automatic Differentiable Optics</h3>
 
 <p align="center">
-  <a href="#%EF%B8%8F-installation">⚙️ Installation</a> •
+  <a href="https://shwbaek.github.io/pado">📚 Documentation</a>•
   <a href="#-quickstart">🚀 Quickstart</a> •
   <a href="#-features">✨ Features</a> •
-  <a href="https://shwbaek.github.io/pado">📚 Documentation</a> •
+  <a href="#%EF%B8%8F-installation">⚙️ Installation</a> •
   <a href="#-license">📄 License</a>
 </p>
 <p align="center">
-  <img alt="Python Version" src="https://img.shields.io/badge/python-3.7%2B-3776AB?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="Python Version" src="https://img.shields.io/badge/python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white">
   <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-1.10.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white">
   <img alt="NumPy" src="https://img.shields.io/badge/NumPy-1.16.0%2B-013243?style=for-the-badge&logo=numpy&logoColor=white">
   <img alt="Matplotlib" src="https://img.shields.io/badge/Matplotlib-3.3.0%2B-FF5733?style=for-the-badge&logo=matplotlib&logoColor=white">
