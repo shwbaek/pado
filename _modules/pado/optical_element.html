@@ -295,7 +295,7 @@
 <span class="c1"># The MIT License (MIT)</span>
 <span class="c1">#</span>
 <span class="c1"># PADO (Pytorch Automatic Differentiable Optics)</span>
-<span class="c1"># Copyright (c) 2025 by POSTECH Computer Graphics Lab</span>
+<span class="c1"># Copyright (c) 2023 by POSTECH Computer Graphics Lab</span>
 <span class="c1">#</span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
 <span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
@@ -565,13 +565,16 @@
 <span class="sd">            &gt;&gt;&gt; element.pad((10,10,10,10))  # Add 10 pixels padding on all sides</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">padval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">)</span>
+            <span class="c1"># Create a new padded tensor instead of modifying in-place</span>
+            <span class="n">padded_field_change</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">padded_field_change</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;only zero padding supported&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span></div>
+        <span class="c1"># Create a new dim tuple instead of modifying in-place</span>
+        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">new_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">new_dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">new_dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_dim</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="OpticalElement.resize">
@@ -590,10 +593,14 @@
 <span class="sd">            &gt;&gt;&gt; element.resize(1e-6)  # Resize to 1μm pitch</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">scale_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">/</span> <span class="n">target_pitch</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="n">scale_factor</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">interp_mode</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="c1"># Create a new interpolated tensor instead of modifying in-place</span>
+        <span class="n">resized_field_change</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="n">scale_factor</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">interp_mode</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">resized_field_change</span>
+        
+        <span class="c1"># Create a new dim tuple instead of modifying in-place</span>
+        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">new_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">new_dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">resized_field_change</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">resized_field_change</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_dim</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_pitch</span><span class="p">(</span><span class="n">target_pitch</span><span class="p">)</span></div>
 
 
@@ -613,10 +620,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+            <span class="c1"># Create a new field change tensor instead of modifying in-place</span>
+            <span class="n">new_field_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+            <span class="n">new_field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">new_field_change</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">angle</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span></div>
+            <span class="c1"># Create a completely new tensor</span>
+            <span class="n">new_field_change</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">new_field_change</span></div>
 
 
 <div class="viewcode-block" id="OpticalElement.set_field_change">
@@ -634,10 +646,16 @@
 <span class="sd">            &gt;&gt;&gt; element.set_field_change(field)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_change</span>
+            <span class="c1"># Create a clone to avoid in-place modification</span>
+            <span class="n">new_field_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+            <span class="n">new_field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_change</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">new_field_change</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Create a new tensor for all channels</span>
+            <span class="n">new_field_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">chan</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">chan</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_change</span></div>
+                <span class="n">new_field_change</span><span class="p">[:,</span> <span class="n">chan</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">field_change</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">new_field_change</span></div>
 
 
 <div class="viewcode-block" id="OpticalElement.set_name">
@@ -667,11 +685,17 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+            <span class="c1"># Create a clone to avoid in-place modification</span>
+            <span class="n">new_field_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+            <span class="n">new_field_change</span><span class="p">[:,</span> <span class="n">c</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">new_field_change</span>
         <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Create a new tensor for all channels</span>
+            <span class="n">new_field_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">chan</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
                 <span class="n">amplitude</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">chan</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span><span class="p">[:,</span> <span class="n">chan</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span></div>
+                <span class="n">new_field_change</span><span class="p">[:,</span> <span class="n">chan</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">field_change</span> <span class="o">=</span> <span class="n">new_field_change</span></div>
 
 
 <div class="viewcode-block" id="OpticalElement.set_pitch">
@@ -985,7 +1009,7 @@
 
 <span class="sd">    Note that phase to height mapping is not one-to-one.</span>
 <span class="sd">    There exists an integer phase wrapping factor:</span>
-<span class="sd">    height = wvl/(RI-1) * (phase_u + i*2π), where i is integer</span>
+<span class="sd">        height = wvl/(RI-1) * (phase_u + i*2π), where i is integer</span>
 <span class="sd">    This function uses minimum height minh to constrain the conversion.</span>
 <span class="sd">    Minimal height is chosen such that height is always &gt;= minh.</span>
 
@@ -1128,14 +1152,16 @@
         <span class="n">slit_num_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">slit_width_px</span><span class="p">)</span>
         <span class="n">slit_num_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">slit_width_px</span><span class="p">)</span>
 
-        <span class="n">dg</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">minh</span>
+        <span class="c1"># Create a copy to avoid modifying in-place</span>
+        <span class="n">dg_copy</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">dg_copy</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">minh</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">slit_num_c</span><span class="p">)):</span>
             <span class="n">minc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">slit_width_px</span> <span class="o">+</span> <span class="n">slit_space_px</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
             <span class="n">maxc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minc</span> <span class="o">+</span> <span class="n">slit_width_px</span><span class="p">)</span>
 
-            <span class="n">dg</span><span class="p">[:,</span> <span class="n">minc</span><span class="p">:</span><span class="n">maxc</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxh</span>
-        <span class="n">pc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">dg</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">dg_copy</span><span class="p">[:,</span> <span class="n">minc</span><span class="p">:</span><span class="n">maxc</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxh</span>
+        <span class="n">pc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">dg_copy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_phase_change</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">pc</span><span class="p">)</span></div>
 
 
@@ -1163,7 +1189,9 @@
         <span class="n">slit_num_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">slit_width_px</span><span class="p">)</span>
         <span class="n">slit_num_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">//</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">slit_width_px</span><span class="p">)</span>
 
-        <span class="n">dg</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">minh</span>
+        <span class="c1"># Create a copy to avoid modifying in-place</span>
+        <span class="n">dg_copy</span> <span class="o">=</span> <span class="n">dg</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">dg_copy</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">minh</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">slit_num_r</span><span class="p">)):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">slit_num_c</span><span class="p">)):</span>
@@ -1172,9 +1200,9 @@
                 <span class="n">minr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">slit_width_px</span> <span class="o">+</span> <span class="n">slit_space_px</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span>
                 <span class="n">maxr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">minr</span> <span class="o">+</span> <span class="n">slit_width_px</span><span class="p">)</span>
 
-                <span class="n">dg</span><span class="p">[</span><span class="n">minr</span><span class="p">:</span><span class="n">maxr</span><span class="p">,</span> <span class="n">minc</span><span class="p">:</span><span class="n">maxc</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxh</span>
+                <span class="n">dg_copy</span><span class="p">[</span><span class="n">minr</span><span class="p">:</span><span class="n">maxr</span><span class="p">,</span> <span class="n">minc</span><span class="p">:</span><span class="n">maxc</span><span class="p">]</span> <span class="o">=</span> <span class="n">maxh</span>
 
-        <span class="n">pc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">dg</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">dg_copy</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_phase_change</span><span class="p">(</span><span class="n">pc</span><span class="p">)</span></div>
 
 
@@ -1265,7 +1293,46 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">set_phase_change</span><span class="p">(</span><span class="n">fresnel_phase</span><span class="p">,</span> <span class="n">sync_height</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
+    
+<div class="viewcode-block" id="DOE.change_wvl">
+<a class="viewcode-back" href="../../api/pado.html#pado.optical_element.DOE.change_wvl">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">change_wvl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wvl</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change the wavelength and update phase change.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            wvl (float): New wavelength in meters</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; doe = DOE((1,1,100,100), 2e-6, material, 500e-9, &#39;cpu&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; doe.change_wvl(633e-9)  # Change to 633nm wavelength</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
+        <span class="c1"># Store the new wavelength</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span> <span class="o">=</span> <span class="n">wvl</span>
+        <span class="c1"># Calculate the phase change for the new wavelength</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">height2phase</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">get_RI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wvl</span><span class="p">))</span>
+        <span class="c1"># Create a new field change tensor</span>
+        <span class="n">new_field_change</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_field_change</span><span class="p">(</span><span class="n">new_field_change</span><span class="p">,</span> <span class="n">sync_height</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_height</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">sync_phase</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the height map of the DOE.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            height (torch.Tensor): Height map in meters</span>
+<span class="sd">            sync_phase (bool): If True, syncs phase profile</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; doe = DOE((1,1,100,100), 2e-6, material, 500e-9, &#39;cpu&#39;)</span>
+<span class="sd">            &gt;&gt;&gt; height = torch.ones((1,1,100,100)) * 500e-9</span>
+<span class="sd">            &gt;&gt;&gt; doe.set_height(height, sync_phase=True)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Store a copy of the height tensor to avoid potential shared memory with input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span> <span class="k">if</span> <span class="n">height</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">sync_phase</span><span class="p">:</span>  
+            <span class="bp">self</span><span class="o">.</span><span class="n">sync_phase_with_height</span><span class="p">()</span>
+            
 <div class="viewcode-block" id="DOE.sync_height_with_phase">
 <a class="viewcode-back" href="../../api/pado.html#pado.optical_element.DOE.sync_height_with_phase">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">sync_height_with_phase</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -1325,25 +1392,6 @@
 <span class="sd">            &gt;&gt;&gt; height = doe.get_height()  # Get current height profile</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span></div>
-
-    
-<div class="viewcode-block" id="DOE.change_wvl">
-<a class="viewcode-back" href="../../api/pado.html#pado.optical_element.DOE.change_wvl">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">change_wvl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wvl</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Change the wavelength and update phase change.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            wvl (float): New wavelength in meters</span>
-
-<span class="sd">        Examples:</span>
-<span class="sd">            &gt;&gt;&gt; doe = DOE((1,1,100,100), 2e-6, material, 500e-9, &#39;cpu&#39;)</span>
-<span class="sd">            &gt;&gt;&gt; doe.change_wvl(633e-9)  # Change to 633nm wavelength</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">height</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span> <span class="o">=</span> <span class="n">wvl</span>
-        <span class="n">phase</span> <span class="o">=</span> <span class="n">height2phase</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">material</span><span class="o">.</span><span class="n">get_RI</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">wvl</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_field_change</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">phase</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">),</span> <span class="n">sync_height</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_phase_change</span></div>
 
     
 <div class="viewcode-block" id="DOE.set_phase_change">
@@ -1556,8 +1604,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span> <span class="o">=</span> <span class="n">wvl</span>
         <span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_amplitude_change</span><span class="p">()</span>
-        <span class="n">amp</span><span class="p">[:,:,:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_amplitude_change</span><span class="p">(</span><span class="n">amp</span><span class="p">)</span></div>
+        <span class="c1"># Create new tensor instead of modifying in-place</span>
+        <span class="n">new_amp</span> <span class="o">=</span> <span class="n">amp</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">new_amp</span><span class="p">[:,:,:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_amplitude_change</span><span class="p">(</span><span class="n">new_amp</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PolarizedSLM.set_amplitudeY_change">
@@ -1575,8 +1625,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span> <span class="o">=</span> <span class="n">wvl</span>
         <span class="n">amp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_amplitude_change</span><span class="p">()</span>
-        <span class="n">amp</span><span class="p">[:,:,:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_amplitude_change</span><span class="p">(</span><span class="n">amp</span><span class="p">)</span></div>
+        <span class="c1"># Create new tensor instead of modifying in-place</span>
+        <span class="n">new_amp</span> <span class="o">=</span> <span class="n">amp</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">new_amp</span><span class="p">[:,:,:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">amplitude</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_amplitude_change</span><span class="p">(</span><span class="n">new_amp</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PolarizedSLM.set_phaseX_change">
@@ -1594,8 +1646,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span> <span class="o">=</span> <span class="n">wvl</span>
         <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_phase_change</span><span class="p">()</span>
-        <span class="n">phase</span><span class="p">[:,:,:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_change</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_phase_change</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span></div>
+        <span class="c1"># Create new tensor instead of modifying in-place</span>
+        <span class="n">new_phase</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">new_phase</span><span class="p">[:,:,:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_change</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_phase_change</span><span class="p">(</span><span class="n">new_phase</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PolarizedSLM.set_phaseY_change">
@@ -1613,8 +1667,10 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wvl</span> <span class="o">=</span> <span class="n">wvl</span>
         <span class="n">phase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_phase_change</span><span class="p">()</span>
-        <span class="n">phase</span><span class="p">[:,:,:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_change</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_phase_change</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span></div>
+        <span class="c1"># Create new tensor instead of modifying in-place</span>
+        <span class="n">new_phase</span> <span class="o">=</span> <span class="n">phase</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+        <span class="n">new_phase</span><span class="p">[:,:,:,:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">phase_change</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">set_phase_change</span><span class="p">(</span><span class="n">new_phase</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PolarizedSLM.get_phase_changeX">
@@ -1732,7 +1788,7 @@
         <span class="c1"># Apply phase modulation with proper shape handling</span>
         <span class="n">phase</span> <span class="o">=</span> <span class="p">(</span><span class="n">light_phase</span> <span class="o">+</span> <span class="n">phase_change</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
         
-        <span class="c1"># Set the modulated phase and amplitude for each polarization component</span>
+        <span class="c1"># Set the modulated phase and amplitude for each polarization component - non-modifying operations</span>
         <span class="n">light</span><span class="o">.</span><span class="n">set_phaseX</span><span class="p">(</span><span class="n">phase</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">light</span><span class="o">.</span><span class="n">set_phaseY</span><span class="p">(</span><span class="n">phase</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
         <span class="n">light</span><span class="o">.</span><span class="n">set_amplitudeX</span><span class="p">(</span><span class="n">light</span><span class="o">.</span><span class="n">get_amplitudeX</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_amplitude_change</span><span class="p">()[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
@@ -1754,15 +1810,25 @@
 <span class="sd">            &gt;&gt;&gt; slm.pad((16,16,16,16))  # Add 16 pixels padding on all sides</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">padval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">amplitude_change</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_amplitude_change</span><span class="p">(),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">phase_change</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_phase_change</span><span class="p">(),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="c1"># Create new padded tensors instead of modifying in-place</span>
+            <span class="n">padded_amplitude</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_amplitude_change</span><span class="p">(),</span> 
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">)</span>
+            <span class="n">padded_phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">get_phase_change</span><span class="p">(),</span> 
+                <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">amplitude_change</span> <span class="o">=</span> <span class="n">padded_amplitude</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">phase_change</span> <span class="o">=</span> <span class="n">padded_phase</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s1">&#39;only zero padding supported&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span></div>
+        <span class="c1"># Create a new dim tuple instead of modifying in-place</span>
+        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">)</span>
+        <span class="n">new_dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">new_dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+=</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">new_dim</span><span class="p">)</span></div>
 
         
 <div class="viewcode-block" id="PolarizedSLM.visualize">
@@ -1870,8 +1936,9 @@
 
         <span class="n">max_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture_diameter</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">amp</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="n">max_val</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">amp</span><span class="p">[</span><span class="n">amp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span>  <span class="c1"># to enable stable learning</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_field_change</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span></div>
+        <span class="n">amp_copy</span> <span class="o">=</span> <span class="n">amp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Make a copy to avoid modifying the array in-place</span>
+        <span class="n">amp_copy</span><span class="p">[</span><span class="n">amp_copy</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_field_change</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">amp_copy</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Aperture.set_circle">
@@ -1892,8 +1959,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">dim</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="n">r2</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">cx</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">cy</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
-        <span class="n">r2</span><span class="p">[</span><span class="n">r2</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span>
-        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r2</span><span class="p">)</span>
+        <span class="n">r2_copy</span> <span class="o">=</span> <span class="n">r2</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">r2_copy</span><span class="p">[</span><span class="n">r2_copy</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">r2_copy</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="n">dia</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -1901,8 +1969,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">aperture_shape</span> <span class="o">=</span> <span class="s1">&#39;circle&#39;</span>
         <span class="n">max_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aperture_diameter</span> <span class="o">/</span> <span class="mi">2</span>
         <span class="n">amp</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span> <span class="o">&lt;=</span> <span class="n">max_val</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="n">amp</span><span class="p">[</span><span class="n">amp</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_field_change</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">amp</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span></div>
+        <span class="n">amp_copy</span> <span class="o">=</span> <span class="n">amp</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Make a copy to avoid modifying the array in-place</span>
+        <span class="n">amp_copy</span><span class="p">[</span><span class="n">amp_copy</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_field_change</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">amp_copy</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">))</span></div>
 </div>
 
 
@@ -1946,8 +2015,16 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>    
             <span class="n">levelized</span> <span class="o">=</span> <span class="p">(</span><span class="n">normalized</span> <span class="o">*</span> <span class="n">levels</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">levels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">levelized</span> <span class="o">*</span> <span class="p">(</span><span class="n">vmax</span> <span class="o">-</span> <span class="n">vmin</span><span class="p">)</span> <span class="o">+</span> <span class="n">vmin</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">result</span> <span class="o">&lt;</span> <span class="n">vmin</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmin</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">result</span> <span class="o">&gt;</span> <span class="n">vmax</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmax</span>
+        
+        <span class="c1"># Create a copy to ensure no in-place operations</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">result_copy</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">result_copy</span><span class="p">[</span><span class="n">result_copy</span> <span class="o">&lt;</span> <span class="n">vmin</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmin</span>
+            <span class="n">result_copy</span><span class="p">[</span><span class="n">result_copy</span> <span class="o">&gt;</span> <span class="n">vmax</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmax</span>
+            <span class="k">return</span> <span class="n">result_copy</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># torch.Tensor</span>
+            <span class="c1"># For tensors, we use clamp which returns a new tensor</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span>
     
     <span class="k">elif</span> <span class="n">include_vmax</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="n">space</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">/</span><span class="n">levels</span>
@@ -1955,12 +2032,15 @@
         <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmin</span> <span class="o">+</span> <span class="n">space</span><span class="o">*</span><span class="p">(</span><span class="n">levels</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">vmin</span><span class="p">)</span><span class="o">/</span><span class="n">space</span><span class="p">))</span><span class="o">*</span><span class="n">space</span> <span class="o">+</span> <span class="n">vmin</span>
+            <span class="c1"># Create a copy to ensure no in-place operations</span>
+            <span class="n">result_copy</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">result_copy</span><span class="p">[</span><span class="n">result_copy</span> <span class="o">&lt;</span> <span class="n">vmin</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmin</span>
+            <span class="n">result_copy</span><span class="p">[</span><span class="n">result_copy</span> <span class="o">&gt;</span> <span class="n">vmax</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmax</span>
+            <span class="k">return</span> <span class="n">result_copy</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>    
             <span class="n">result</span> <span class="o">=</span> <span class="p">(((</span><span class="n">x</span><span class="o">-</span><span class="n">vmin</span><span class="p">)</span><span class="o">/</span><span class="n">space</span><span class="p">)</span><span class="o">.</span><span class="n">floor</span><span class="p">())</span><span class="o">*</span><span class="n">space</span> <span class="o">+</span> <span class="n">vmin</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">&lt;</span><span class="n">vmin</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmin</span>
-        <span class="n">result</span><span class="p">[</span><span class="n">result</span><span class="o">&gt;</span><span class="n">vmax</span><span class="p">]</span> <span class="o">=</span> <span class="n">vmax</span>
-    
-    <span class="k">return</span> <span class="n">result</span></div>
+            <span class="c1"># For tensors, we use clamp which returns a new tensor</span>
+            <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="n">vmin</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="n">vmax</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
