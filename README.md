@@ -16,13 +16,15 @@ build appropriate to your CPU or CUDA system, then install PADO. NumPy array/NPY
 operations, plotting and MAT files have optional dependencies:
 
 ```bash
-pip install "pado-optics==1.1.0"
-pip install "pado-optics[array,viz,mat]==1.1.0"  # optional APIs
+python -m pip install "https://github.com/shwbaek/pado/releases/download/1.1.0/pado_optics-1.1.0-py3-none-any.whl"
+python -m pip install "pado-optics[array,viz,mat] @ https://github.com/shwbaek/pado/releases/download/1.1.0/pado_optics-1.1.0-py3-none-any.whl"  # optional APIs
 ```
 
 The core dependency is PyTorch. Optional extras are `array` (NumPy), `viz`
 (Matplotlib) and `mat` (SciPy). These packages are still needed when their
 corresponding APIs are used.
+PyPI publication is separate; an unpinned PyPI install may still select an
+earlier release.
 
 ## Minimal differentiable propagation
 
