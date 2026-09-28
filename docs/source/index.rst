@@ -67,6 +67,7 @@
    :maxdepth: 2
 
    installation
+   migration
    api/index
    examples/index
    license

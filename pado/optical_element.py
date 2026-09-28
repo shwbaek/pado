@@ -28,17 +28,32 @@
 #
 ########################################################
 
-import numpy as np
-import matplotlib.pyplot as plt
-from typing import Tuple, Optional, Union, List
+import math as _math
+from numbers import Integral as _Integral
+from typing import Tuple, Optional, Union, List, TYPE_CHECKING as _TYPE_CHECKING, Any as _Any
 
 import torch
 import torch.nn.functional as F
 
 from .math import wrap_phase
 from .math import nm, um, mm, cm, m
-from .light import Light
+from .light import Light, _channel_wavelengths, _scalar_parameter
 from .material import Material
+
+if _TYPE_CHECKING:
+    from numpy import ndarray as _NDArray
+else:
+    _NDArray = _Any
+
+
+def _wavelengths_match(light, element):
+    """Compare scalar/channel metadata without ambiguous tensor truth values."""
+    if isinstance(light.wvl, (int, float)) and isinstance(element.wvl, (int, float)):
+        return light.wvl == element.wvl
+    channels = max(light.dim[1], element.dim[1])
+    left = _channel_wavelengths(light.wvl, light.dim[1], light.device).expand(channels)
+    right = _channel_wavelengths(element.wvl, element.dim[1], light.device).expand(channels)
+    return torch.equal(left, right)
 
 
 class OpticalElement:
@@ -75,6 +90,26 @@ class OpticalElement:
         self.wvl = wvl
         self.polar = polar
 
+    def _match_pitch(self, light, interp_mode):
+        """Resample the coarser field onto the finer pitch."""
+        if light.pitch > self.pitch:
+            light.resize(self.pitch, interp_mode)
+            light.set_pitch(self.pitch)
+        elif light.pitch < self.pitch:
+            self.resize(light.pitch, interp_mode)
+            self.set_pitch(light.pitch)
+
+    def _match_spatial_shape(self, light):
+        """Pad rows then columns, aligning each floor(size/2) optical origin."""
+        for axis in (2, 3):
+            if light.dim[axis] == self.dim[axis]:
+                continue
+            smaller, larger = (light, self) if light.dim[axis] < self.dim[axis] else (self, light)
+            leading = larger.dim[axis]//2 - smaller.dim[axis]//2
+            trailing = larger.dim[axis] - smaller.dim[axis] - leading
+            padding = (0, 0, leading, trailing) if axis == 2 else (leading, trailing, 0, 0)
+            smaller.pad(padding)
+
     def forward(self, light: 'Light', interp_mode: str = 'nearest') -> 'Light':
         """Propagate incident light through the optical element.
 
@@ -90,12 +125,7 @@ class OpticalElement:
             >>> light = Light(dim=(1, 1, 64, 64), pitch=2e-6)
             >>> output = element.forward(light)
         """
-        if light.pitch > self.pitch:
-            light.resize(self.pitch, interp_mode)
-            light.set_pitch(self.pitch)
-        elif light.pitch < self.pitch:
-            self.resize(light.pitch, interp_mode)
-            self.set_pitch(light.pitch)
+        self._match_pitch(light, interp_mode)
 
         if self.polar=='non':
             return self.forward_non_polar(light, interp_mode)
@@ -124,25 +154,10 @@ class OpticalElement:
         Raises:
             ValueError: If wavelengths of light and element don't match
         """
-        if light.wvl != self.wvl:
+        if not _wavelengths_match(light, self):
             raise ValueError(f'Wavelength mismatch: light wavelength {light.wvl} != element wavelength {self.wvl}')
 
-        # make sure that light and optical element have the same resolution, i.e. pixel count, by padding the smaller one
-        r1 = np.abs((light.dim[2] - self.dim[2])//2)
-        r2 = np.abs(light.dim[2] - self.dim[2]) - r1
-        pad_width = (r1, r2, 0, 0)
-        if light.dim[2] > self.dim[2]:
-            self.pad(pad_width)
-        elif light.dim[2] < self.dim[2]:
-            light.pad(pad_width)
-
-        c1 = np.abs((light.dim[3] - self.dim[3])//2)
-        c2 = np.abs(light.dim[3] - self.dim[3]) - c1
-        pad_width = (0, 0, c1, c2)
-        if light.dim[3] > self.dim[3]:
-            self.pad(pad_width)
-        elif light.dim[3] < self.dim[3]:
-            light.pad(pad_width)
+        self._match_spatial_shape(light)
 
         light.set_field(light.field*self.field_change)
 
@@ -242,9 +257,7 @@ class OpticalElement:
             raise NotImplementedError('only zero padding supported')
 
         # Create a new dim tuple instead of modifying in-place
-        new_dim = list(self.dim)
-        new_dim[2], new_dim[3] = new_dim[2]+pad_width[0]+pad_width[1], new_dim[3]+pad_width[2]+pad_width[3]
-        self.dim = tuple(new_dim)
+        self.dim = tuple(self.field_change.shape)
 
     def resize(self, target_pitch: float, interp_mode: str = 'nearest') -> None:
         """Resize the wavefront change by changing the pixel pitch.
@@ -259,15 +272,13 @@ class OpticalElement:
             >>> element = OpticalElement((1,1,100,100), pitch=2e-6, wvl=500e-9)
             >>> element.resize(1e-6)  # Resize to 1μm pitch
         """
+        if not isinstance(target_pitch, (int, float)) or not _math.isfinite(target_pitch) or target_pitch <= 0:
+            raise ValueError("target_pitch must be finite and positive")
         scale_factor = self.pitch / target_pitch
-        # Create a new interpolated tensor instead of modifying in-place
-        resized_field_change = F.interpolate(self.field_change, scale_factor=scale_factor, mode=interp_mode)
-        self.field_change = resized_field_change
-        
-        # Create a new dim tuple instead of modifying in-place
-        new_dim = list(self.dim)
-        new_dim[2], new_dim[3] = resized_field_change.shape[2], resized_field_change.shape[3]
-        self.dim = tuple(new_dim)
+        self.field_change = torch.complex(
+            F.interpolate(self.field_change.real, scale_factor=scale_factor, mode=interp_mode),
+            F.interpolate(self.field_change.imag, scale_factor=scale_factor, mode=interp_mode))
+        self.dim = tuple(self.field_change.shape)
         self.set_pitch(target_pitch)
 
     def set_amplitude_change(self, amplitude: torch.Tensor, c: Optional[int] = None) -> None:
@@ -307,16 +318,13 @@ class OpticalElement:
             >>> element.set_field_change(field)
         """
         if c is not None:
-            # Create a clone to avoid in-place modification
+            value = field_change.squeeze(1) if field_change.ndim == 4 and field_change.shape[1] == 1 else field_change
             new_field_change = self.field_change.clone()
-            new_field_change[:, c, ...] = field_change
+            new_field_change[:, c, ...] = value
             self.field_change = new_field_change
         else:
-            # Create a new tensor for all channels
-            new_field_change = self.field_change.clone()
-            for chan in range(self.dim[1]):
-                new_field_change[:, chan, ...] = field_change
-            self.field_change = new_field_change
+            value = field_change.unsqueeze(1) if field_change.ndim == 3 else field_change
+            self.field_change = torch.broadcast_to(value, self.dim).to(self.field_change.dtype).clone()
 
     def set_name(self, name: str) -> None:
         """Sets the name of the optical element.
@@ -339,18 +347,15 @@ class OpticalElement:
             >>> element.set_phase_change(phase)
         """
         if c is not None:
+            phase = phase.squeeze(1) if phase.ndim == 4 and phase.shape[1] == 1 else phase
             amplitude = self.field_change[:, c, ...].abs()
-            # Create a clone to avoid in-place modification
             new_field_change = self.field_change.clone()
             new_field_change[:, c, ...] = amplitude * torch.exp(phase * 1j)
             self.field_change = new_field_change
         else:
-            # Create a new tensor for all channels
-            new_field_change = self.field_change.clone()
-            for chan in range(self.dim[1]):
-                amplitude = self.field_change[:, chan, ...].abs()
-                new_field_change[:, chan, ...] = amplitude * torch.exp(phase * 1j)
-            self.field_change = new_field_change
+            phase = phase.unsqueeze(1) if phase.ndim == 3 else phase
+            phase = torch.broadcast_to(phase, self.dim)
+            self.field_change = (self.field_change.abs() * torch.exp(phase * 1j)).to(self.field_change.dtype)
 
     def set_pitch(self, pitch: float) -> None:
         """Set the pixel pitch of the complex tensor.
@@ -417,17 +422,18 @@ class OpticalElement:
             >>> lens.visualize()  # Visualize first batch, all channels
             >>> lens.visualize(b=0, c=0)  # Visualize first batch, first channel
         """
+        import matplotlib.pyplot as plt
         channels = [c] if c is not None else range(self.dim[1])
 
         for chan in channels:
             plt.figure(figsize=(13,6))
             plt.subplot(121)
-            plt.imshow(self.get_amplitude_change().data.cpu()[b,chan,...].squeeze(), cmap='inferno', vmin=0, vmax=1)
+            plt.imshow(self.get_amplitude_change().detach().cpu()[b,chan,...].squeeze(), cmap='inferno', vmin=0, vmax=1)
             plt.title('amplitude change')
             plt.colorbar()
             
             plt.subplot(122)
-            plt.imshow(self.get_phase_change().data.cpu()[b,chan,...].squeeze(), cmap='hsv', vmin=-np.pi, vmax=np.pi)
+            plt.imshow(self.get_phase_change().detach().cpu()[b,chan,...].squeeze(), cmap='hsv', vmin=-_math.pi, vmax=_math.pi)
             plt.title('phase change')
             plt.colorbar()
             
@@ -478,27 +484,10 @@ class RefractiveLens(OpticalElement):
             
         self.set_focal_length(focal_length)
 
-        if dim[1] == 1:
-            phase = self.compute_phase(self.wvl, shift_x=0, shift_y=0)
-            # Create unit amplitude field with exact 1.0 amplitude
-            amplitude = torch.ones(phase.shape, dtype=torch.float64, device=self.device)
-            field_change = amplitude * torch.exp(1j * phase)
-            self.set_field_change(field_change, c=0)
-        else:
-            if designated_wvl is not None:
-                for i in range(dim[1]):
-                    phase = self.compute_phase(designated_wvl, shift_x=0, shift_y=0)
-                    # Create unit amplitude field with exact 1.0 amplitude
-                    amplitude = torch.ones(phase.shape, dtype=torch.float64, device=self.device)
-                    field_change = amplitude * torch.exp(1j * phase)
-                    self.set_field_change(field_change, c=i)
-            else:
-                for i in range(dim[1]):
-                    phase = self.compute_phase(self.wvl[i], shift_x=0, shift_y=0)
-                    # Create unit amplitude field with exact 1.0 amplitude
-                    amplitude = torch.ones(phase.shape, dtype=torch.float64, device=self.device)
-                    field_change = amplitude * torch.exp(1j * phase)
-                    self.set_field_change(field_change, c=i)
+        self.designated_wvl = designated_wvl
+        wavelengths = _channel_wavelengths(self.wvl if designated_wvl is None else designated_wvl, dim[1], self.device)
+        phase = self.compute_phase(wavelengths)
+        self.set_field_change(torch.exp(1j * phase))
 
     def set_focal_length(self, focal_length: float) -> None:
         """Set the focal length of the lens.
@@ -509,7 +498,13 @@ class RefractiveLens(OpticalElement):
         Examples:
             >>> lens.set_focal_length(0.2)  # Set 20cm focal length
         """
-        self.focal_length = focal_length
+        value = _scalar_parameter(focal_length, "focal_length", self.device)
+        if value == 0:
+            raise ValueError("focal_length cannot be zero")
+        self.focal_length = value
+        if hasattr(self, "designated_wvl"):
+            wavelengths = _channel_wavelengths(self.wvl if self.designated_wvl is None else self.designated_wvl, self.dim[1], self.device)
+            self.set_field_change(torch.exp(1j * self.compute_phase(wavelengths)))
 
     def compute_phase(self, wvl: float, shift_x: float = 0, shift_y: float = 0) -> torch.Tensor:
         """Compute the phase modulation for the lens.
@@ -519,8 +514,8 @@ class RefractiveLens(OpticalElement):
 
         Args:
             wvl (float): Wavelength of light in meters
-            shift_x (float, optional): Horizontal displacement of lens center in meters. Defaults to 0
-            shift_y (float, optional): Vertical displacement of lens center in meters. Defaults to 0
+            shift_x (float, optional): Displacement along rows in meters (historical convention). Defaults to 0
+            shift_y (float, optional): Displacement along columns in meters (historical convention). Defaults to 0
 
         Returns:
             torch.Tensor: Phase modulation pattern of the lens
@@ -529,15 +524,15 @@ class RefractiveLens(OpticalElement):
             >>> phase = lens.compute_phase(633e-9)  # Centered lens
             >>> phase = lens.compute_phase(633e-9, shift_x=10e-6)  # Shifted lens
         """
-        x = np.arange(-self.dim[3]/2, self.dim[3]/2) * self.pitch
-        y = np.arange(-self.dim[2]/2, self.dim[2]/2) * self.pitch
-        xx, yy = np.meshgrid(x, y, indexing='xy')
-
-        theta_change = torch.tensor((-2*np.pi / wvl)*((xx-shift_x)**2 + (yy-shift_y)**2), device=self.device) / (2*self.focal_length)
-        theta_change = (theta_change + np.pi) % (np.pi * 2) - np.pi
-        theta_change = torch.unsqueeze(torch.unsqueeze(theta_change, axis=0), axis=0)
-        
-        return theta_change
+        # Historical shift_x/shift_y refer to rows/columns, respectively.
+        x = (torch.arange(self.dim[2], device=self.device, dtype=torch.float64) - self.dim[2]//2) * self.pitch
+        y = (torch.arange(self.dim[3], device=self.device, dtype=torch.float64) - self.dim[3]//2) * self.pitch
+        radius_squared = (x[:, None] - shift_x)**2 + (y[None, :] - shift_y)**2
+        wavelength = torch.as_tensor(wvl, device=self.device, dtype=torch.float64).reshape(-1)
+        if wavelength.numel() not in (1, self.dim[1]) or not torch.isfinite(wavelength).all() or (wavelength <= 0).any():
+            raise ValueError("wvl must contain positive finite scalar or channel wavelengths")
+        phase = -torch.pi * radius_squared[None, None] / (wavelength[None, :, None, None] * self.focal_length)
+        return wrap_phase(phase)
 
 
 class CosineSquaredLens(OpticalElement):
@@ -572,23 +567,13 @@ class CosineSquaredLens(OpticalElement):
         Examples:
             >>> lens.compute_and_set_phase_change()
         """
-        k = 20 * np.pi / self.wvl  # Wave number
-        
-        x = np.arange(-self.dim[3]/2, self.dim[3]/2) * self.pitch
-        y = np.arange(-self.dim[2]/2, self.dim[2]/2) * self.pitch
-        xx, yy = np.meshgrid(x, y, indexing='xy')
-        
-        xx = torch.tensor(xx, device=self.device)
-        yy = torch.tensor(yy, device=self.device)
-        
-        r_squared = xx**2 + yy**2  # Radius squared from the center
-        
-        # Calculate phase change based on pi*[1+cos(k*r^2)]/2 to adjust the range to [0, pi]
-        phase_change = np.pi * (1 + torch.cos(k * r_squared)) / 2
-        phase_change = torch.unsqueeze(torch.unsqueeze(phase_change, axis=0), axis=0)
-        
-        for i in range(self.dim[1]):  # Assuming potential multiple wavelengths or batch dimension
-            self.set_phase_change(phase_change, c=i)
+        wavelength = _channel_wavelengths(self.wvl, self.dim[1], self.device)
+        k = 20 * torch.pi / wavelength  # Preserve the documented phase model.
+        x = (torch.arange(self.dim[2], device=self.device, dtype=torch.float64) - self.dim[2]//2) * self.pitch
+        y = (torch.arange(self.dim[3], device=self.device, dtype=torch.float64) - self.dim[3]//2) * self.pitch
+        r_squared = x[:, None]**2 + y[None, :]**2
+        phase = torch.pi * (1 + torch.cos(k[None, :, None, None] * r_squared[None, None])) / 2
+        self.set_phase_change(phase)
 
 
 def height2phase(height: float, wvl: float, RI: float, wrap: bool = True) -> torch.Tensor:
@@ -610,7 +595,7 @@ def height2phase(height: float, wvl: float, RI: float, wrap: bool = True) -> tor
         >>> phase = height2phase(height, 633e-9, 1.5)
     """
     dRI = RI - 1
-    wv_n = 2. * np.pi / wvl
+    wv_n = 2. * _math.pi / wvl
     phi = wv_n * dRI * height
     if wrap:
         phi = wrap_phase(phi, stay_positive=True)
@@ -621,7 +606,7 @@ def phase2height(phase_u: torch.Tensor, wvl: float, RI: float, minh: float = 0) 
 
     Note that phase to height mapping is not one-to-one.
     There exists an integer phase wrapping factor:
-        height = wvl/(RI-1) * (phase_u + i*2π), where i is integer
+        height = wvl/(RI-1) * (phase_u/(2π) + i), where i is integer
     This function uses minimum height minh to constrain the conversion.
     Minimal height is chosen such that height is always >= minh.
 
@@ -635,16 +620,21 @@ def phase2height(phase_u: torch.Tensor, wvl: float, RI: float, minh: float = 0) 
         torch.Tensor: Material height that induces the phase change
 
     Examples:
-        >>> phase = torch.ones((1,1,1024,1024)) * np.pi
+        >>> phase = torch.ones((1,1,1024,1024)) * torch.pi
         >>> height = phase2height(phase, 633e-9, 1.5, minh=100e-9)  # 100nm min height
     """
     dRI = RI - 1
+    if torch.any(torch.as_tensor(dRI) == 0):
+        raise ValueError("Height cannot be recovered when RI equals the ambient index 1")
+    period = wvl / dRI
+    cycles = phase_u / (2 * torch.pi)
     if minh is not None:
-        i = torch.ceil(((dRI/wvl)*minh - phase_u)/(2*np.pi))
+        offset = minh / period - cycles
+        i = torch.where(torch.as_tensor(period, device=cycles.device) > 0, torch.ceil(offset), torch.floor(offset))
     else:
         i = 0
-    height = wvl * (phase_u + 2*np.pi*i) / dRI
-    return height
+    return period * (cycles + i)
+
 
 
 class DOE(OpticalElement):
@@ -670,7 +660,7 @@ class DOE(OpticalElement):
             >>> doe = DOE(height.shape, 2e-6, material, 500e-9, 'cpu', height=height)
             
             >>> # Create DOE with specified phase profile
-            >>> phase = torch.ones((1,1,100,100)) * np.pi  # π phase
+            >>> phase = torch.ones((1,1,100,100)) * torch.pi  # π phase
             >>> doe = DOE(phase.shape, 2e-6, material, 500e-9, 'cpu', phase_change=phase)
         """
         super().__init__(dim=dim, pitch=pitch, wvl=wvl, device=device, name="doe", polar=polar)
@@ -703,21 +693,22 @@ class DOE(OpticalElement):
             >>> doe.visualize()  # Shows modulation plots
             >>> doe.visualize(b=1, c=0)  # Shows plots for batch index 1
         """
+        import matplotlib.pyplot as plt
         plt.figure(figsize=(20,5))
         plt.subplot(131)
-        plt.imshow(self.get_amplitude_change().data.cpu()[b,c,...].squeeze(), 
+        plt.imshow(self.get_amplitude_change().detach().cpu()[b,c,...].squeeze(),
                    cmap='inferno', vmin=0, vmax=1)
         plt.title('amplitude change')
         plt.colorbar()
         
         plt.subplot(132)
-        plt.imshow(self.get_phase_change().data.cpu()[b,c,...].squeeze(), 
-                   cmap='hsv', vmin=-np.pi, vmax=np.pi)
+        plt.imshow(self.get_phase_change().detach().cpu()[b,c,...].squeeze(),
+                   cmap='hsv', vmin=-_math.pi, vmax=_math.pi)
         plt.title('phase change')
         plt.colorbar()
         
         plt.subplot(133)
-        plt.imshow(self.get_height().data.cpu()[b,c,...].squeeze()*1e6, 
+        plt.imshow(self.get_height().detach().cpu()[b,c,...].squeeze()*1e6,
                    cmap='hot')
         plt.title('height [um]')
         plt.colorbar()
@@ -746,24 +737,15 @@ class DOE(OpticalElement):
             >>> doe.set_diffraction_grating_1d(10e-6, 0, 500e-9)  # 10μm slits
             >>> doe.visualize()  # Shows 1D grating pattern
         """
-        slit_width_px = np.round(slit_width / self.pitch)
-        slit_space_px = slit_width_px
-
-        dg = np.zeros((self.dim[2], self.dim[3]))
-        slit_num_r = self.dim[2] // (2 * slit_width_px)
-        slit_num_c = self.dim[3] // (2 * slit_width_px)
-
-        # Create a copy to avoid modifying in-place
-        dg_copy = dg.copy()
-        dg_copy[:] = minh
-
-        for i in range(int(slit_num_c)):
-            minc = int((slit_width_px + slit_space_px) * i)
-            maxc = int(minc + slit_width_px)
-
-            dg_copy[:, minc:maxc] = maxh
-        pc = torch.tensor(dg_copy.astype(np.float32), device=self.device).unsqueeze(0).unsqueeze(0)
-        self.set_phase_change(1j*pc)
+        slit_width_px = round(slit_width / self.pitch)
+        if slit_width_px < 1:
+            raise ValueError("slit_width must span at least one pixel after rounding")
+        columns = torch.arange(self.dim[3], device=self.device) // slit_width_px
+        high = (columns[None, :] % 2 == 0).expand(self.dim[-2:])
+        low_height = _scalar_parameter(minh, "minh", self.device)
+        high_height = _scalar_parameter(maxh, "maxh", self.device)
+        height = torch.where(high, high_height, low_height)[None, None].expand(self.dim).clone()
+        self.set_height(height, sync_phase=True)
 
     def set_diffraction_grating_2d(self, slit_width: float, minh: float, maxh: float) -> None:
         """Set the wavefront modulation as a 2D diffraction grating.
@@ -780,28 +762,16 @@ class DOE(OpticalElement):
             >>> doe.set_diffraction_grating_2d(10e-6, 0, 500e-9)  # 10μm slits
             >>> doe.visualize()  # Shows 2D grating pattern
         """
-        slit_width_px = np.round(slit_width / self.pitch)
-        slit_space_px = slit_width_px
-
-        dg = np.zeros((self.dim[2], self.dim[3]))
-        slit_num_r = self.dim[2] // (2 * slit_width_px)
-        slit_num_c = self.dim[3] // (2 * slit_width_px)
-
-        # Create a copy to avoid modifying in-place
-        dg_copy = dg.copy()
-        dg_copy[:] = minh
-
-        for i in range(int(slit_num_r)):
-            for j in range(int(slit_num_c)):
-                minc = int((slit_width_px + slit_space_px) * j)
-                maxc = int(minc + slit_width_px)
-                minr = int((slit_width_px + slit_space_px) * i)
-                maxr = int(minr + slit_width_px)
-
-                dg_copy[minr:maxr, minc:maxc] = maxh
-
-        pc = torch.tensor(dg_copy.astype(np.float32), device=self.device).unsqueeze(0).unsqueeze(0)
-        self.set_phase_change(pc)
+        slit_width_px = round(slit_width / self.pitch)
+        if slit_width_px < 1:
+            raise ValueError("slit_width must span at least one pixel after rounding")
+        columns = torch.arange(self.dim[3], device=self.device) // slit_width_px
+        rows = torch.arange(self.dim[2], device=self.device) // slit_width_px
+        high = (rows[:, None] + columns[None, :]) % 2 == 0
+        low_height = _scalar_parameter(minh, "minh", self.device)
+        high_height = _scalar_parameter(maxh, "maxh", self.device)
+        height = torch.where(high, high_height, low_height)[None, None].expand(self.dim).clone()
+        self.set_height(height, sync_phase=True)
 
     def set_Fresnel_lens(self, focal_length: float, wvl: float, shift_x: float = 0, shift_y: float = 0) -> None:
         """Set the wavefront modulation as a Fresnel lens.
@@ -819,41 +789,22 @@ class DOE(OpticalElement):
             >>> doe.set_Fresnel_lens(0.1, 500e-9)  # f=10cm lens
             >>> doe.set_Fresnel_lens(0.1, 500e-9, shift_x=50e-6)  # Shifted lens
         """
-        x = np.arange(
-            -self.dim[3] * self.pitch / 2,
-            self.dim[3] * self.pitch / 2,
-            self.pitch
-        )
-        x = x[:self.dim[3]]
-        
-        y = np.arange(
-            -self.dim[2] * self.pitch / 2,
-            self.dim[2] * self.pitch / 2,
-            self.pitch
-        )
-        y = y[:self.dim[2]]
-        
-        xx, yy = np.meshgrid(x, y)
-        xx = torch.tensor(xx, device=self.device)
-        yy = torch.tensor(yy, device=self.device)
+        x = (torch.arange(self.dim[3], device=self.device, dtype=torch.float64) - self.dim[3]//2) * self.pitch
+        y = (torch.arange(self.dim[2], device=self.device, dtype=torch.float64) - self.dim[2]//2) * self.pitch
+        focal = _scalar_parameter(focal_length, "focal_length", self.device)
+        if focal == 0:
+            raise ValueError("focal_length cannot be zero")
+        r2 = (x[None, :] - shift_x)**2 + (y[:, None] - shift_y)**2
+        # Rationalization avoids catastrophic cancellation for r << abs(f).
+        optical_path = torch.sign(focal) * r2 / (torch.sqrt(r2 + focal**2) + focal.abs())
+        phase = -2 * torch.pi * optical_path / wvl
+        self.set_phase_change(wrap_phase(phase)[None, None], sync_height=True)
 
-        phase_u = (-2 * np.pi / wvl) * (
-            torch.sqrt(
-                (xx - shift_x)**2 + 
-                (yy - shift_y)**2 + 
-                focal_length**2
-            ) - focal_length
-        )
-        
-        phase_w = wrap_phase(phase_u)
-        phase_w = phase_w.unsqueeze(0).unsqueeze(0)
-
-        self.set_phase_change(phase_w, sync_height=True)
-    
     def set_Fresnel_zone_plate_lens(self, focal_length: float, wvl: float, shift_x: float = 0, shift_y: float = 0) -> None:
         """Set binary Fresnel zone plate pattern.
 
-        Creates alternating opaque and transparent zones that focus light.
+        Creates a binary phase plate with alternating 0 and π phase zones.
+        Transmission amplitude remains one; this is not an opaque-zone mask.
 
         Args:
             focal_length (float): Focal length in meters
@@ -866,25 +817,16 @@ class DOE(OpticalElement):
             >>> doe.set_Fresnel_zone_plate_lens(0.1, 500e-9)  # f=10cm lens
             >>> doe.set_Fresnel_zone_plate_lens(0.1, 500e-9, shift_x=50e-6)  # Shifted lens
         """
-        x = np.arange(-self.dim[3]/2, self.dim[3]/2) * self.pitch
-        y = np.arange(-self.dim[2]/2, self.dim[2]/2) * self.pitch
-        xx, yy = np.meshgrid(x, y, indexing='xy')
+        x = (torch.arange(self.dim[3], device=self.device, dtype=torch.float64) - self.dim[3]//2) * self.pitch
+        y = (torch.arange(self.dim[2], device=self.device, dtype=torch.float64) - self.dim[2]//2) * self.pitch
+        focal = _scalar_parameter(focal_length, "focal_length", self.device)
+        if focal == 0:
+            raise ValueError("focal_length cannot be zero")
+        r2 = (x[None, :] - shift_x)**2 + (y[:, None] - shift_y)**2
+        original_phase = -torch.pi * r2 / (wvl * focal)
+        phase = torch.pi * (torch.cos(original_phase) >= 0).to(torch.float64)
+        self.set_phase_change(phase[None, None], sync_height=True)
 
-        # Calculate the radial distance from the center
-        r_squared = (xx - shift_x)**2 + (yy - shift_y)**2
-
-        # Original phase calculation for a thin lens
-        original_phase = (-2 * np.pi / wvl) * r_squared / (2 * focal_length)
-
-        # Fresnel zone plate phase calculation
-        # Map phase to 0 or pi based on the sign of the cosine of the original phase
-        fresnel_phase = np.pi * (np.cos(original_phase) >= 0).astype(np.float32)
-
-        fresnel_phase = torch.tensor(fresnel_phase, device=self.device)
-        fresnel_phase = torch.unsqueeze(torch.unsqueeze(fresnel_phase, axis=0), axis=0)
-        
-        self.set_phase_change(fresnel_phase, sync_height=True)
-    
     def change_wvl(self, wvl: float) -> None:
         """Change the wavelength and update phase change.
 
@@ -904,22 +846,6 @@ class DOE(OpticalElement):
         new_field_change = torch.exp(phase*1j)
         self.set_field_change(new_field_change, sync_height=False)
 
-    def set_height(self, height: torch.Tensor, sync_phase: bool = True) -> None:
-        """Set the height map of the DOE.
-
-        Args:
-            height (torch.Tensor): Height map in meters
-            sync_phase (bool): If True, syncs phase profile
-
-        Examples:
-            >>> doe = DOE((1,1,100,100), 2e-6, material, 500e-9, 'cpu')
-            >>> height = torch.ones((1,1,100,100)) * 500e-9
-            >>> doe.set_height(height, sync_phase=True)
-        """
-        # Store a copy of the height tensor to avoid potential shared memory with input
-        self.height = height.clone() if height is not None else None
-        if sync_phase:  
-            self.sync_phase_with_height()
             
     def sync_height_with_phase(self) -> None:
         """Synchronize height profile with current phase profile.
@@ -979,7 +905,7 @@ class DOE(OpticalElement):
 
         Examples:
             >>> doe = DOE((1,1,100,100), 2e-6, material, 500e-9, 'cpu')
-            >>> phase = torch.ones((1,1,100,100)) * np.pi
+            >>> phase = torch.ones((1,1,100,100)) * torch.pi
             >>> doe.set_phase_change(phase, sync_height=True)
         """
         super().set_phase_change(phase_change)
@@ -1046,14 +972,17 @@ class SLM(OpticalElement):
         Examples:
             >>> slm.set_lens(focal_length=0.5, shift_x=100e-6)  # 500mm focal length, 100μm x-shift
         """
-        x = np.arange(-self.dim[3]*self.pitch/2, self.dim[3]*self.pitch/2, self.pitch)
-        y = np.arange(-self.dim[2]*self.pitch/2, self.dim[2]*self.pitch/2, self.pitch)
-        xx,yy = np.meshgrid(x,y)
-
-        phase_u = (2*np.pi / self.wvl)*((xx-shift_x)**2 + (yy-shift_y)**2) / (2*focal_length)
-        phase_u = torch.tensor(phase_u.astype(np.float32), device=self.device).unsqueeze(0).unsqueeze(0)
-        phase_w = wrap_phase(phase_u, stay_positive=False)
-        self.set_phase_change(phase_w)
+        # Preserve the historical positive quadratic phase sign for this SLM
+        # API; unlike RefractiveLens, it specifies a programmed phase pattern.
+        focal = _scalar_parameter(focal_length, "focal_length", self.device)
+        if focal == 0:
+            raise ValueError("focal_length cannot be zero")
+        x = (torch.arange(self.dim[3], dtype=torch.float64, device=self.device)-self.dim[3]//2)*self.pitch
+        y = (torch.arange(self.dim[2], dtype=torch.float64, device=self.device)-self.dim[2]//2)*self.pitch
+        wavelength = _channel_wavelengths(self.wvl, self.dim[1], self.device)
+        r2 = (x[None, :]-shift_x)**2 + (y[:, None]-shift_y)**2
+        phase = torch.pi*r2[None, None]/(wavelength[None, :, None, None]*focal)
+        self.set_phase_change(wrap_phase(phase), self.wvl)
 
     def set_amplitude_change(self, amplitude: torch.Tensor, wvl: float) -> None:
         """Set amplitude modulation profile of the SLM.
@@ -1077,7 +1006,7 @@ class SLM(OpticalElement):
             wvl (float): Operating wavelength in meters
 
         Examples:
-            >>> phase = torch.ones((1,1,1024,1024)) * np.pi  # π phase shift
+            >>> phase = torch.ones((1,1,1024,1024)) * torch.pi  # π phase shift
             >>> slm.set_phase_change(phase, wvl=633e-9)
         """
         self.wvl = wvl
@@ -1098,8 +1027,32 @@ class PolarizedSLM(OpticalElement):
             >>> slm = PolarizedSLM(dim=(1,1,1024,1024), pitch=6.4e-6, wvl=633e-9, device='cuda:0')
         """
         super().__init__(dim, pitch, wvl, device=device, name="Metasurface", polar='polar')
-        self.amplitude_change = torch.ones((dim[0], 1, dim[2], dim[3], 2), device=self.device)
-        self.phase_change = torch.zeros((dim[0], 1, dim[2], dim[3], 2), device=self.device)
+        # One authoritative complex modulation tensor; last axis is X/Y.
+        self.field_change = self.field_change[..., None].expand(dim+(2,)).clone()
+
+    @property
+    def amplitude_change(self):
+        return self.get_amplitude_change()
+
+    @amplitude_change.setter
+    def amplitude_change(self, value):
+        self.set_amplitude_change(value, self.wvl)
+
+    @property
+    def phase_change(self):
+        return self.get_phase_change()
+
+    @phase_change.setter
+    def phase_change(self, value):
+        self.set_phase_change(value, self.wvl)
+
+    def set_field_change(self, field_change: torch.Tensor, c: Optional[int] = None) -> None:
+        if c is None:
+            self.field_change = torch.broadcast_to(field_change, self.dim+(2,)).to(self.field_change.dtype).clone()
+        else:
+            result = self.field_change.clone()
+            result[:, c] = field_change
+            self.field_change = result
 
     def set_amplitude_change(self, amplitude: torch.Tensor, wvl: float) -> None:
         """Set amplitude change for both polarization components.
@@ -1113,7 +1066,8 @@ class PolarizedSLM(OpticalElement):
             >>> slm.set_amplitude_change(amp, wvl=633e-9)
         """
         self.wvl = wvl
-        super().set_amplitude_change(amplitude)
+        amplitude = torch.broadcast_to(amplitude, self.dim+(2,))
+        self.field_change = (amplitude * torch.exp(1j*self.get_phase_change())).to(self.field_change.dtype)
 
     def set_phase_change(self, phase_change: torch.Tensor, wvl: float) -> None:
         """Set phase change for both polarization components.
@@ -1123,11 +1077,18 @@ class PolarizedSLM(OpticalElement):
             wvl (float): Wavelength in meters
 
         Examples:
-            >>> phase = torch.ones((1,1,1024,1024,2)) * np.pi  # π phase shift for both polarizations
+            >>> phase = torch.ones((1,1,1024,1024,2)) * torch.pi  # π phase shift for both polarizations
             >>> slm.set_phase_change(phase, wvl=633e-9)
         """
         self.wvl = wvl
-        super().set_phase_change(phase_change)
+        phase_change = torch.broadcast_to(phase_change, self.dim+(2,))
+        self.field_change = (self.get_amplitude_change() * torch.exp(1j*phase_change)).to(self.field_change.dtype)
+
+    def _replace_component(self, component, value):
+        # Preserve the untouched component's identity derivative, including zero.
+        field = self.field_change.clone()
+        field[..., component] = value
+        self.field_change = field
 
     def set_amplitudeX_change(self, amplitude: torch.Tensor, wvl: float) -> None:
         """Set amplitude change for X polarization component.
@@ -1141,11 +1102,7 @@ class PolarizedSLM(OpticalElement):
             >>> slm.set_amplitudeX_change(ampX, wvl=633e-9)
         """
         self.wvl = wvl
-        amp = self.get_amplitude_change()
-        # Create new tensor instead of modifying in-place
-        new_amp = amp.clone()
-        new_amp[:,:,:,:,0] = amplitude
-        super().set_amplitude_change(new_amp)
+        self._replace_component(0, amplitude * torch.exp(1j*self.field_change[..., 0].angle()))
 
     def set_amplitudeY_change(self, amplitude: torch.Tensor, wvl: float) -> None:
         """Set amplitude change for Y polarization component.
@@ -1159,11 +1116,7 @@ class PolarizedSLM(OpticalElement):
             >>> slm.set_amplitudeY_change(ampY, wvl=633e-9)
         """
         self.wvl = wvl
-        amp = self.get_amplitude_change()
-        # Create new tensor instead of modifying in-place
-        new_amp = amp.clone()
-        new_amp[:,:,:,:,1] = amplitude
-        super().set_amplitude_change(new_amp)
+        self._replace_component(1, amplitude * torch.exp(1j*self.field_change[..., 1].angle()))
 
     def set_phaseX_change(self, phase_change: torch.Tensor, wvl: float) -> None:
         """Set phase change for X polarization component.
@@ -1173,15 +1126,11 @@ class PolarizedSLM(OpticalElement):
             wvl (float): Wavelength in meters
 
         Examples:
-            >>> phaseX = torch.ones((1,1,1024,1024)) * np.pi/2  # π/2 phase shift for X polarization
+            >>> phaseX = torch.ones((1,1,1024,1024)) * torch.pi/2  # π/2 phase shift for X polarization
             >>> slm.set_phaseX_change(phaseX, wvl=633e-9)
         """
         self.wvl = wvl
-        phase = self.get_phase_change()
-        # Create new tensor instead of modifying in-place
-        new_phase = phase.clone()
-        new_phase[:,:,:,:,0] = phase_change
-        super().set_phase_change(new_phase)
+        self._replace_component(0, self.field_change[..., 0].abs() * torch.exp(1j*phase_change))
 
     def set_phaseY_change(self, phase_change: torch.Tensor, wvl: float) -> None:
         """Set phase change for Y polarization component.
@@ -1191,15 +1140,11 @@ class PolarizedSLM(OpticalElement):
             wvl (float): Wavelength in meters
 
         Examples:
-            >>> phaseY = torch.ones((1,1,1024,1024)) * np.pi  # π phase shift for Y polarization
+            >>> phaseY = torch.ones((1,1,1024,1024)) * torch.pi  # π phase shift for Y polarization
             >>> slm.set_phaseY_change(phaseY, wvl=633e-9)
         """
         self.wvl = wvl
-        phase = self.get_phase_change()
-        # Create new tensor instead of modifying in-place
-        new_phase = phase.clone()
-        new_phase[:,:,:,:,1] = phase_change
-        super().set_phase_change(new_phase)
+        self._replace_component(1, self.field_change[..., 1].abs() * torch.exp(1j*phase_change))
 
     def get_phase_changeX(self) -> torch.Tensor:
         """Return phase change for X polarization component.
@@ -1259,88 +1204,40 @@ class PolarizedSLM(OpticalElement):
             >>> modulated_light = slm.forward(input_light)  # Apply polarization modulation
             >>> modulated_light = slm.forward(input_light, interp_mode='bilinear')  # Use bilinear interpolation
         """
-        if light.wvl != self.wvl:
+        if not _wavelengths_match(light, self):
             raise ValueError(f'Wavelength mismatch: light wavelength {light.wvl} != element wavelength {self.wvl}')
         
-        if light.pitch > self.pitch:
-            light.resize(self.pitch, interp_mode)
-            light.set_pitch(self.pitch)
-        elif light.pitch < self.pitch:
-            self.resize(light.pitch, interp_mode)
-            self.set_pitch(light.pitch)
+        self._match_pitch(light, interp_mode)
             
-        r1 = np.abs((light.dim[2] - self.dim[2])//2)
-        r2 = np.abs(light.dim[2] - self.dim[2]) - r1
-        pad_width = (r1, r2, 0, 0)
-        if light.dim[2] > self.dim[2]:
-            self.pad(pad_width)
-        elif light.dim[2] < self.dim[2]:
-            light.pad(pad_width)
-
-        c1 = np.abs((light.dim[3] - self.dim[3])//2)
-        c2 = np.abs(light.dim[3] - self.dim[3]) - c1
-        pad_width = (0, 0, c1, c2)
-        if light.dim[3] > self.dim[3]:
-            self.pad(pad_width)
-        elif light.dim[3] < self.dim[3]:
-            light.pad(pad_width)
+        self._match_spatial_shape(light)
         
-        # Ensure compatible shapes for broadcasting
-        light_phase = light.get_phase()
-        phase_change = self.get_phase_change()
-        
-        # Check if shapes are compatible and reshape if needed
-        if light_phase.shape != phase_change.shape:
-            # Ensure light_phase has the same shape as phase_change for proper broadcasting
-            if light_phase.dim() == 4 and phase_change.dim() == 5:
-                # Add polarization dimension if missing
-                light_phase = light_phase.unsqueeze(-1)
-                if light_phase.shape[-1] == 1:
-                    # Duplicate the phase for both polarizations
-                    light_phase = light_phase.expand(-1, -1, -1, -1, 2)
-        
-        # Apply phase modulation with proper shape handling
-        phase = (light_phase + phase_change + np.pi) % (np.pi*2) - np.pi
-        
-        # Set the modulated phase and amplitude for each polarization component - non-modifying operations
-        light.set_phaseX(phase[..., 0])
-        light.set_phaseY(phase[..., 1])
-        light.set_amplitudeX(light.get_amplitudeX() * self.get_amplitude_change()[..., 0])
-        light.set_amplitudeY(light.get_amplitudeY() * self.get_amplitude_change()[..., 1])
-        
+        # Multiplication preserves independent input phases and the complete
+        # input/modulator autograd graph, including zero-amplitude samples.
+        light.set_fieldX(light.get_fieldX() * self.field_change[..., 0])
+        light.set_fieldY(light.get_fieldY() * self.field_change[..., 1])
         return light
 
     def pad(self, pad_width: tuple, padval: int = 0) -> None:
-        """Pad amplitude and phase changes with constant value.
-
-        Args:
-            pad_width (tuple): Padding dimensions (left, right, top, bottom)
-            padval (int): Padding value (only 0 supported)
-
-        Examples:
-            >>> slm.pad((16,16,16,16))  # Add 16 pixels padding on all sides
-        """
-        if padval == 0:
-            # Create new padded tensors instead of modifying in-place
-            padded_amplitude = torch.nn.functional.pad(
-                self.get_amplitude_change(), 
-                (0,0,0,0,pad_width[2],pad_width[3],pad_width[0],pad_width[1])
-            )
-            padded_phase = torch.nn.functional.pad(
-                self.get_phase_change(), 
-                (0,0,0,0,pad_width[2],pad_width[3],pad_width[0],pad_width[1])
-            )
-            self.amplitude_change = padded_amplitude
-            self.phase_change = padded_phase
-        else:
+        """Pad spatial axes using (left, right, top, bottom), retaining X/Y."""
+        if padval != 0:
             raise NotImplementedError('only zero padding supported')
+        self.field_change = F.pad(self.field_change, (0, 0)+tuple(pad_width))
+        self.dim = tuple(self.field_change.shape[:-1])
 
-        # Create a new dim tuple instead of modifying in-place
-        new_dim = list(self.dim)
-        new_dim[2] += pad_width[0] + pad_width[1]
-        new_dim[3] += pad_width[2] + pad_width[3]
-        self.dim = tuple(new_dim)
-        
+    def resize(self, target_pitch: float, interp_mode: str = 'nearest') -> None:
+        """Interpolate each complex polarization on the spatial axes."""
+        if not isinstance(target_pitch, (int, float)) or not _math.isfinite(target_pitch) or target_pitch <= 0:
+            raise ValueError("target_pitch must be finite and positive")
+        batch, channels, rows, cols = self.dim
+        field = self.field_change.permute(0, 1, 4, 2, 3).reshape(batch, 2*channels, rows, cols)
+        scale = self.pitch / target_pitch
+        field = torch.complex(F.interpolate(field.real, scale_factor=scale, mode=interp_mode),
+                              F.interpolate(field.imag, scale_factor=scale, mode=interp_mode))
+        rows, cols = field.shape[-2:]
+        self.field_change = field.reshape(batch, channels, 2, rows, cols).permute(0, 1, 3, 4, 2)
+        self.dim = (batch, channels, rows, cols)
+        self.pitch = target_pitch
+
     def visualize(self, b: int = 0) -> None:
         """Visualize amplitude and phase modulation for both polarizations.
 
@@ -1351,25 +1248,26 @@ class PolarizedSLM(OpticalElement):
             >>> slm.visualize()  # Visualize first batch
             >>> slm.visualize(b=1)  # Visualize second batch
         """
+        import matplotlib.pyplot as plt
         plt.figure(figsize=(13,8))
         
         plt.subplot(221)
-        plt.imshow(self.get_amplitude_changeX().data.cpu()[b,...].squeeze(), cmap='inferno')
+        plt.imshow(self.get_amplitude_changeX().detach().cpu()[b,...].squeeze(), cmap='inferno')
         plt.title('amplitude change X')
         plt.colorbar()
         
         plt.subplot(222)
-        plt.imshow(self.get_phase_changeX().data.cpu()[b,...].squeeze(), cmap='hsv')
+        plt.imshow(self.get_phase_changeX().detach().cpu()[b,...].squeeze(), cmap='hsv')
         plt.title('phase change X')
         plt.colorbar()
         
         plt.subplot(223)
-        plt.imshow(self.get_amplitude_changeY().data.cpu()[b,...].squeeze(), cmap='inferno')
+        plt.imshow(self.get_amplitude_changeY().detach().cpu()[b,...].squeeze(), cmap='inferno')
         plt.title('amplitude change Y')
         plt.colorbar()
         
         plt.subplot(224)
-        plt.imshow(self.get_phase_changeY().data.cpu()[b,...].squeeze(), cmap='hsv')
+        plt.imshow(self.get_phase_changeY().detach().cpu()[b,...].squeeze(), cmap='hsv')
         plt.title('phase change Y')
         plt.colorbar()
         
@@ -1429,15 +1327,14 @@ class Aperture(OpticalElement):
         """
         self.aperture_shape = 'square'
 
-        [x, y] = np.mgrid[-self.dim[2]//2:self.dim[2]//2, -self.dim[3]//2:self.dim[3]//2].astype(np.float32)
-        r = self.pitch * np.asarray([abs(x), abs(y)]).max(axis=0)
-        r = np.expand_dims(np.expand_dims(r, axis=0), axis=0)
+        x = torch.arange(self.dim[2], device=self.device, dtype=torch.float64) - self.dim[2]//2
+        y = torch.arange(self.dim[3], device=self.device, dtype=torch.float64) - self.dim[3]//2
+        r = (self.pitch * torch.maximum(x[:, None].abs(), y[None, :].abs()))[None, None]
 
         max_val = self.aperture_diameter / 2
-        amp = (r <= max_val).astype(np.float32)
-        amp_copy = amp.copy()  # Make a copy to avoid modifying the array in-place
-        amp_copy[amp_copy == 0] = 1e-20
-        self.set_field_change(torch.tensor(amp_copy, device=self.device))
+        amp = (r <= max_val).to(torch.float32)
+        amp[amp == 0] = 1e-20  # to enable stable learning
+        self.set_field_change(amp)
 
     def set_circle(self, cx: float = 0, cy: float = 0, dia: float = None) -> None:
         """Set circular aperture amplitude modulation.
@@ -1445,44 +1342,41 @@ class Aperture(OpticalElement):
         Create circular aperture mask with optional offset and diameter.
 
         Args:
-            cx (float): Center x-offset in pixels
-            cy (float): Center y-offset in pixels  
+            cx (float): Center row offset in pixels (historical convention)
+            cy (float): Center column offset in pixels (historical convention)
             dia (float, optional): Circle diameter in meters
 
         Examples:
             >>> aperture.set_circle()  # Centered circle
             >>> aperture.set_circle(cx=10, cy=-10, dia=2e-3)  # Offset circle
         """
-        [x, y] = np.mgrid[-self.dim[2]//2:self.dim[2]//2, -self.dim[3]//2:self.dim[3]//2].astype(np.float32)
-        r2 = (x-cx) ** 2 + (y-cy) ** 2
-        r2_copy = r2.copy()
-        r2_copy[r2_copy < 0] = 1e-20
-        r = self.pitch * np.sqrt(r2_copy)
-        r = np.expand_dims(np.expand_dims(r, axis=0), axis=0)
-        
+        # Preserve historical cx=row and cy=column offsets, measured in pixels.
+        x = torch.arange(self.dim[2], device=self.device, dtype=torch.float64) - self.dim[2]//2
+        y = torch.arange(self.dim[3], device=self.device, dtype=torch.float64) - self.dim[3]//2
+        r = self.pitch * torch.sqrt((x[:, None]-cx)**2 + (y[None, :]-cy)**2)
         if dia is not None:
             self.aperture_diameter = dia
         self.aperture_shape = 'circle'
-        max_val = self.aperture_diameter / 2
-        amp = (r <= max_val).astype(np.float32)
-        amp_copy = amp.copy()  # Make a copy to avoid modifying the array in-place
-        amp_copy[amp_copy == 0] = 1e-20
-        self.set_field_change(torch.tensor(amp_copy, device=self.device))
+        amp = (r <= self.aperture_diameter / 2).to(torch.float32)[None, None]
+        amp = torch.where(amp == 0, amp.new_tensor(1e-20), amp)
+        self.set_field_change(amp)
 
 
-def quantize(x: Union[torch.Tensor, np.ndarray], levels: int, vmin: float = None, vmax: float = None, include_vmax: bool = True) -> Union[torch.Tensor, np.ndarray]:
+
+def quantize(x: Union[torch.Tensor, _NDArray], levels: int, vmin: float = None, vmax: float = None, include_vmax: bool = True) -> Union[torch.Tensor, _NDArray]:
     """Quantize floating point array.
 
     Discretize input array into specified number of levels.
 
     Args:
         x (torch.Tensor or np.ndarray): Input array to quantize
-        levels (int): Number of quantization levels
-        vmin (float, optional): Minimum value for quantization
-        vmax (float, optional): Maximum value for quantization
-        include_vmax (bool): Whether to include max value in quantization
-            True: Quantize with spacing of 1/levels
-            False: Quantize with spacing of 1/(levels-1)
+        levels (int): Nonnegative number of levels; zero disables quantization.
+            One level returns the lower bound. A constant input remains finite.
+        vmin (float, optional): Lower bound when include_vmax=False.
+        vmax (float, optional): Upper bound when include_vmax=False.
+        include_vmax (bool): Historical bin convention. True uses the observed
+            input range with spacing (max-min)/levels and excludes its maximum;
+            False uses spacing (vmax-vmin)/(levels-1), including both bounds.
 
     Returns:
         torch.Tensor or np.ndarray: Quantized array
@@ -1490,46 +1384,54 @@ def quantize(x: Union[torch.Tensor, np.ndarray], levels: int, vmin: float = None
     Examples:
         >>> x = torch.randn(100)
         >>> x_quant = quantize(x, levels=8)
-        >>> x_quant = quantize(x, levels=16, vmin=-1, vmax=1)
+        >>> x_quant = quantize(x, levels=16, vmin=-1, vmax=1, include_vmax=False)
     """
-    if include_vmax is False:
-        if levels == 0:
-            return x
+    is_tensor = isinstance(x, torch.Tensor)
+    if not is_tensor:
+        import numpy as np
+        if not isinstance(x, np.ndarray):
+            raise TypeError("x must be a torch.Tensor or numpy.ndarray")
 
+    if isinstance(levels, bool) or not isinstance(levels, _Integral):
+        raise TypeError("levels must be a nonnegative integer")
+    if levels < 0:
+        raise ValueError("levels must be nonnegative")
+    if levels == 0:
+        return x
+
+    if include_vmax is False:
         if vmin is None:
             vmin = x.min()
         if vmax is None:
             vmax = x.max()
+        if levels == 1:
+            result = x * 0 + vmin
+            return result if is_tensor else np.asarray(result)
 
         normalized = (x - vmin) / (vmax - vmin + 1e-16)
-        if isinstance(x, np.ndarray):
+        if not is_tensor:
             levelized = np.floor(normalized * levels) / (levels - 1)
-        elif isinstance(x, torch.Tensor):    
+        else:
             levelized = (normalized * levels).floor() / (levels - 1)
         result = levelized * (vmax - vmin) + vmin
         
-        # Create a copy to ensure no in-place operations
-        if isinstance(x, np.ndarray):
-            result_copy = result.copy()
-            result_copy[result_copy < vmin] = vmin
-            result_copy[result_copy > vmax] = vmax
-            return result_copy
+        if not is_tensor:
+            return np.asarray(np.clip(result, vmin, vmax))
         else:  # torch.Tensor
             # For tensors, we use clamp which returns a new tensor
             return torch.clamp(result, min=vmin, max=vmax)
     
     elif include_vmax is True:
-        space = (x.max()-x.min())/levels
         vmin = x.min()
+        span = x.max() - vmin
+        # Use a finite divisor for flat fields without a CUDA scalar read.
+        space = (torch.where(span == 0, torch.ones_like(span), span) if is_tensor
+                 else np.where(span == 0, 1, span)) / levels
         vmax = vmin + space*(levels-1)
-        if isinstance(x, np.ndarray):
+        if not is_tensor:
             result = (np.floor((x-vmin)/space))*space + vmin
-            # Create a copy to ensure no in-place operations
-            result_copy = result.copy()
-            result_copy[result_copy < vmin] = vmin
-            result_copy[result_copy > vmax] = vmax
-            return result_copy
-        elif isinstance(x, torch.Tensor):    
+            return np.asarray(np.clip(result, vmin, vmax))
+        else:
             result = (((x-vmin)/space).floor())*space + vmin
             # For tensors, we use clamp which returns a new tensor
             return torch.clamp(result, min=vmin, max=vmax)

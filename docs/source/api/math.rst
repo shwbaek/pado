@@ -1,6 +1,8 @@
 Mathematical Utilities
 ========================================
 
+.. py:module:: pado.math
+
 .. currentmodule:: pado.math
 
 Constants

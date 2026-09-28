@@ -11,6 +11,8 @@ Core Components
    :caption: Core Components
 
    light
+   kspace_light
+   sampler
    optical_element
    propagator
    material
