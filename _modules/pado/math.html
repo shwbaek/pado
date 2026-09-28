@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
         <title>pado.math - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -201,12 +201,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../api/light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.light.Light.html">pado.light.Light</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.light.PolarizedLight.html">pado.light.PolarizedLight</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/kspace_light.html">Frequency-domain Light</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/sampler.html">K-space Sampling</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../api/optical_element.html">Optical Elements</a><input aria-label="Toggle navigation of Optical Elements" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.optical_element.OpticalElement.html">pado.optical_element.OpticalElement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.optical_element.RefractiveLens.html">pado.optical_element.RefractiveLens</a></li>
@@ -286,10 +289,10 @@
 <span class="c1"># The MIT License (MIT)</span>
 <span class="c1">#</span>
 <span class="c1"># PADO (Pytorch Automatic Differentiable Optics)</span>
-<span class="c1"># Copyright (c) 2025 by POSTECH Computer Graphics Lab</span>
+<span class="c1"># Copyright (c) 2023 by POSTECH Computer Graphics Lab</span>
 <span class="c1">#</span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
-<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># of this software and associated documentation files (the "Software"), to deal</span>
 <span class="c1"># in the Software without restriction, including without limitation the rights</span>
 <span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
 <span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
@@ -298,7 +301,7 @@
 <span class="c1"># The above copyright notice and this permission notice shall be included in</span>
 <span class="c1"># all copies or substantial portions of the Software.</span>
 <span class="c1">#</span>
-<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
 <span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
 <span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
 <span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
@@ -312,14 +315,16 @@
 <span class="c1">#</span>
 <span class="c1">########################################################</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_math</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">torch.nn.functional</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">F</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">._propagation</span><span class="w"> </span><span class="kn">import</span> <span class="n">unpad</span> <span class="k">as</span> <span class="n">_unpad</span>
+
+<span class="sd">"""</span>
 <span class="sd">At Pado, all measurements adhere to the International System of Units (SI).</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="n">nm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span>
 <span class="n">um</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-6</span>
 <span class="n">mm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-3</span>
@@ -332,9 +337,9 @@
 <span class="n">ns</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
 <div class="viewcode-block" id="wrap_phase">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.wrap_phase">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.wrap_phase.html#pado.math.wrap_phase">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">wrap_phase</span><span class="p">(</span><span class="n">phase_u</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">stay_positive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrap phase values to [-π, π] or [0, 2π] range.</span>
+<span class="w">    </span><span class="sd">"""Wrap phase values to [-π, π] or [0, 2π] range.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        phase_u (torch.Tensor): Unwrapped phase values tensor</span>
@@ -344,26 +349,56 @@
 <span class="sd">        torch.Tensor: Wrapped phase values tensor</span>
 
 <span class="sd">    Examples:</span>
-<span class="sd">        &gt;&gt;&gt; phase = torch.tensor([3.5 * np.pi, -2.5 * np.pi])</span>
-<span class="sd">        &gt;&gt;&gt; wrapped = wrap_phase(phase)  # tensor([0.5000 * π, -0.5000 * π])</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">phase</span> <span class="o">=</span> <span class="n">phase_u</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">stay_positive</span><span class="p">:</span>
-        <span class="n">phase</span><span class="p">[</span><span class="n">phase</span> <span class="o">&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="sd">        &gt;&gt;&gt; phase = torch.tensor([3.5 * torch.pi, -2.5 * torch.pi])</span>
+<span class="sd">        &gt;&gt;&gt; wrapped = wrap_phase(phase)  # tensor([-0.5000 * π, -0.5000 * π])</span>
+<span class="sd">    """</span>
+    <span class="c1"># Remainder by a rounded 2*pi accumulates a large argument-reduction</span>
+    <span class="c1"># error. Trigonometric kernels reduce the represented input accurately,</span>
+    <span class="c1"># including float32 phases much larger than 2*pi.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">phase_u</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="n">phase_u</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">phase_u</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phase_u</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phase_u</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">stay_positive</span><span class="p">:</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">phase</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">phase</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">phase</span> <span class="o">==</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">phase</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">phase</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">phase</span></div>
 
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_fft_nd</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">dim</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">inverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">norm</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"backward"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Apply FFT normalization outside the CPU backend.</span>
+
+<span class="sd">    Some CPU FFT backends mis-scale normalized complex64 transforms at large</span>
+<span class="sd">    sizes. Unnormalized transforms followed by the mathematical scale avoid</span>
+<span class="sd">    that backend path without changing the process-wide Torch environment.</span>
+<span class="sd">    CUDA retains its native normalization.</span>
+<span class="sd">    """</span>
+    <span class="n">operation</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftn</span> <span class="k">if</span> <span class="n">inverse</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftn</span>
+    <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">type</span> <span class="o">!=</span> <span class="s2">"cpu"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">operation</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">norm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"backward"</span><span class="p">,</span> <span class="s2">"forward"</span><span class="p">,</span> <span class="s2">"ortho"</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Invalid FFT normalization mode: </span><span class="si">{</span><span class="n">norm</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s2">"forward"</span> <span class="k">if</span> <span class="n">inverse</span> <span class="k">else</span> <span class="s2">"backward"</span><span class="p">)</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">_math</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">axis</span><span class="p">]</span> <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">dim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="s2">"ortho"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="o">/</span> <span class="n">_math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">inverse</span> <span class="ow">and</span> <span class="n">norm</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="s2">"backward"</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">inverse</span> <span class="ow">and</span> <span class="n">norm</span> <span class="o">==</span> <span class="s2">"forward"</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">result</span> <span class="o">/</span> <span class="n">size</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
 <div class="viewcode-block" id="fft">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.fft">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">fft</span><span class="p">(</span><span class="n">arr_c</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">normalized</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;backward&quot;</span><span class="p">,</span> 
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.fft.html#pado.math.fft">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fft</span><span class="p">(</span><span class="n">arr_c</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">normalized</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"backward"</span><span class="p">,</span> 
         <span class="n">pad_width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
         <span class="n">padval</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">shift</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute 2D FFT of a complex tensor with optional padding and frequency shifting.</span>
+<span class="w">    </span><span class="sd">"""Compute 2D FFT of a complex tensor with optional padding and frequency shifting.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        arr_c (torch.Tensor): Complex tensor [B, Ch, H, W]</span>
-<span class="sd">        normalized (str): FFT normalization mode: &quot;backward&quot;, &quot;forward&quot;, or &quot;ortho&quot;</span>
+<span class="sd">        normalized (str): FFT normalization mode: "backward", "forward", or "ortho"</span>
 <span class="sd">        pad_width (tuple): Padding as (left, right, top, bottom)</span>
 <span class="sd">        padval (int): Padding value (only 0 supported)</span>
 <span class="sd">        shift (bool): If True, center zero-frequency component</span>
@@ -374,29 +409,29 @@
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; light = Light(dim=(1, 1, 100, 100), pitch=2e-6, wvl=500e-9)</span>
 <span class="sd">        &gt;&gt;&gt; field_fft = fft(light.field)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">pad_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">padval</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">padval</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"Only zero padding is implemented."</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pad_width</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">4</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">pad_width</span><span class="p">):</span>
             <span class="n">arr_c</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">arr_c</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Only zero padding is implemented.&quot;</span><span class="p">)</span>
     
     <span class="n">arr_c_shifted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">arr_c</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">if</span> <span class="n">shift</span> <span class="k">else</span> <span class="n">arr_c</span>
-    <span class="n">arr_c_fft</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span><span class="n">arr_c_shifted</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span>
+    <span class="n">arr_c_fft</span> <span class="o">=</span> <span class="n">_fft_nd</span><span class="p">(</span><span class="n">arr_c_shifted</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">norm</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">arr_c_fft</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">if</span> <span class="n">shift</span> <span class="k">else</span> <span class="n">arr_c_fft</span></div>
 
 
 
 <div class="viewcode-block" id="ifft">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.ifft">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">ifft</span><span class="p">(</span><span class="n">arr_c</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">normalized</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;backward&quot;</span><span class="p">,</span> 
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.ifft.html#pado.math.ifft">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ifft</span><span class="p">(</span><span class="n">arr_c</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">normalized</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"backward"</span><span class="p">,</span> 
          <span class="n">pad_width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
          <span class="n">shift</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute 2D inverse FFT of a complex tensor with optional padding and shifting.</span>
+<span class="w">    </span><span class="sd">"""Compute 2D inverse FFT of a complex tensor with optional padding and shifting.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        arr_c (torch.Tensor): Complex tensor [B, Ch, H, W]</span>
-<span class="sd">        normalized (str): IFFT normalization mode: &quot;backward&quot;, &quot;forward&quot;, or &quot;ortho&quot;</span>
+<span class="sd">        normalized (str): IFFT normalization mode: "backward", "forward", or "ortho"</span>
 <span class="sd">        pad_width (tuple): Padding as (left, right, top, bottom)</span>
 <span class="sd">        shift (bool): If True, center zero-frequency component</span>
 
@@ -407,47 +442,45 @@
 <span class="sd">        &gt;&gt;&gt; field = torch.ones((1, 1, 64, 64), dtype=torch.complex64)</span>
 <span class="sd">        &gt;&gt;&gt; field_freq = fft(field)</span>
 <span class="sd">        &gt;&gt;&gt; field_restored = ifft(field_freq)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">arr_c_shifted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">arr_c</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">if</span> <span class="n">shift</span> <span class="k">else</span> <span class="n">arr_c</span>
-    <span class="n">arr_c_fft</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span><span class="n">arr_c_shifted</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span>
+    <span class="n">arr_c_fft</span> <span class="o">=</span> <span class="n">_fft_nd</span><span class="p">(</span><span class="n">arr_c_shifted</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">normalized</span><span class="p">)</span>
     <span class="n">arr_c_result</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">arr_c_fft</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">if</span> <span class="n">shift</span> <span class="k">else</span> <span class="n">arr_c_fft</span>
     
-    <span class="k">if</span> <span class="n">pad_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">arr_c_result</span> <span class="o">=</span> <span class="n">arr_c_result</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="o">-</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">:]</span>
-        <span class="k">if</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">arr_c_result</span> <span class="o">=</span> <span class="n">arr_c_result</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:,</span> <span class="n">pad_width</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="o">-</span><span class="n">pad_width</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">if</span> <span class="n">pad_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">pad_width</span><span class="p">):</span>
+        <span class="n">arr_c_result</span> <span class="o">=</span> <span class="n">_unpad</span><span class="p">(</span><span class="n">arr_c_result</span><span class="p">,</span> <span class="n">pad_width</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">arr_c_result</span></div>
 
 
 <div class="viewcode-block" id="calculate_psnr">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.calculate_psnr">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">calculate_psnr</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">data_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Peak Signal-to-Noise Ratio between multi-channel tensors.</span>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.calculate_psnr.html#pado.math.calculate_psnr">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_psnr</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">data_range</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Calculate Peak Signal-to-Noise Ratio between multi-channel tensors.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        img1 (torch.Tensor): First tensor [B, Channel, R, C]</span>
 <span class="sd">        img2 (torch.Tensor): Second tensor [B, Channel, R, C]</span>
 <span class="sd">        data_range (float, optional): The data range of the input image (e.g., 1.0 for normalized images, </span>
-<span class="sd">                            255 for uint8 images). If None, uses the maximum value from images.</span>
+<span class="sd">                            255 for uint8 images). If None, uses the detached maximum value</span>
+<span class="sd">                            from both images, preserving the original normalization rule.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        float: PSNR value in dB, infinity if images are identical</span>
+<span class="sd">        torch.Tensor: Scalar PSNR in dB on the input device, +inf if images are identical</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; intensity1 = light1.get_intensity()  # [B, Channel, R, C]</span>
 <span class="sd">        &gt;&gt;&gt; intensity2 = light2.get_intensity()  # [B, Channel, R, C]</span>
 <span class="sd">        &gt;&gt;&gt; psnr = calculate_psnr(intensity1, intensity2)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Input tensors must have the same shape&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Input tensors must have the same shape"</span><span class="p">)</span>
         
     <span class="n">img2</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">img1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
     
     <span class="c1"># If data_range is None, determine it from the input images</span>
     <span class="k">if</span> <span class="n">data_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">data_range</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">img1</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">img2</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">data_range</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">img1</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">img2</span><span class="p">))</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
     
     <span class="c1"># If tensor is 4D [B, C, H, W], compute MSE per batch and channel, then average</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">img1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
@@ -456,21 +489,23 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">mse</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">img1</span> <span class="o">-</span> <span class="n">img2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
     
-    <span class="k">if</span> <span class="n">mse</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
-    
     <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-10</span>
-
-    <span class="k">return</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">data_range</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">))</span></div>
+    <span class="n">identical</span> <span class="o">=</span> <span class="n">mse</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">peak</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">data_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">mse</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">mse</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="c1"># Keep the unused branch finite even for two all-zero images, so backward</span>
+    <span class="c1"># does not encounter the undefined derivative of log(0).</span>
+    <span class="n">peak</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">identical</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">mse</span><span class="p">),</span> <span class="n">peak</span><span class="p">)</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">peak</span> <span class="o">/</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span> <span class="o">+</span> <span class="n">epsilon</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">identical</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">score</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">'inf'</span><span class="p">)),</span> <span class="n">score</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="calculate_ssim">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.calculate_ssim">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.calculate_ssim.html#pado.math.calculate_ssim">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">calculate_ssim</span><span class="p">(</span><span class="n">img1</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">img2</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> 
                   <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span> 
                   <span class="n">sigma</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> 
-                  <span class="n">data_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Structural Similarity Index between multi-channel tensors.</span>
+                  <span class="n">data_range</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Calculate Structural Similarity Index between multi-channel tensors.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        img1 (torch.Tensor): First tensor [B, Channel, H, W]</span>
@@ -481,28 +516,28 @@
 <span class="sd">        data_range (float): Dynamic range of images</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        float: SSIM score (-1 to 1, where 1 indicates identical images)</span>
+<span class="sd">        torch.Tensor: Scalar SSIM score (-1 to 1, where 1 indicates identical images)</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; intensity1 = light1.get_intensity()  # [B, Channel, R, C]</span>
 <span class="sd">        &gt;&gt;&gt; intensity2 = light2.get_intensity()  # [B, Channel, R, C]</span>
 <span class="sd">        &gt;&gt;&gt; similarity = calculate_ssim(intensity1, intensity2)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">sigma</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">sigma</span> <span class="o">=</span> <span class="n">window_size</span> <span class="o">/</span> <span class="mi">6</span>
 
     <span class="k">if</span> <span class="n">img1</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="n">img2</span><span class="o">.</span><span class="n">shape</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Input images must have the same dimensions.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Input images must have the same dimensions.'</span><span class="p">)</span>
     
-    <span class="n">img2</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">img1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">window</span> <span class="o">=</span> <span class="n">gaussian_window</span><span class="p">(</span><span class="n">window_size</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">img1</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">window</span> <span class="o">=</span> <span class="n">window</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">img2</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">img1</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">img1</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="n">gaussian_window</span><span class="p">(</span><span class="n">window_size</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">img1</span><span class="o">.</span><span class="n">device</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">img1</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="n">window</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">img1</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
     
     <span class="c1"># Constants for numerical stability</span>
     <span class="n">C1</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">data_range</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
     <span class="n">C2</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.03</span> <span class="o">*</span> <span class="n">data_range</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
 
-    <span class="c1"># Compute means (window will be automatically broadcasted across batch and channels)</span>
+    <span class="c1"># Each channel uses the same Gaussian kernel without mixing channels.</span>
     <span class="n">mu1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">window_size</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">img1</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     <span class="n">mu2</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">conv2d</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="n">window_size</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">img2</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     
@@ -523,22 +558,25 @@
 
 
 <div class="viewcode-block" id="gaussian_window">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.gaussian_window">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">gaussian_window</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create normalized 2D Gaussian window.</span>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.gaussian_window.html#pado.math.gaussian_window">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">gaussian_window</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Create normalized 2D Gaussian window.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        size (int): Width and height of square window</span>
 <span class="sd">        sigma (float): Standard deviation of Gaussian</span>
+<span class="sd">        device (torch.device, optional): Device for direct kernel construction</span>
+<span class="sd">        dtype (torch.dtype): Real floating-point kernel dtype (default float32)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        torch.Tensor: Normalized 2D Gaussian window [size, size]</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; window = gaussian_window(11, 1.5)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-</span> <span class="n">size</span> <span class="o">//</span> <span class="mi">2</span>
-    <span class="n">grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="n">size</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">'ij'</span><span class="p">)</span>
     <span class="n">window</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">sigma</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">window</span> <span class="o">/</span> <span class="n">window</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
 
@@ -546,167 +584,176 @@
 <span class="c1">##########################</span>
 <span class="c1"># Additional Helper Functions for Sc-ASM(Scaled Angular Spectrum Method)</span>
 <span class="c1">##########################</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_scaled_transform_last_axis</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+                                <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">inverse</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Evaluate a centered Fourier sum with a batched chirp convolution."""</span>
+    <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">M</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected a final axis of length </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">g</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex128</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Scaled transforms require float32, float64, complex64 or complex128 input"</span><span class="p">)</span>
+    <span class="n">complex_dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex128</span> <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex64</span>
+    <span class="c1"># Double precision argument construction prevents the chirp phase error</span>
+    <span class="c1"># from growing quadratically with the grid index, even for complex64 FFTs.</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">delta_x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">dfx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">delta_fx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dx</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">dfx</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Scaled-transform sampling intervals must be scalars"</span><span class="p">)</span>
+    <span class="n">dx</span><span class="p">,</span> <span class="n">dfx</span> <span class="o">=</span> <span class="n">dx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(()),</span> <span class="n">dfx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(())</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">M</span> <span class="o">-</span> <span class="n">M</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">m_big</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">M</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+    <span class="c1"># Reduce in units of pi with the exactly representable period 2 before</span>
+    <span class="c1"># multiplying by pi. This retains discrete Fourier periodicity when the</span>
+    <span class="c1"># sampling product or grid is large; reducing a rounded 2*pi does not.</span>
+    <span class="n">cycles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">remainder</span><span class="p">((</span><span class="n">dx</span> <span class="o">*</span> <span class="n">dfx</span><span class="p">)</span> <span class="o">*</span> <span class="n">m_big</span><span class="o">.</span><span class="n">square</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">inverse</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">cycles</span>
+    <span class="n">chirp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">complex_dtype</span><span class="p">)</span>
+    <span class="n">kernel</span> <span class="o">=</span> <span class="n">chirp</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span>
+    <span class="c1"># The product and inverse use native FFT order; paired frequency shifts</span>
+    <span class="c1"># cancel algebraically and would otherwise copy the batched spectrum.</span>
+    <span class="c1"># Multiply only nonzero input samples and build the padded native order</span>
+    <span class="c1"># directly, avoiding a padded product and a full batched roll.</span>
+    <span class="n">weighted</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">complex_dtype</span><span class="p">)</span> <span class="o">*</span> <span class="n">chirp</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">M</span><span class="p">]</span>
+    <span class="n">zeros</span> <span class="o">=</span> <span class="n">weighted</span><span class="o">.</span><span class="n">new_zeros</span><span class="p">((</span><span class="o">*</span><span class="n">weighted</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">M</span><span class="p">))</span>
+    <span class="n">native</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">weighted</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">:],</span> <span class="n">zeros</span><span class="p">,</span> <span class="n">weighted</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">Q1</span> <span class="o">=</span> <span class="n">_fft_nd</span><span class="p">(</span><span class="n">native</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="k">del</span> <span class="n">weighted</span><span class="p">,</span> <span class="n">zeros</span><span class="p">,</span> <span class="n">native</span>
+    <span class="n">Q2</span> <span class="o">=</span> <span class="n">_fft_nd</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,))</span>
+    <span class="n">conv</span> <span class="o">=</span> <span class="n">_fft_nd</span><span class="p">(</span><span class="n">Q1</span> <span class="o">*</span> <span class="n">Q2</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,),</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># Select only the requested centered window rather than rolling all 2*M samples.</span>
+    <span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">conv</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">M</span><span class="o">-</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">:],</span> <span class="n">conv</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="n">M</span><span class="o">-</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="p">(</span><span class="n">dfx</span> <span class="k">if</span> <span class="n">inverse</span> <span class="k">else</span> <span class="n">dx</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">real</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">chirp</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="n">M</span><span class="p">]</span> <span class="o">*</span> <span class="n">conv</span>
+
+
 <div class="viewcode-block" id="sc_dft_1d">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_dft_1d">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_dft_1d.html#pado.math.sc_dft_1d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_dft_1d</span><span class="p">(</span><span class="n">g</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute 1D scaled DFT for optical field propagation.</span>
+<span class="w">    </span><span class="sd">"""Compute 1D scaled DFT for optical field propagation.</span>
+
+<span class="sd">    The sum is ``delta_x * sum(g[n] * exp(-2j*pi*x[n]*f[k]))``, with</span>
+<span class="sd">    ``x[n]=(n-M//2)*delta_x`` and ``f[k]=(k-M//2)*delta_fx``. The last axis</span>
+<span class="sd">    is transformed; leading axes and complex precision are preserved.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        g (torch.Tensor): Input complex field [M]</span>
+<span class="sd">        g (torch.Tensor): Input complex field [..., M]</span>
 <span class="sd">        M (int): Number of sample points</span>
 <span class="sd">        delta_x (float): Spatial sampling interval (m)</span>
 <span class="sd">        delta_fx (float): Frequency sampling interval (1/m)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        torch.Tensor: Transformed complex field [M]</span>
+<span class="sd">        torch.Tensor: Transformed complex field [..., M]</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; M = 1000</span>
 <span class="sd">        &gt;&gt;&gt; pitch = 2e-6</span>
 <span class="sd">        &gt;&gt;&gt; g = torch.exp(-x**2 / (2 * (100*um)**2)).to(torch.complex64)</span>
 <span class="sd">        &gt;&gt;&gt; G = sc_dft_1d(g, M, pitch, 1/(M*pitch))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">device</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">device</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">delta_fx</span> <span class="o">*</span> <span class="n">delta_x</span>
-
-    <span class="n">M2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">M</span>
-
-    <span class="n">g_padded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">M2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">g_padded</span><span class="p">[</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">M</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span>
-
-    <span class="n">m_big</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">M</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>  <span class="c1"># length = M2</span>
-
-    <span class="n">q1</span> <span class="o">=</span> <span class="n">g_padded</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">m_big</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-    <span class="n">q2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">m_big</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-
-    <span class="n">Q1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">q1</span><span class="p">)))</span>
-    <span class="n">Q2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">q2</span><span class="p">)))</span>
-    <span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">Q1</span><span class="o">*</span><span class="n">Q2</span><span class="p">)))</span>
-    <span class="n">conv</span> <span class="o">=</span> <span class="n">conv</span><span class="p">[</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">M</span><span class="p">]</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">G</span> <span class="o">=</span> <span class="n">delta_x</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">conv</span>
-
-    <span class="k">return</span> <span class="n">G</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_scaled_transform_last_axis</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="sc_idft_1d">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_idft_1d">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_idft_1d.html#pado.math.sc_idft_1d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_idft_1d</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute 1D scaled inverse DFT for optical field reconstruction.</span>
+<span class="w">    </span><span class="sd">"""Compute 1D scaled inverse DFT for optical field reconstruction.</span>
+
+<span class="sd">    Uses the positive exponential and a ``delta_fx`` quadrature weight. It</span>
+<span class="sd">    inverts ``sc_dft_1d`` when ``M*delta_x*delta_fx == 1``. Leading axes</span>
+<span class="sd">    and complex precision are preserved; arbitrary sampling need not invert.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        G (torch.Tensor): Frequency domain input [M]</span>
+<span class="sd">        G (torch.Tensor): Frequency domain input [..., M]</span>
 <span class="sd">        M (int): Number of samples</span>
 <span class="sd">        delta_fx (float): Frequency sampling interval (1/m)</span>
 <span class="sd">        delta_x (float): Spatial sampling interval (m)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        torch.Tensor: Spatial domain output [M]</span>
+<span class="sd">        torch.Tensor: Spatial domain complex output [..., M]</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; M = 1000</span>
 <span class="sd">        &gt;&gt;&gt; G = torch.ones(M, dtype=torch.complex64)</span>
 <span class="sd">        &gt;&gt;&gt; field = sc_idft_1d(G, M, 1/(M*2e-6), 4e-6)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">device</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">device</span>
-    <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">delta_fx</span> <span class="o">*</span> <span class="n">delta_x</span>
-    <span class="n">M2</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">M</span>
-
-    <span class="n">G_padded</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">M2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">G_padded</span><span class="p">[</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">M</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span>
-
-    <span class="n">m_big</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">M</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-
-    <span class="n">q1_inv</span> <span class="o">=</span> <span class="n">G_padded</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">m_big</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-    <span class="n">q2_inv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">m_big</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-
-    <span class="n">Q1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">q1_inv</span><span class="p">)))</span>
-    <span class="n">Q2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">q2_inv</span><span class="p">)))</span>
-    <span class="n">conv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftshift</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftshift</span><span class="p">(</span><span class="n">Q1</span><span class="o">*</span><span class="n">Q2</span><span class="p">)))</span>
-    <span class="n">conv</span> <span class="o">=</span> <span class="n">conv</span><span class="p">[</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">:</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="o">+</span><span class="n">M</span><span class="p">]</span>
-
-    <span class="n">p</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">M</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-
-    <span class="n">xdomain</span> <span class="o">=</span> <span class="n">delta_fx</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">beta</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">conv</span>
-
-    <span class="k">return</span> <span class="n">xdomain</span></div>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">_scaled_transform_last_axis</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">,</span> <span class="n">inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="sc_dft_2d">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_dft_2d">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_dft_2d.html#pado.math.sc_dft_2d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_dft_2d</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Mx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">My</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
              <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
              <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform 2D scaled DFT using separable 1D transforms.</span>
+<span class="w">    </span><span class="sd">"""Perform 2D scaled DFT using batched separable 1D transforms.</span>
+
+<span class="sd">    Leading batch/channel axes and complex precision are preserved. Both</span>
+<span class="sd">    spatial and frequency grids use centered integer sample coordinates.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        u (torch.Tensor): Input field [My, Mx]</span>
+<span class="sd">        u (torch.Tensor): Input field [..., My, Mx]</span>
 <span class="sd">        Mx, My (int): Number of samples in x,y directions</span>
 <span class="sd">        delta_x, delta_y (float): Spatial sampling intervals (m)</span>
 <span class="sd">        delta_fx, delta_fy (float): Frequency sampling intervals (1/m)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        torch.Tensor: Transformed field [My, Mx]</span>
+<span class="sd">        torch.Tensor: Transformed complex field [..., My, Mx]</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; field = light.get_field().squeeze()</span>
 <span class="sd">        &gt;&gt;&gt; U = sc_dft_2d(field, 1024, 1024, pitch, pitch, 1/(pitch*1024), 1/(pitch*1024))</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">U_intermediate</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">My</span><span class="p">):</span>
-        <span class="n">U_intermediate</span><span class="p">[</span><span class="n">iy</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sc_dft_1d</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">iy</span><span class="p">,</span> <span class="p">:],</span> <span class="n">Mx</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">)</span>
-
-    <span class="n">U_final</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">U_intermediate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mx</span><span class="p">):</span>
-        <span class="n">U_final</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc_dft_1d</span><span class="p">(</span><span class="n">U_intermediate</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">],</span> <span class="n">My</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">U_final</span></div>
+<span class="sd">    """</span>
+    <span class="n">U_intermediate</span> <span class="o">=</span> <span class="n">sc_dft_1d</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">Mx</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sc_dft_1d</span><span class="p">(</span><span class="n">U_intermediate</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">My</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="sc_idft_2d">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.sc_idft_2d">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.sc_idft_2d.html#pado.math.sc_idft_2d">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sc_idft_2d</span><span class="p">(</span><span class="n">U</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">Mx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">My</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
               <span class="n">delta_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
               <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform 2D scaled inverse DFT using separable 1D transforms.</span>
+<span class="w">    </span><span class="sd">"""Perform 2D scaled inverse DFT using batched separable 1D transforms.</span>
+
+<span class="sd">    Leading batch/channel axes and complex precision are preserved. The</span>
+<span class="sd">    inverse has positive exponential signs and weight ``delta_fx*delta_fy``.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        U (torch.Tensor): Frequency domain input [My, Mx]</span>
+<span class="sd">        U (torch.Tensor): Frequency domain input [..., My, Mx]</span>
 <span class="sd">        Mx, My (int): Number of samples in x,y directions</span>
 <span class="sd">        delta_x, delta_y (float): Target spatial sampling intervals (m)</span>
 <span class="sd">        delta_fx, delta_fy (float): Frequency sampling intervals (1/m)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        torch.Tensor: Spatial domain output [My, Mx]</span>
+<span class="sd">        torch.Tensor: Spatial domain complex output [..., My, Mx]</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; U = sc_dft_2d(field, Mx, My, dx, dy, dfx, dfy)</span>
 <span class="sd">        &gt;&gt;&gt; field_recovered = sc_idft_2d(U, Mx, My, dx, dy, dfx, dfy)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">u_intermediate</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">U</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Mx</span><span class="p">):</span>
-        <span class="n">u_intermediate</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">]</span> <span class="o">=</span> <span class="n">sc_idft_1d</span><span class="p">(</span><span class="n">U</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">],</span> <span class="n">My</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">)</span>
-
-    <span class="n">u_final</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">u_intermediate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">My</span><span class="p">):</span>
-        <span class="n">u_final</span><span class="p">[</span><span class="n">iy</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">sc_idft_1d</span><span class="p">(</span><span class="n">u_intermediate</span><span class="p">[</span><span class="n">iy</span><span class="p">,</span> <span class="p">:],</span> <span class="n">Mx</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">u_final</span></div>
+<span class="sd">    """</span>
+    <span class="n">u_intermediate</span> <span class="o">=</span> <span class="n">sc_idft_1d</span><span class="p">(</span><span class="n">U</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">My</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">,</span> <span class="n">delta_y</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sc_idft_1d</span><span class="p">(</span><span class="n">u_intermediate</span><span class="p">,</span> <span class="n">Mx</span><span class="p">,</span> <span class="n">delta_fx</span><span class="p">,</span> <span class="n">delta_x</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="compute_scasm_transfer_function">
-<a class="viewcode-back" href="../../api/pado.html#pado.math.compute_scasm_transfer_function">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.math.compute_scasm_transfer_function.html#pado.math.compute_scasm_transfer_function">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_scasm_transfer_function</span><span class="p">(</span><span class="n">Mx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">My</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
                                    <span class="n">delta_fx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
-                                   <span class="n">λ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute transfer function for Scaled Angular Spectrum Method propagation.</span>
+                                   <span class="n">λ</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                                   <span class="n">device</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">dtype</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Compute transfer function for Scaled Angular Spectrum Method propagation.</span>
+
+<span class="sd">    Positive distance uses outgoing evanescent decay. Negative distance is the</span>
+<span class="sd">    stable adjoint: propagating phase is conjugated and evanescent modes still</span>
+<span class="sd">    decay with abs(z). Exact grazing bins use a finite zero subgradient for the</span>
+<span class="sd">    singular square root, matching the full angular-spectrum propagator.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        Mx, My (int): Number of sampling points in x,y directions</span>
 <span class="sd">        delta_fx, delta_fy (float): Frequency sampling intervals (1/m)</span>
 <span class="sd">        λ (float): Wavelength (m)</span>
 <span class="sd">        z (float): Propagation distance (m)</span>
+<span class="sd">        device (torch.device, optional): Device for direct transfer-function construction</span>
+<span class="sd">        dtype (torch.dtype): Output real or complex precision; phase geometry</span>
+<span class="sd">            is evaluated in float64 before casting to this precision.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        torch.Tensor: Transfer function H(fx,fy) [My, Mx]</span>
@@ -714,15 +761,24 @@
 <span class="sd">    Examples:</span>
 <span class="sd">        &gt;&gt;&gt; H = compute_scasm_transfer_function(1024, 1024, 1/(1024*2e-6), 1/(1024*2e-6), 633e-9, 0.1)</span>
 <span class="sd">        &gt;&gt;&gt; U_prop = torch.fft.fft2(light.get_field()) * H</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fx</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">Mx</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">Mx</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">*</span><span class="n">delta_fx</span><span class="p">)</span>
-    <span class="n">fy</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="n">My</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">My</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">*</span><span class="n">delta_fy</span><span class="p">)</span>
-    <span class="n">fxx</span><span class="p">,</span> <span class="n">fyy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span>
-    <span class="n">k</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">λ</span>
-
-    <span class="n">gamma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">λ</span><span class="o">*</span><span class="n">fxx</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">λ</span><span class="o">*</span><span class="n">fyy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">0</span><span class="n">j</span><span class="p">)</span>
-    <span class="n">H</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="n">z</span><span class="o">*</span><span class="n">gamma</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">H</span></div>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex128</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"Transfer dtype must be float32, float64, complex64 or complex128"</span><span class="p">)</span>
+    <span class="n">complex_dtype</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex128</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">complex64</span>
+    <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">value</span><span class="o">.</span><span class="n">device</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="n">delta_fx</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+                       <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">delta_fx</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">delta_fx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">delta_fy</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">delta_fy</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">λ</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">λ</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="n">delta_fx</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">z</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Transfer sampling intervals, wavelength and distance must be scalars"</span><span class="p">)</span>
+    <span class="n">delta_fx</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">reshape</span><span class="p">(())</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="n">delta_fx</span><span class="p">,</span> <span class="n">delta_fy</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">z</span><span class="p">))</span>
+    <span class="n">fx</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">Mx</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="n">Mx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_fx</span>
+    <span class="n">fy</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">My</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span> <span class="o">-</span> <span class="n">My</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">delta_fy</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">._propagation</span><span class="w"> </span><span class="kn">import</span> <span class="n">angular_transfer</span>
+    <span class="k">return</span> <span class="n">angular_transfer</span><span class="p">(</span><span class="n">fx</span><span class="p">,</span> <span class="n">fy</span><span class="p">,</span> <span class="n">λ</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">complex_dtype</span><span class="p">)</span></div>
 
 </pre></div>
         </article>
@@ -736,7 +792,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Seung-Hwan Baek, Dong-Ha Shin, and contributors
+                Copyright &#169; 2026, Seung-Hwan Baek, Dong-Ha Shin, and contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -756,7 +812,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=8d563738"></script>
+</div><script src="../../_static/documentation_options.js?v=fc837d61"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

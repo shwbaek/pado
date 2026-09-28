@@ -7,17 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="api/_autosummary/pado.propagator.Propagator.html" />
 <meta property="og:site_name" content="PADO Documentation" />
-<meta property="og:image:width" content="1146" />
-<meta property="og:image:height" content="600" />
-<meta property="og:image" content="_images/social_previews/summary_api__autosummary_pado.propagator.Propagator_26271b16.png" />
-<meta property="og:image:alt" content="" />
-<meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="pado.propagator.compute_pad_width" href="pado.propagator.compute_pad_width.html"><link rel="prev" title="Light Propagation" href="../propagator.html">
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
         <title>pado.propagator.Propagator - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -211,12 +206,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="../light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="pado.light.Light.html">pado.light.Light</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pado.light.PolarizedLight.html">pado.light.PolarizedLight</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../kspace_light.html">Frequency-domain Light</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sampler.html">K-space Sampling</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../optical_element.html">Optical Elements</a><input aria-label="Toggle navigation of Optical Elements" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="pado.optical_element.OpticalElement.html">pado.optical_element.OpticalElement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pado.optical_element.RefractiveLens.html">pado.optical_element.RefractiveLens</a></li>
@@ -301,45 +299,51 @@
 <h1>pado.propagator.Propagator<a class="headerlink" href="#pado-propagator-propagator" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pado.propagator.Propagator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Propagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'non'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Propagator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'non'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'torch'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
-<li><p><strong>polar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>polar</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'non'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'non'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'torch'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Light propagator for simulating wave propagation through free space.</p>
 <p>Implement common diffraction methods including Fraunhofer, Fresnel, ASM and RS.
 Support complex field calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Propagation method to use:
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Propagation method to use:
 - “Fraunhofer”: Far-field diffraction
 - “Fresnel”: Near-field diffraction
 - “ASM”: Angular Spectrum Method
 - “RS”: Rayleigh-Sommerfeld Method</p></li>
-<li><p><strong>polar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Polarization mode (‘non’: scalar, ‘polar’: vector)</p></li>
+<li><p><strong>polar</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Polarization mode (‘non’: scalar, ‘polar’: vector)</p></li>
+<li><p><strong>backend</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – ‘torch’ uses native PyTorch on the field device.
+‘fused’ opts ASM into an experimental NVRTC transfer kernel
+for fixed CUDA geometry. CPU and differentiable geometry use
+PyTorch; input-field gradients remain supported in both paths.
+First CUDA use compiles the kernel through PyTorch’s Jiterator.</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create ASM propagator for scalar field</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;ASM&quot;</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="s2">&quot;non&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"ASM"</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="s2">"non"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create Fresnel propagator for vector field</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;Fresnel&quot;</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="s2">&quot;polar&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"Fresnel"</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="s2">"polar"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create Fraunhofer propagator</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;ASM&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"ASM"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">field</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light</span> <span class="o">=</span> <span class="n">Light</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">pitch</span><span class="o">=</span><span class="mf">2e-6</span><span class="p">,</span> <span class="n">wvl</span><span class="o">=</span><span class="mf">660e-9</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light_prop</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
@@ -349,35 +353,67 @@ Support complex field calculations.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pado.propagator.Propagator.prepare">
+<span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.prepare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.prepare" title="Link to this definition">¶</a></dt>
+<dd><p>Prepare scalar, unscaled ASM for repeated Tensor -&gt; Tensor calls.</p>
+<p>Optical conditions are fixed at preparation. The callable accepts new
+fields with the same channels, spatial shape, dtype and device; batch
+size may vary. Only H and layout metadata persist, not the input Light,
+field or geometry tensors. Changing conditions requires a new prepare.
+H occupies one complex tensor per wavelength at the padded FFT size.</p>
+<p>Field gradients remain supported across repeated backward calls.
+Differentiable geometry is rejected, even inside no_grad; use forward
+to optimize wavelength, pitch, distance or offset. Preparation inside
+torch.func transforms is unsupported; applying an existing operator to
+transformed fields uses ordinary Torch operations. Fixed zero distance
+and zero offset return the input field itself, including Tensor zeros.
+The selected backend is used only to prepare H, never during reuse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.14)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>band_limit</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">band_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward" title="Link to this definition">¶</a></dt>
 <dd><p>Propagate incident light through the propagator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Incident light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters for off-axis propagation</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Flag for linear convolution (with padding) or circular convolution (no padding)</p></li>
-<li><p><strong>band_limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, apply band-limiting for ASM</p></li>
-<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scaling factor for observation plane (b&gt;1: expansion, b&lt;1: focusing)</p></li>
-<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates for RS diffraction</p></li>
-<li><p><strong>sampling_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Spatial sampling ratio for RS computation</p></li>
-<li><p><strong>vectorized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use vectorized implementation for RS (better performance but higher memory usage)</p></li>
-<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of computation steps for vectorized RS (higher values use less memory)</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Incident light field</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Propagation distance in meters</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Lateral shift (y, x) in meters for off-axis propagation</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Flag for linear convolution (with padding) or circular convolution (no padding)</p></li>
+<li><p><strong>band_limit</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, apply band-limiting for unscaled ASM (b=1)</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Scaling factor for observation plane (b&gt;1: expansion, b&lt;1: focusing)</p></li>
+<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates for RS diffraction</p></li>
+<li><p><strong>sampling_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Spatial sampling ratio for RS computation</p></li>
+<li><p><strong>vectorized</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, use vectorized implementation for RS (better performance but higher memory usage)</p></li>
+<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of chunks for vectorized RS. More chunks reduce
+temporary kernel storage, but not total autograd saved tensors.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Basic propagation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;ASM&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"ASM"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light_prop</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -386,7 +422,7 @@ Support complex field calculations.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Vector field propagation</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;Fresnel&quot;</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="s2">&quot;polar&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"Fresnel"</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="s2">"polar"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light_prop</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Access x,y components</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">x_component</span> <span class="o">=</span> <span class="n">light_prop</span><span class="o">.</span><span class="n">get_lightX</span><span class="p">()</span>
@@ -394,11 +430,39 @@ Support complex field calculations.</p>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Vectorized RS propagation for better performance</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;RS&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"RS"</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light_prop</span> <span class="o">=</span> <span class="n">prop</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">vectorized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pado.propagator.Propagator.forward_180">
+<span class="sig-name descname"><span class="pre">forward_180</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_180"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_180" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a spatial-domain Light into a k-space KSpaceLight.</p>
+<p>Perform a centered 2D FFT of the input spatial field and represent the
+result on a wave-vector (kx, ky) grid derived from the input’s spatial
+pitch and field size. This is the entry point for wide-angle / 180-degree
+propagation: (kx, ky) maps naturally to propagation direction (theta, phi).</p>
+<p>No propagation distance is applied: this mode performs only
+spatial complex field -&gt; centered FFT -&gt; KSpaceLight. Autograd is
+preserved through the FFT (the field is never detached).</p>
+<p>Only scalar Light with polar=’non’ is supported. PolarizedLight and
+other polarization modes raise NotImplementedError; no polarization
+components are silently combined. Angular sampling supports the
+forward hemisphere, not backward propagation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input spatial-domain light field</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>k-space field on a centered (kx, ky) grid</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../kspace_light.html#pado.kspace_light.KSpaceLight" title="pado.kspace_light.KSpaceLight">KSpaceLight</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -408,23 +472,23 @@ Support complex field calculations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters for off-axis propagation</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
-<li><p><strong>band_limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, apply band-limiting for ASM</p></li>
-<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scaling factor for observation plane (b&gt;1: expansion, b&lt;1: focusing)</p></li>
-<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates for RS diffraction</p></li>
-<li><p><strong>sampling_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Spatial sampling ratio for RS computation</p></li>
-<li><p><strong>vectorized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use vectorized implementation for RS</p></li>
-<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of computation steps for vectorized RS</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Propagation distance in meters</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Lateral shift (y, x) in meters for off-axis propagation</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
+<li><p><strong>band_limit</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, apply band-limiting for ASM</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Scaling factor for observation plane (b&gt;1: expansion, b&lt;1: focusing)</p></li>
+<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates for RS diffraction</p></li>
+<li><p><strong>sampling_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Spatial sampling ratio for RS computation</p></li>
+<li><p><strong>vectorized</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, use vectorized implementation for RS</p></li>
+<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of computation steps for vectorized RS</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Propagated light field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -432,23 +496,21 @@ Support complex field calculations.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward_Fraunhofer">
 <span class="sig-name descname"><span class="pre">forward_Fraunhofer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_Fraunhofer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_Fraunhofer" title="Link to this definition">¶</a></dt>
-<dd><p>Propagate light using Fraunhofer diffraction.</p>
-<p>Implement far-field diffraction with multi-wavelength support.
-The propagated field is independent of z distance, which only
-affect the output pixel pitch.</p>
+<dd><p>Physical Fraunhofer integral on a common isotropic output grid.</p>
+<p>The returned shape is unchanged. Padding doubles Fourier sampling;
+output pitch and field coordinates depend on wavelength and distance.
+Includes pixel area, carrier, amplitude and output quadratic phase.
+Tensor distance/wavelength gradients include the moving output grid.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -456,22 +518,20 @@ affect the output pixel pitch.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward_Fresnel">
 <span class="sig-name descname"><span class="pre">forward_Fresnel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_Fresnel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_Fresnel" title="Link to this definition">¶</a></dt>
-<dd><p>Propagate light using Fresnel diffraction.</p>
-<p>Implement Fresnel approximation with multi-wavelength support.
-Valid when z &gt;&gt; (x² + y²)_max/λ.</p>
+<dd><p>Sampled paraxial propagation with unchanged pixel pitch.</p>
+<p>Uses H=exp(i*2*pi*z/wavelength-i*pi*wavelength*z*(fx**2+fy**2)).
+This replaces the formerly amplitude-normalized impulse convolution.
+Optional zero padding reduces circular wrap-around before cropping.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -485,15 +545,15 @@ or padding. Used for basic Fourier transform of the input field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Not used in this method</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Not used in this method</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>FFT of input field</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -507,19 +567,19 @@ depending on the scaling factor b and offset requirements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution</p></li>
-<li><p><strong>band_limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, apply band-limiting</p></li>
-<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scaling factor (b&gt;1: expansion, b&lt;1: focusing)</p></li>
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Propagation distance in meters</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Lateral shift (y, x) in meters</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, use linear convolution</p></li>
+<li><p><strong>band_limit</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, apply band-limiting</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Scaling factor (b&gt;1: expansion, b&lt;1: focusing)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Propagated light field using selected ASM method</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -527,23 +587,21 @@ depending on the scaling factor b and offset requirements.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward_standard_ASM">
 <span class="sig-name descname"><span class="pre">forward_standard_ASM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_standard_ASM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_standard_ASM" title="Link to this definition">¶</a></dt>
-<dd><p>Propagate light using standard Angular Spectrum Method.</p>
-<p>Implement basic ASM propagation with optional off-axis shift.
-Support multi-wavelength channels and linear/circular convolution.</p>
+<dd><p>Scalar ASM with double-precision geometry and evanescent decay.</p>
+<p>Complex field dtype is preserved. Negative z applies the stable adjoint:
+propagating phases reverse, while evanescent components still decay.
+It is not the unstable inverse of a decaying evanescent field.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Lateral shift (y, x) in meters</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -551,87 +609,64 @@ Support multi-wavelength channels and linear/circular convolution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward_shifted_BL_ASM">
 <span class="sig-name descname"><span class="pre">forward_shifted_BL_ASM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_shifted_BL_ASM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_shifted_BL_ASM" title="Link to this definition">¶</a></dt>
-<dd><p>Propagate light using band-limited Angular Spectrum Method.</p>
-<p>Implement shifted band-limited ASM for improved numerical stability in
-off-axis propagation. Based on Matsushima’s method.</p>
+<dd><p>Shifted ASM with a mask derived from sampled phase-gradient limits.</p>
+<p>offset is (y, x) in metres. The Nyquist bound uses half of the actual
+FFT period, including padding. Evanescent bins are suppressed at
+nonzero distance. Hard support changes are nondifferentiable; parameter
+gradients describe the transfer within the locally fixed support.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – offset (y, x) between source and target plane in meters for off-axis propagation</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
-</dd>
 </dl>
-<div class="admonition-references admonition">
-<p class="admonition-title">References</p>
-<p>Matsushima, “Shifted angular spectrum method for off-axis numerical propagation”</p>
-</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward_ScASM">
 <span class="sig-name descname"><span class="pre">forward_ScASM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_ScASM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_ScASM" title="Link to this definition">¶</a></dt>
-<dd><p>Propagate light using scaled Angular Spectrum Method.</p>
-<p>This function perform a scaled forward angular spectrum propagation. It take an
-input optical field ‘light’, propagate it over a distance ‘z’, and scale the observation
-plane by a factor ‘b’ relative to the source plane. If ‘linear’ is True, zero-padding is
-applied to avoid wrap-around effects from FFT-based convolutions.
-refer to M. Abedi, H. Saghafifar, and L. Rahimi,
-“Improvement of optical wave propagation simulations: the scaled angular spectrum method
-for far-field and focal analysis,” Opt. Continuum 3, 935-947 (2024)</p>
+<dd><p>Scaled angular spectrum on an isotropic output pitch b*input_pitch.</p>
+<p>Preserves field precision and supports odd rectangular arrays. Uses
+physical forward/inverse quadrature normalization and the same scaled
+inverse operator for expansion and focusing. Negative z is the stable
+adjoint for evanescent components, rather than their unstable inverse.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scaling factor for observation plane (b&gt;1)</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field with scaled observation plane</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
-</dd>
 </dl>
-<div class="admonition-references admonition">
-<p class="admonition-title">References</p>
-<p>Abedi et al., “Improvement of optical wave propagation simulations:
-the scaled angular spectrum method for far-field and focal analysis”</p>
-</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward_ScASM_focusing">
 <span class="sig-name descname"><span class="pre">forward_ScASM_focusing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_ScASM_focusing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_ScASM_focusing" title="Link to this definition">¶</a></dt>
-<dd><p>Propagate light using scaled ASM for focusing.</p>
-<p>Implement scaled ASM propagation for focusing to a smaller observation plane.
-Use FFT to transform to frequency domain, apply transfer function, then
-use Sc-IDFT to resample field at smaller observation plane. Support
-multi-wavelength channels and linear/circular convolution.</p>
+<dd><p>Focusing variant of the same physically normalized scaled operator.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scaling factor (b&lt;1 for focusing to smaller plane)</p></li>
-<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use linear convolution with zero-padding</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field at focusing plane</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>linear</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -639,25 +674,36 @@ multi-wavelength channels and linear/circular convolution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator.forward_RayleighSommerfeld">
 <span class="sig-name descname"><span class="pre">forward_RayleighSommerfeld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sampling_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator.forward_RayleighSommerfeld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator.forward_RayleighSommerfeld" title="Link to this definition">¶</a></dt>
-<dd><p>Propagate light using Rayleigh-Sommerfeld diffraction.</p>
-<p>Implement exact scalar diffraction calculation. Computationally intensive
-but accurate for both near and far field. Support arbitrary target plane geometry.</p>
+<dd><p>Evaluate the scalar Rayleigh-Sommerfeld integral by pixel quadrature.</p>
+<p>Source coordinates are (index - size//2)*pitch, in metres. Batch and
+wavelength channels are independent. The returned field preserves the
+input complex dtype and device. This finite-grid quadrature is not an
+exact continuous diffraction solution; sampling convergence is required.</p>
+<p>target_plane is an optional tuple of finite, equally shaped 2D (x,y,z)
+tensors, with nonzero z. Output target coordinates are retained as
+result.target_plane. For explicit targets, result.pitch remains the
+input pitch as a fallback: the coordinate tensors are authoritative and
+must be used for nonuniform/tilted grids, rather than feeding the result
+directly to a uniform-grid propagator.</p>
+<p>sampling_ratio evaluates every nth target row/column and replicates
+the samples with nearest-neighbour blocks, including partial edge
+blocks. It does not subsample the source integral. vectorized selects
+chunked rather than one-target-at-a-time evaluation; steps is the
+requested number of chunks, bounded by the sampled target count.
+Both execution paths implement the same quadrature and sampling rule.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates of target plane points</p></li>
-<li><p><strong>sampling_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Spatial sampling ratio for computation (&gt;1 for faster calculation)</p></li>
-<li><p><strong>vectorized</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – If True, use vectorized implementation for better performance</p></li>
-<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of computation steps for vectorized mode (higher values use less memory)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a><em>, </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a><em>, </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>sampling_ratio</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+<li><p><strong>vectorized</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>)</p></li>
+<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -665,21 +711,18 @@ but accurate for both near and far field. Support arbitrary target plane geometr
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.propagator.Propagator._forward_RayleighSommerfeld_vectorized">
 <span class="sig-name descname"><span class="pre">_forward_RayleighSommerfeld_vectorized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">light</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_plane</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/propagator.html#Propagator._forward_RayleighSommerfeld_vectorized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.propagator.Propagator._forward_RayleighSommerfeld_vectorized" title="Link to this definition">¶</a></dt>
-<dd><p>Vectorized implementation of RayleighSommerfeld propagation.</p>
+<dd><p>Compatibility wrapper for chunked RS quadrature.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Input light field</p></li>
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Propagation distance in meters</p></li>
-<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em>, </em><em>optional</em>) – (x, y, z) coordinates of target plane points</p></li>
-<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – How many steps to divide computation into to manage memory usage</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Propagated light field</p>
-</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-class docutils literal notranslate"><span class="pre">Light</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>light</strong> (<a class="reference internal" href="pado.light.Light.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>)</p></li>
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>target_plane</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a><em>, </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a><em>, </em><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -717,7 +760,7 @@ but accurate for both near and far field. Support arbitrary target plane geometr
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Seung-Hwan Baek, Dong-Ha Shin, and contributors
+                Copyright &#169; 2026, Seung-Hwan Baek, Dong-Ha Shin, and contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -746,7 +789,9 @@ but accurate for both near and far field. Support arbitrary target plane geometr
 <li><a class="reference internal" href="#">pado.propagator.Propagator</a><ul>
 <li><a class="reference internal" href="#pado.propagator.Propagator"><code class="docutils literal notranslate"><span class="pre">Propagator</span></code></a><ul>
 <li><a class="reference internal" href="#pado.propagator.Propagator.__init__"><code class="docutils literal notranslate"><span class="pre">Propagator.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#pado.propagator.Propagator.prepare"><code class="docutils literal notranslate"><span class="pre">Propagator.prepare()</span></code></a></li>
 <li><a class="reference internal" href="#pado.propagator.Propagator.forward"><code class="docutils literal notranslate"><span class="pre">Propagator.forward()</span></code></a></li>
+<li><a class="reference internal" href="#pado.propagator.Propagator.forward_180"><code class="docutils literal notranslate"><span class="pre">Propagator.forward_180()</span></code></a></li>
 <li><a class="reference internal" href="#pado.propagator.Propagator.forward_non_polar"><code class="docutils literal notranslate"><span class="pre">Propagator.forward_non_polar()</span></code></a></li>
 <li><a class="reference internal" href="#pado.propagator.Propagator.forward_Fraunhofer"><code class="docutils literal notranslate"><span class="pre">Propagator.forward_Fraunhofer()</span></code></a></li>
 <li><a class="reference internal" href="#pado.propagator.Propagator.forward_Fresnel"><code class="docutils literal notranslate"><span class="pre">Propagator.forward_Fresnel()</span></code></a></li>
@@ -771,7 +816,7 @@ but accurate for both near and far field. Support arbitrary target plane geometr
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=8d563738"></script>
+</div><script src="../../_static/documentation_options.js?v=fc837d61"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

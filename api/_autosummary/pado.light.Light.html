@@ -7,17 +7,12 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="api/_autosummary/pado.light.Light.html" />
 <meta property="og:site_name" content="PADO Documentation" />
-<meta property="og:image:width" content="1146" />
-<meta property="og:image:height" content="600" />
-<meta property="og:image" content="_images/social_previews/summary_api__autosummary_pado.light.Light_9629052e.png" />
-<meta property="og:image:alt" content="" />
-<meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="pado.light.PolarizedLight" href="pado.light.PolarizedLight.html"><link rel="prev" title="Light Field" href="../light.html">
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
         <title>pado.light.Light - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -211,12 +206,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 current has-children"><a class="reference internal" href="../light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l3 current current-page"><a class="current reference internal" href="#">pado.light.Light</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pado.light.PolarizedLight.html">pado.light.PolarizedLight</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../kspace_light.html">Frequency-domain Light</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sampler.html">K-space Sampling</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../optical_element.html">Optical Elements</a><input aria-label="Toggle navigation of Optical Elements" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="pado.optical_element.OpticalElement.html">pado.optical_element.OpticalElement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pado.optical_element.RefractiveLens.html">pado.optical_element.RefractiveLens</a></li>
@@ -308,11 +306,11 @@ through various optical operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>]</em>)</p></li>
-<li><p><strong>pitch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>)</p></li>
-<li><p><strong>wvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>]</em>)</p></li>
-<li><p><strong>field</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>Tensor</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>)</p></li>
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><em>Tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>]</em>)</p></li>
+<li><p><strong>pitch</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>wvl</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><em>List</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>]</em>)</p></li>
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>Tensor</em></a><em> | </em><em>None</em>)</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -323,11 +321,11 @@ through various optical operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Field dimensions (B, Ch, R, C) for batch, channels, rows, cols</p></li>
-<li><p><strong>pitch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Pixel pitch in meters</p></li>
-<li><p><strong>wvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a>) – Wavelength in meters. Can be single value or list for multi-wavelength</p></li>
-<li><p><strong>field</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a><em>, </em><em>optional</em>) – Initial complex field [B, Ch, R, C]</p></li>
-<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Device for computation (‘cpu’, ‘cuda:0’, etc.)</p></li>
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Field dimensions (B, Ch, R, C) for batch, channels, rows, cols</p></li>
+<li><p><strong>pitch</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Pixel pitch in meters</p></li>
+<li><p><strong>wvl</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a>) – Wavelength in meters. Can be single value or list for multi-wavelength</p></li>
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a><em>, </em><em>optional</em>) – Initial complex field [B, Ch, R, C]</p></li>
+<li><p><strong>device</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Device for computation (‘cpu’, ‘cuda:0’, etc.)</p></li>
 </ul>
 </dd>
 </dl>
@@ -346,10 +344,10 @@ through various optical operations.</p>
 <dd><p>Crop light wavefront.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>crop_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Crop dimensions (left, right, top, bottom)</p>
+<dd class="field-odd"><p><strong>crop_width</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Crop dimensions (left, right, top, bottom)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -369,7 +367,7 @@ through various optical operations.</p>
 <dd class="field-odd"><p>New light instance with copied attributes</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light">Light</a></p>
+<dd class="field-even"><p><a class="reference internal" href="#pado.light.Light" title="pado.light.Light">Light</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -387,12 +385,12 @@ through various optical operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pad_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a>) – Padding dimensions (left, right, top, bottom)</p></li>
-<li><p><strong>padval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Padding value (only 0 supported)</p></li>
+<li><p><strong>pad_width</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a>) – Padding dimensions (left, right, top, bottom)</p></li>
+<li><p><strong>padval</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Padding value (only 0 supported)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -410,15 +408,15 @@ through various optical operations.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>real</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Real part in rectangular representation.
+<li><p><strong>real</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Real part in rectangular representation.
 If c is None: Expected shape is (B,Ch,R,C) matching self.field.real.shape
 If c is provided: Expected shape is (B,R,C) matching self.field[:, c, …].real.shape
 where B=batch size, Ch=channels, R=rows, C=columns</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -442,15 +440,15 @@ where B=batch size, Ch=channels, R=rows, C=columns</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>imag</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Imaginary part in rectangular representation.
+<li><p><strong>imag</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Imaginary part in rectangular representation.
 If c is None: Expected shape is (B,Ch,R,C) matching self.field.imag.shape
 If c is provided: Expected shape is (B,R,C) matching self.field[:, c, …].imag.shape
 where B=batch size, Ch=channels, R=rows, C=columns</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -474,12 +472,12 @@ where B=batch size, Ch=channels, R=rows, C=columns</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>amplitude</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Amplitude in polar representation.</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify.</p></li>
+<li><p><strong>amplitude</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Amplitude in polar representation.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -491,15 +489,15 @@ where B=batch size, Ch=channels, R=rows, C=columns</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phase</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Phase in polar representation (in radians).
+<li><p><strong>phase</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Phase in polar representation (in radians).
 If c is None: Expected shape is (B,Ch,R,C) matching self.field.shape
 If c is provided: Expected shape is (B,R,C) matching self.field[:, c, …].shape
 where B=batch size, Ch=channels, R=rows, C=columns</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -520,18 +518,20 @@ where B=batch size, Ch=channels, R=rows, C=columns</p></li>
 <dt class="sig sig-object py" id="pado.light.Light.set_field">
 <span class="sig-name descname"><span class="pre">set_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/light.html#Light.set_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.light.Light.set_field" title="Link to this definition">¶</a></dt>
 <dd><p>Set complex field of light wavefront.</p>
+<p>Channel replacement copies the containing field, so a borrowed tensor
+or autograd leaf is not modified. Untouched channels retain their graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)"><em>torch.Tensor</em></a>) – Complex field tensor.
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Complex field tensor.
 If c is None: Expected shape is (B,Ch,R,C) matching self.field.shape
 If c is provided: Expected shape is (B,R,C) matching self.field[:, c, …].shape
 where B=batch size, Ch=channels, R=rows, C=columns</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If provided, only that specific channel will be updated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -554,10 +554,10 @@ where B=batch size, Ch=channels, R=rows, C=columns</p></li>
 <dd><p>Set pixel pitch of light field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pitch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – New pixel pitch in meters</p>
+<dd class="field-odd"><p><strong>pitch</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – New pixel pitch in meters</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -577,7 +577,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p></li>
 <dd class="field-odd"><p>Number of channels</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)">int</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -594,7 +594,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p></li>
 <dd><p>Get amplitude of light wavefront.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
+<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
@@ -606,7 +606,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -627,7 +627,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 <dd><p>Get phase of light wavefront.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
+<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
@@ -639,7 +639,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -660,7 +660,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 <dd><p>Get intensity (amplitude squared) of light wavefront.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
+<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
@@ -672,7 +672,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -693,7 +693,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 <dd><p>Get complex field of light wavefront.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
+<dd class="field-odd"><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to retrieve. If provided, only that specific channel will be returned.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
@@ -705,7 +705,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.8)">torch.Tensor</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -729,7 +729,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 <dd class="field-odd"><p>Device name (‘cpu’, ‘cuda:0’, etc.)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)">str</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -749,7 +749,7 @@ where B=batch size, Ch=channels, R=rows, C=columns</p>
 <dd class="field-odd"><p>Spatial height and width of wavefront in meters</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -769,10 +769,14 @@ based on the Nyquist sampling criterion: sin(θ_max) = λ/(2·pitch).
 Use the shortest wavelength for multi-wavelength cases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Ideal angle limit in degrees</p>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Ideal angle limit in degrees. Tensor wavelength</dt><dd><p>inputs retain their device, dtype and gradient.</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a> or <a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -790,19 +794,19 @@ Use the shortest wavelength for multi-wavelength cases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scale_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Scale factor for interpolation</p></li>
-<li><p><strong>interp_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Interpolation method (‘bilinear’ or ‘nearest’)</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify</p></li>
+<li><p><strong>scale_factor</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Scale factor for interpolation</p></li>
+<li><p><strong>interp_mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Interpolation method (‘bilinear’ or ‘nearest’)</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">magnify</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>  <span class="c1"># Double resolution</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">magnify</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">interp_mode</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">)</span>  <span class="c1"># Half resolution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">magnify</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">interp_mode</span><span class="o">=</span><span class="s1">'bilinear'</span><span class="p">)</span>  <span class="c1"># Half resolution</span>
 </pre></div>
 </div>
 </div>
@@ -815,12 +819,12 @@ Use the shortest wavelength for multi-wavelength cases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>target_pitch</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – New pixel pitch in meters</p></li>
-<li><p><strong>interp_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Interpolation method (‘bilinear’ or ‘nearest’)</p></li>
+<li><p><strong>target_pitch</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – New pixel pitch in meters</p></li>
+<li><p><strong>interp_mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Interpolation method (‘bilinear’ or ‘nearest’)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -834,53 +838,50 @@ Use the shortest wavelength for multi-wavelength cases.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.light.Light.set_spherical_light">
 <span class="sig-name descname"><span class="pre">set_spherical_light</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/light.html#Light.set_spherical_light"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.light.Light.set_spherical_light" title="Link to this definition">¶</a></dt>
-<dd><p>Set spherical wavefront from point source.</p>
+<dd><p>Set a unit-amplitude spherical phase front from a point source.</p>
+<p>Coordinates are (index - size//2)*pitch. dx offsets columns and dy
+offsets rows, in meters. This initializer retains the absolute optical
+carrier phase; it does not apply geometric 1/r amplitude decay.
+Scalar or channel wavelengths and scalar tensor parameters retain
+gradients. Phase is evaluated in float64 before final field storage.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Distance from source along optical axis</p></li>
-<li><p><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Lateral x-offset of source</p></li>
-<li><p><strong>dy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Lateral y-offset of source</p></li>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>z</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>dx</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>dy</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
-</dd>
 </dl>
-<div class="admonition-examples admonition">
-<p class="admonition-title">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_spherical_light</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Source at 10cm</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_spherical_light</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>  <span class="c1"># Offset source</span>
-</pre></div>
-</div>
-</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.light.Light.set_plane_light">
 <span class="sig-name descname"><span class="pre">set_plane_light</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/light.html#Light.set_plane_light"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.light.Light.set_plane_light" title="Link to this definition">¶</a></dt>
-<dd><p>Set plane wave with unit amplitude.</p>
+<dd><p>Set a unit-amplitude plane wave with angle theta in degrees.</p>
+<p>The historical tilt axis is rows. Coordinates are now spaced by the
+declared pitch: (index - rows//2)*pitch, including odd-sized fields.
+This intentionally replaces endpoint-inclusive linspace, whose actual
+spacing was rows/(rows-1)*pitch. Optical phase is evaluated in float64
+before casting the complex field to its original storage dtype.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Incident angle in degrees</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>theta</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p>
 </dd>
 </dl>
-<div class="admonition-examples admonition">
-<p class="admonition-title">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_plane_light</span><span class="p">(</span><span class="n">theta</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>  <span class="c1"># 15° incident angle</span>
-</pre></div>
-</div>
-</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pado.light.Light.set_amplitude_ones">
 <span class="sig-name descname"><span class="pre">set_amplitude_ones</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/light.html#Light.set_amplitude_ones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.light.Light.set_amplitude_ones" title="Link to this definition">¶</a></dt>
 <dd><p>Set amplitude to ones.
-:rtype: <span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+:rtype: <span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_amplitude_ones</span><span class="p">()</span>
@@ -898,7 +899,7 @@ Use the shortest wavelength for multi-wavelength cases.</p>
 <dt class="sig sig-object py" id="pado.light.Light.set_amplitude_zeros">
 <span class="sig-name descname"><span class="pre">set_amplitude_zeros</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/light.html#Light.set_amplitude_zeros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.light.Light.set_amplitude_zeros" title="Link to this definition">¶</a></dt>
 <dd><p>Set amplitude to zeros.
-:rtype: <span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+:rtype: <span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_amplitude_zeros</span><span class="p">()</span>
@@ -916,7 +917,7 @@ Use the shortest wavelength for multi-wavelength cases.</p>
 <dt class="sig sig-object py" id="pado.light.Light.set_phase_zeros">
 <span class="sig-name descname"><span class="pre">set_phase_zeros</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pado/light.html#Light.set_phase_zeros"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.light.Light.set_phase_zeros" title="Link to this definition">¶</a></dt>
 <dd><p>Set phase to zeros.
-:rtype: <span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+:rtype: <span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_zeros</span><span class="p">()</span>
@@ -937,30 +938,50 @@ Use the shortest wavelength for multi-wavelength cases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>std</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Standard deviation for phase randomness.
+<li><p><strong>std</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Standard deviation for phase randomness.
 - For gaussian: Standard deviation in radians
 - For uniform: Half-width of uniform distribution in radians
 - For von_mises: Inverse of concentration parameter (1/κ)
 Defaults to π/2.</p></li>
-<li><p><strong>distribution</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Type of random distribution.
+<li><p><strong>distribution</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Type of random distribution.
 Must be one of [‘gaussian’, ‘uniform’, ‘von_mises’].
 Defaults to ‘gaussian’.</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If None, all channels are modified.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index to modify. If None, all channels are modified.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If distribution is not one of the supported types.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+</dd>
+</dl>
+<div class="admonition-notes admonition">
+<p class="admonition-title">Notes</p>
+<p>All-channel mode draws one complete phase tensor. For more than one
+channel, seeded outputs and the subsequent RNG stream differ from
+versions that redundantly redrew the full tensor per channel.
+The von Mises sampler now uses an unbiased independent sign draw;
+its seeded outputs also change. Selected-channel scope is unchanged.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If distribution is not one of the supported types.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>std</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>)</p></li>
+<li><p><strong>distribution</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>)</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
+</ul>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">()</span>  <span class="c1"># Default gaussian with π/2 std for all channels</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">(</span><span class="n">std</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Reduced randomness</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">)</span>  <span class="c1"># Uniform distribution</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">(</span><span class="n">std</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;von_mises&#39;</span><span class="p">)</span>  <span class="c1"># von Mises with κ=4</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">(</span><span class="n">std</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># Reduced randomness</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">(</span><span class="n">distribution</span><span class="o">=</span><span class="s1">'uniform'</span><span class="p">)</span>  <span class="c1"># Uniform distribution</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">(</span><span class="n">std</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s1">'von_mises'</span><span class="p">)</span>  <span class="c1"># von Mises with κ=4</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">set_phase_random</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Only modify first channel</span>
 </pre></div>
 </div>
@@ -973,17 +994,17 @@ Defaults to ‘gaussian’.</p></li>
 <dd><p>Save light field to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Filename (.pt, .pth, .npy or .mat)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Filename (.pt, .pth, .npy or .mat)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;field.pt&quot;</span><span class="p">)</span>  <span class="c1"># Save as PyTorch format</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;field.npy&quot;</span><span class="p">)</span>  <span class="c1"># Save as NumPy format</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;field.mat&quot;</span><span class="p">)</span>  <span class="c1"># Save as MATLAB format</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"field.pt"</span><span class="p">)</span>  <span class="c1"># Save as PyTorch format</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"field.npy"</span><span class="p">)</span>  <span class="c1"># Save as NumPy format</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">"field.mat"</span><span class="p">)</span>  <span class="c1"># Save as MATLAB format</span>
 </pre></div>
 </div>
 </div>
@@ -995,10 +1016,10 @@ Defaults to ‘gaussian’.</p></li>
 <dd><p>Scale amplitude to match average of another light field.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>other_light</strong> (<a class="reference internal" href="../pado.html#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Reference light field</p>
+<dd class="field-odd"><p><strong>other_light</strong> (<a class="reference internal" href="#pado.light.Light" title="pado.light.Light"><em>Light</em></a>) – Reference light field</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -1017,32 +1038,32 @@ Defaults to ‘gaussian’.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>image_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to image file.</p></li>
-<li><p><strong>random_phase</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to apply random phase.
+<li><p><strong>image_path</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Path to image file.</p></li>
+<li><p><strong>random_phase</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to apply random phase.
 Defaults to False.</p></li>
-<li><p><strong>std</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Standard deviation for phase randomness.
+<li><p><strong>std</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Standard deviation for phase randomness.
 For gaussian: Standard deviation in radians
 For uniform: Half-width of uniform distribution in radians
 For von_mises: Inverse of concentration parameter (1/κ)
 Defaults to π.</p></li>
-<li><p><strong>distribution</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – Type of random distribution.
+<li><p><strong>distribution</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – Type of random distribution.
 Must be one of [‘gaussian’, ‘uniform’, ‘von_mises’].
 Defaults to ‘uniform’.</p></li>
-<li><p><strong>batch_idx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Specific batch index to load the image into.
+<li><p><strong>batch_idx</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Specific batch index to load the image into.
 If None, loads the image into all batches. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;target.png&quot;</span><span class="p">)</span>  <span class="c1"># No random phase, all batches</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;target.png&quot;</span><span class="p">,</span> <span class="n">random_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Default uniform, all batches</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;target.png&quot;</span><span class="p">,</span> <span class="n">random_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;target.png&quot;</span><span class="p">,</span> <span class="n">random_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;target.png&quot;</span><span class="p">,</span> <span class="n">batch_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Load only into first batch</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"target.png"</span><span class="p">)</span>  <span class="c1"># No random phase, all batches</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"target.png"</span><span class="p">,</span> <span class="n">random_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Default uniform, all batches</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"target.png"</span><span class="p">,</span> <span class="n">random_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"target.png"</span><span class="p">,</span> <span class="n">random_phase</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">distribution</span><span class="o">=</span><span class="s1">'gaussian'</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span><span class="s2">"target.png"</span><span class="p">,</span> <span class="n">batch_idx</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Load only into first batch</span>
 </pre></div>
 </div>
 </div>
@@ -1055,17 +1076,17 @@ If None, loads the image into all batches. Defaults to None.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Batch index</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index</p></li>
-<li><p><strong>uniform_scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Use same scale for all channels</p></li>
-<li><p><strong>vmin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Intensity plot range</p></li>
-<li><p><strong>vmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Intensity plot range</p></li>
-<li><p><strong>fix_noise</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to fix numerical noise in amplitude visualization</p></li>
-<li><p><strong>amp_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Threshold for detecting uniform amplitude with noise</p></li>
+<li><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Batch index</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index</p></li>
+<li><p><strong>uniform_scale</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Use same scale for all channels</p></li>
+<li><p><strong>vmin</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Intensity plot range</p></li>
+<li><p><strong>vmax</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Intensity plot range</p></li>
+<li><p><strong>fix_noise</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to fix numerical noise in amplitude visualization</p></li>
+<li><p><strong>amp_threshold</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Threshold for detecting uniform amplitude with noise</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -1073,7 +1094,7 @@ If None, loads the image into all batches. Defaults to None.</p></li>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">visualize</span><span class="p">()</span>  <span class="c1"># Show all channels</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Show only first channel</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">uniform_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># Use uniform scaling</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">fix_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Don&#39;t fix numerical noise</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">fix_noise</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Don't fix numerical noise</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">visualize</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Visualize the second batch</span>
 </pre></div>
 </div>
@@ -1086,10 +1107,10 @@ If None, loads the image into all batches. Defaults to None.</p></li>
 <dd><p>Visualize amplitude, phase, and intensity as RGB images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Batch index to visualize</p>
+<dd class="field-odd"><p><strong>b</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Batch index to visualize</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -1110,7 +1131,7 @@ If None, loads the image into all batches. Defaults to None.</p></li>
 <dd class="field-odd"><p>Shape of the field tensor</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)">tuple</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.14)">tuple</a></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
@@ -1127,17 +1148,17 @@ If None, loads the image into all batches. Defaults to None.</p></li>
 <dd><p>Load light field from file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Filename (.pt, .pth, .npy or .mat)</p>
+<dd class="field-odd"><p><strong>fn</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Filename (.pt, .pth, .npy or .mat)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></span></p>
 </dd>
 </dl>
 <div class="admonition-examples admonition">
 <p class="admonition-title">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;field.pt&quot;</span><span class="p">)</span>  <span class="c1"># Load PyTorch format</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;field.npy&quot;</span><span class="p">)</span>  <span class="c1"># Load NumPy format</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;field.mat&quot;</span><span class="p">)</span>  <span class="c1"># Load MATLAB format</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"field.pt"</span><span class="p">)</span>  <span class="c1"># Load PyTorch format</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"field.npy"</span><span class="p">)</span>  <span class="c1"># Load NumPy format</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">light</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">"field.mat"</span><span class="p">)</span>  <span class="c1"># Load MATLAB format</span>
 </pre></div>
 </div>
 </div>
@@ -1176,7 +1197,7 @@ If None, loads the image into all batches. Defaults to None.</p></li>
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Seung-Hwan Baek, Dong-Ha Shin, and contributors
+                Copyright &#169; 2026, Seung-Hwan Baek, Dong-Ha Shin, and contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -1250,7 +1271,7 @@ If None, loads the image into all batches. Defaults to None.</p></li>
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=8d563738"></script>
+</div><script src="../../_static/documentation_options.js?v=fc837d61"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

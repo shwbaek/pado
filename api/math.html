@@ -8,18 +8,13 @@
 <meta property="og:url" content="api/math.html" />
 <meta property="og:site_name" content="PADO Documentation" />
 <meta property="og:description" content="Constants: Functions:" />
-<meta property="og:image:width" content="1146" />
-<meta property="og:image:height" content="600" />
-<meta property="og:image" content="_images/social_previews/summary_api_math_3d270771.png" />
-<meta property="og:image:alt" content="Constants: Functions:" />
 <meta name="description" content="Constants: Functions:" />
-<meta name="twitter:card" content="summary_large_image" />
 <link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="pado.math.wrap_phase" href="_autosummary/pado.math.wrap_phase.html"><link rel="prev" title="pado.material.Material" href="_autosummary/pado.material.Material.html">
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
         <title>Mathematical Utilities - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -213,12 +208,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../migration.html">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
 <li class="toctree-l2 has-children"><a class="reference internal" href="light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.light.Light.html">pado.light.Light</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.light.PolarizedLight.html">pado.light.PolarizedLight</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="kspace_light.html">Frequency-domain Light</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sampler.html">K-space Sampling</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="optical_element.html">Optical Elements</a><input aria-label="Toggle navigation of Optical Elements" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.optical_element.OpticalElement.html">pado.optical_element.OpticalElement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.optical_element.RefractiveLens.html">pado.optical_element.RefractiveLens</a></li>
@@ -299,8 +297,8 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="mathematical-utilities">
-<h1>Mathematical Utilities<a class="headerlink" href="#mathematical-utilities" title="Link to this heading">¶</a></h1>
+          <section id="module-pado.math">
+<span id="mathematical-utilities"></span><h1>Mathematical Utilities<a class="headerlink" href="#module-pado.math" title="Link to this heading">¶</a></h1>
 <section id="constants">
 <h2>Constants<a class="headerlink" href="#constants" title="Link to this heading">¶</a></h2>
 <dl class="py data">
@@ -308,7 +306,7 @@
 <span class="sig-name descname"><span class="pre">nm</span></span><a class="headerlink" href="#pado.math.nm" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1e-9</p>
@@ -322,7 +320,7 @@
 <span class="sig-name descname"><span class="pre">um</span></span><a class="headerlink" href="#pado.math.um" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1e-6</p>
@@ -336,7 +334,7 @@
 <span class="sig-name descname"><span class="pre">mm</span></span><a class="headerlink" href="#pado.math.mm" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1e-3</p>
@@ -350,7 +348,7 @@
 <span class="sig-name descname"><span class="pre">cm</span></span><a class="headerlink" href="#pado.math.cm" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1e-2</p>
@@ -364,7 +362,7 @@
 <span class="sig-name descname"><span class="pre">m</span></span><a class="headerlink" href="#pado.math.m" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1</p>
@@ -378,7 +376,7 @@
 <span class="sig-name descname"><span class="pre">s</span></span><a class="headerlink" href="#pado.math.s" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1</p>
@@ -392,7 +390,7 @@
 <span class="sig-name descname"><span class="pre">ms</span></span><a class="headerlink" href="#pado.math.ms" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1e-3</p>
@@ -406,7 +404,7 @@
 <span class="sig-name descname"><span class="pre">us</span></span><a class="headerlink" href="#pado.math.us" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1e-6</p>
@@ -420,7 +418,7 @@
 <span class="sig-name descname"><span class="pre">ns</span></span><a class="headerlink" href="#pado.math.ns" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)">float</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)">float</a></p>
 </dd>
 <dt class="field-even">Value<span class="colon">:</span></dt>
 <dd class="field-even"><p>1e-9</p>
@@ -435,37 +433,37 @@
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="pado.html#pado.math.wrap_phase" title="pado.math.wrap_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap_phase</span></code></a>(phase_u[, stay_positive])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/pado.math.wrap_phase.html#pado.math.wrap_phase" title="pado.math.wrap_phase"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap_phase</span></code></a>(phase_u[, stay_positive])</p></td>
 <td><p>Wrap phase values to [-π, π] or [0, 2π] range.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pado.html#pado.math.fft" title="pado.math.fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fft</span></code></a>(arr_c[, normalized, pad_width, padval, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/pado.math.fft.html#pado.math.fft" title="pado.math.fft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fft</span></code></a>(arr_c[, normalized, pad_width, padval, ...])</p></td>
 <td><p>Compute 2D FFT of a complex tensor with optional padding and frequency shifting.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pado.html#pado.math.ifft" title="pado.math.ifft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ifft</span></code></a>(arr_c[, normalized, pad_width, shift])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/pado.math.ifft.html#pado.math.ifft" title="pado.math.ifft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ifft</span></code></a>(arr_c[, normalized, pad_width, shift])</p></td>
 <td><p>Compute 2D inverse FFT of a complex tensor with optional padding and shifting.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pado.html#pado.math.calculate_psnr" title="pado.math.calculate_psnr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_psnr</span></code></a>(img1, img2[, data_range])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/pado.math.calculate_psnr.html#pado.math.calculate_psnr" title="pado.math.calculate_psnr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_psnr</span></code></a>(img1, img2[, data_range])</p></td>
 <td><p>Calculate Peak Signal-to-Noise Ratio between multi-channel tensors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pado.html#pado.math.calculate_ssim" title="pado.math.calculate_ssim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_ssim</span></code></a>(img1, img2[, window_size, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/pado.math.calculate_ssim.html#pado.math.calculate_ssim" title="pado.math.calculate_ssim"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_ssim</span></code></a>(img1, img2[, window_size, ...])</p></td>
 <td><p>Calculate Structural Similarity Index between multi-channel tensors.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pado.html#pado.math.gaussian_window" title="pado.math.gaussian_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussian_window</span></code></a>(size, sigma)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/pado.math.gaussian_window.html#pado.math.gaussian_window" title="pado.math.gaussian_window"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gaussian_window</span></code></a>(size, sigma, *[, device, dtype])</p></td>
 <td><p>Create normalized 2D Gaussian window.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pado.html#pado.math.sc_dft_1d" title="pado.math.sc_dft_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_dft_1d</span></code></a>(g, M, delta_x, delta_fx)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/pado.math.sc_dft_1d.html#pado.math.sc_dft_1d" title="pado.math.sc_dft_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_dft_1d</span></code></a>(g, M, delta_x, delta_fx)</p></td>
 <td><p>Compute 1D scaled DFT for optical field propagation.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pado.html#pado.math.sc_idft_1d" title="pado.math.sc_idft_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_idft_1d</span></code></a>(G, M, delta_fx, delta_x)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/pado.math.sc_idft_1d.html#pado.math.sc_idft_1d" title="pado.math.sc_idft_1d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_idft_1d</span></code></a>(G, M, delta_fx, delta_x)</p></td>
 <td><p>Compute 1D scaled inverse DFT for optical field reconstruction.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pado.html#pado.math.sc_dft_2d" title="pado.math.sc_dft_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_dft_2d</span></code></a>(u, Mx, My, delta_x, delta_y, ...)</p></td>
-<td><p>Perform 2D scaled DFT using separable 1D transforms.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/pado.math.sc_dft_2d.html#pado.math.sc_dft_2d" title="pado.math.sc_dft_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_dft_2d</span></code></a>(u, Mx, My, delta_x, delta_y, ...)</p></td>
+<td><p>Perform 2D scaled DFT using batched separable 1D transforms.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="pado.html#pado.math.sc_idft_2d" title="pado.math.sc_idft_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_idft_2d</span></code></a>(U, Mx, My, delta_x, delta_y, ...)</p></td>
-<td><p>Perform 2D scaled inverse DFT using separable 1D transforms.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/pado.math.sc_idft_2d.html#pado.math.sc_idft_2d" title="pado.math.sc_idft_2d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sc_idft_2d</span></code></a>(U, Mx, My, delta_x, delta_y, ...)</p></td>
+<td><p>Perform 2D scaled inverse DFT using batched separable 1D transforms.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="pado.html#pado.math.compute_scasm_transfer_function" title="pado.math.compute_scasm_transfer_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scasm_transfer_function</span></code></a>(Mx, My, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/pado.math.compute_scasm_transfer_function.html#pado.math.compute_scasm_transfer_function" title="pado.math.compute_scasm_transfer_function"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_scasm_transfer_function</span></code></a>(Mx, My, ...)</p></td>
 <td><p>Compute transfer function for Scaled Angular Spectrum Method propagation.</p></td>
 </tr>
 </tbody>
@@ -503,7 +501,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Seung-Hwan Baek, Dong-Ha Shin, and contributors
+                Copyright &#169; 2026, Seung-Hwan Baek, Dong-Ha Shin, and contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -554,7 +552,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=8d563738"></script>
+</div><script src="../_static/documentation_options.js?v=fc837d61"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -3,16 +3,14 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta property="og:title" content="Light Field" />
+<meta property="og:title" content="K-space Sampling" />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="api/light.html" />
+<meta property="og:url" content="api/sampler.html" />
 <meta property="og:site_name" content="PADO Documentation" />
-<meta property="og:description" content="Core Classes:" />
-<meta name="description" content="Core Classes:" />
-<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="pado.light.Light" href="_autosummary/pado.light.Light.html"><link rel="prev" title="API Reference" href="index.html">
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Optical Elements" href="optical_element.html"><link rel="prev" title="Frequency-domain Light" href="kspace_light.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
-        <title>Light Field - PADO Documentation</title>
+        <title>K-space Sampling - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -210,13 +208,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../migration.html">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
-<li class="toctree-l2 current has-children current-page"><a class="current reference internal" href="#">Light Field</a><input aria-label="Toggle navigation of Light Field" checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.light.Light.html">pado.light.Light</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.light.PolarizedLight.html">pado.light.PolarizedLight</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="kspace_light.html">Frequency-domain Light</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sampler.html">K-space Sampling</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">K-space Sampling</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="optical_element.html">Optical Elements</a><input aria-label="Toggle navigation of Optical Elements" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.optical_element.OpticalElement.html">pado.optical_element.OpticalElement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="_autosummary/pado.optical_element.RefractiveLens.html">pado.optical_element.RefractiveLens</a></li>
@@ -279,7 +277,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/api/light.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/api/sampler.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -297,23 +295,90 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="module-pado.light">
-<span id="light-field"></span><h1>Light Field<a class="headerlink" href="#module-pado.light" title="Link to this heading">¶</a></h1>
-<section id="core-classes">
-<h2>Core Classes<a class="headerlink" href="#core-classes" title="Link to this heading">¶</a></h2>
-<div class="table-wrapper autosummary longtable docutils container">
-<table class="autosummary longtable docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_autosummary/pado.light.Light.html#pado.light.Light" title="pado.light.Light"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Light</span></code></a>(dim, pitch, wvl[, field, device])</p></td>
-<td><p>Light wave with complex field wavefront.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="_autosummary/pado.light.PolarizedLight.html#pado.light.PolarizedLight" title="pado.light.PolarizedLight"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PolarizedLight</span></code></a>(dim, pitch, wvl[, fieldX, ...])</p></td>
-<td><p>Light wave with polarized complex field wavefront.</p></td>
-</tr>
-</tbody>
-</table>
+          <section id="module-pado.sampler">
+<span id="k-space-sampling"></span><h1>K-space Sampling<a class="headerlink" href="#module-pado.sampler" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pado.sampler.Sampler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Sampler</span></span><a class="reference internal" href="../_modules/pado/sampler.html#Sampler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.sampler.Sampler" title="Link to this definition">¶</a></dt>
+<dd><p>Sample a k-space (KSpaceLight) complex field at angular / direction queries.</p>
+<p>The k-space field is stored on a <code class="docutils literal notranslate"><span class="pre">(kx,</span> <span class="pre">ky)</span></code> grid in radians per meter.
+Given query angular coordinates <code class="docutils literal notranslate"><span class="pre">(theta,</span> <span class="pre">phi)</span></code> or 3D direction vectors,
+this sampler converts them to <code class="docutils literal notranslate"><span class="pre">(kx_query,</span> <span class="pre">ky_query)</span></code>, normalizes to the
+<code class="docutils literal notranslate"><span class="pre">[-1,</span> <span class="pre">1]</span></code> coordinate system expected by <code class="docutils literal notranslate"><span class="pre">torch.nn.functional.grid_sample</span></code>,
+and samples the complex field (real/imag separately to preserve autograd).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">sample_direction</span></code> samples the angular / k-space field along a
+direction. It does NOT compute the coherent field at a physical 3D
+point; that would require an integral over k-space and is left for a
+separate, later implementation.</p>
 </div>
-</section>
+<dl class="py method">
+<dt class="sig sig-object py" id="pado.sampler.Sampler.sample_theta_phi">
+<span class="sig-name descname"><span class="pre">sample_theta_phi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bilinear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polar_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'z'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pado/sampler.html#Sampler.sample_theta_phi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.sampler.Sampler.sample_theta_phi" title="Link to this definition">¶</a></dt>
+<dd><p>Sample the k-space field at angular coordinates (theta, phi).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_field</strong> (<a class="reference internal" href="kspace_light.html#pado.kspace_light.KSpaceLight" title="pado.kspace_light.KSpaceLight"><em>KSpaceLight</em></a>) – k-space field to sample.</p></li>
+<li><p><strong>theta</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Query polar angles in radians, shape [H, W] or [B, H, W].</p></li>
+<li><p><strong>phi</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Query azimuthal angles in radians, same shape as theta.</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index for multi-wavelength fields.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – grid_sample interpolation mode.</p></li>
+<li><p><strong>padding_mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – grid_sample out-of-range padding mode.</p></li>
+<li><p><strong>align_corners</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – grid_sample align_corners flag.</p></li>
+<li><p><strong>polar_axis</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – “z” (default) uses theta from the optical z axis
+and phi from +x toward +y, matching KSpaceLight.get_theta_phi_grid.
+“y” uses theta from +y and phi from +x toward +z, preserving the
+validation notebook’s angular layout.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sampled complex field [N, C_out, H, W].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pado.sampler.Sampler.sample_direction">
+<span class="sig-name descname"><span class="pre">sample_direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_field</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bilinear'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">align_corners</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pado/sampler.html#Sampler.sample_direction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pado.sampler.Sampler.sample_direction" title="Link to this definition">¶</a></dt>
+<dd><p>Sample the k-space field along 3D direction vectors.</p>
+<p>Coordinate axes must be uniformly sampled. If an axis has length one,
+queries must match that stored coordinate (torch.isclose tolerance);
+off-axis queries raise ValueError for every padding mode because no
+interpolation spacing is defined.</p>
+<p>Only the forward hemisphere (dir_z &gt;= 0) is supported. Rear-facing,
+zero and nonfinite vectors raise ValueError. With normalize=False,
+vectors must already have unit length. Values within 8 dtype eps of
+the horizon are treated as horizon roundoff. Validation on CUDA may
+synchronize with the host.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_field</strong> (<a class="reference internal" href="kspace_light.html#pado.kspace_light.KSpaceLight" title="pado.kspace_light.KSpaceLight"><em>KSpaceLight</em></a>) – k-space field to sample.</p></li>
+<li><p><strong>dirs</strong> (<a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)"><em>torch.Tensor</em></a>) – Direction vectors with last dim 3, shape
+[H, W, 3] or [B, H, W, 3], representing (dir_x, dir_y, dir_z).</p></li>
+<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – Channel index for multi-wavelength fields.</p></li>
+<li><p><strong>mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – grid_sample interpolation mode.</p></li>
+<li><p><strong>padding_mode</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – grid_sample out-of-range padding mode.</p></li>
+<li><p><strong>align_corners</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – grid_sample align_corners flag.</p></li>
+<li><p><strong>normalize</strong> (<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True, normalize each direction vector to unit length.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sampled complex field [N, C_out, H, W].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.pytorch.org/docs/stable/tensors.html#torch.Tensor" title="(in PyTorch v2.14)">torch.Tensor</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -321,23 +386,23 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="_autosummary/pado.light.Light.html">
+          <a class="next-page" href="optical_element.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">pado.light.Light</div>
+                <div class="title">Optical Elements</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="index.html">
+          <a class="prev-page" href="kspace_light.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">API Reference</div>
+                <div class="title">Frequency-domain Light</div>
                 
               </div>
             </a>
@@ -371,8 +436,12 @@
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Light Field</a><ul>
-<li><a class="reference internal" href="#core-classes">Core Classes</a></li>
+<li><a class="reference internal" href="#">K-space Sampling</a><ul>
+<li><a class="reference internal" href="#pado.sampler.Sampler"><code class="docutils literal notranslate"><span class="pre">Sampler</span></code></a><ul>
+<li><a class="reference internal" href="#pado.sampler.Sampler.sample_theta_phi"><code class="docutils literal notranslate"><span class="pre">Sampler.sample_theta_phi()</span></code></a></li>
+<li><a class="reference internal" href="#pado.sampler.Sampler.sample_direction"><code class="docutils literal notranslate"><span class="pre">Sampler.sample_direction()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -7,19 +7,14 @@
 <meta property="og:type" content="website" />
 <meta property="og:url" content="installation.html" />
 <meta property="og:site_name" content="PADO Documentation" />
-<meta property="og:description" content="Basic Installation: You can install PADO via pip: Or via conda: Or install directly from GitHub: For development installation: Dependencies: PADO requires the following dependencies: Python 3.9 or ..." />
-<meta property="og:image:width" content="1146" />
-<meta property="og:image:height" content="600" />
-<meta property="og:image" content="_images/social_previews/summary_installation_c3271994.png" />
-<meta property="og:image:alt" content="Basic Installation: You can install PADO via pip: Or via conda: Or install directly from GitHub: For development installation: Dependencies: PADO requires the following dependencies: Python 3.9 or ..." />
-<meta name="description" content="Basic Installation: You can install PADO via pip: Or via conda: Or install directly from GitHub: For development installation: Dependencies: PADO requires the following dependencies: Python 3.9 or ..." />
-<meta name="twitter:card" content="summary_large_image" />
-<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="API Reference" href="api/index.html"><link rel="prev" title="Indices and tables" href="index.html">
+<meta property="og:description" content="Basic installation: This documentation describes PADO 1.1.0. Use Python 3.10 or later and install a PyTorch 2.10 or later build matching the intended CPU/CUDA system. Install the 1.1.0 wheel from t..." />
+<meta name="description" content="Basic installation: This documentation describes PADO 1.1.0. Use Python 3.10 or later and install a PyTorch 2.10 or later build matching the intended CPU/CUDA system. Install the 1.1.0 wheel from t..." />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Migrating to PADO 1.1" href="migration.html"><link rel="prev" title="Indices and tables" href="index.html">
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
         <title>Installation Guide - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -213,12 +208,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pado.light.Light.html">pado.light.Light</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pado.light.PolarizedLight.html">pado.light.PolarizedLight</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="api/kspace_light.html">Frequency-domain Light</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/sampler.html">K-space Sampling</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/optical_element.html">Optical Elements</a><input aria-label="Toggle navigation of Optical Elements" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pado.optical_element.OpticalElement.html">pado.optical_element.OpticalElement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pado.optical_element.RefractiveLens.html">pado.optical_element.RefractiveLens</a></li>
@@ -302,42 +300,76 @@
           <section id="installation-guide">
 <h1>Installation Guide<a class="headerlink" href="#installation-guide" title="Link to this heading">¶</a></h1>
 <section id="basic-installation">
-<h2>Basic Installation<a class="headerlink" href="#basic-installation" title="Link to this heading">¶</a></h2>
-<p>You can install PADO via pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pado-optics
+<h2>Basic installation<a class="headerlink" href="#basic-installation" title="Link to this heading">¶</a></h2>
+<p>This documentation describes PADO 1.1.0. Use Python 3.10 or later
+and install a PyTorch 2.10 or later build matching the intended CPU/CUDA system.
+Install the 1.1.0 wheel from the GitHub release:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"https://github.com/shwbaek/pado/releases/download/1.1.0/pado_optics-1.1.0-py3-none-any.whl"</span>
 </pre></div>
 </div>
-<p>Or via conda:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>pado-optics
-</pre></div>
+<p>The distribution name is <code class="docutils literal notranslate"><span class="pre">pado-optics</span></code> and the Python import is <code class="docutils literal notranslate"><span class="pre">pado</span></code>.
+PyPI publication is separate; an unpinned PyPI install may still select an
+earlier release. See <a class="reference internal" href="migration.html"><span class="doc">Migrating to PADO 1.1</span></a> before comparing numerical results with PADO 1.0.1.</p>
+</section>
+<section id="optional-dependencies">
+<h2>Optional dependencies<a class="headerlink" href="#optional-dependencies" title="Link to this heading">¶</a></h2>
+<p>PyTorch is the only core runtime dependency. Install extras when using their
+corresponding APIs:</p>
+<div class="table-wrapper colwidths-given docutils container">
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 17.6%" />
+<col style="width: 52.9%" />
+<col style="width: 29.4%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Extra</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>Minimum</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></td>
+<td><p>NumPy arrays and NPY files</p></td>
+<td><p>NumPy 1.24</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">viz</span></code></p></td>
+<td><p>Plotting</p></td>
+<td><p>Matplotlib 3.7</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mat</span></code></p></td>
+<td><p>MAT files</p></td>
+<td><p>SciPy 1.10</p></td>
+</tr>
+</tbody>
+</table>
 </div>
-<p>Or install directly from GitHub:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/shwbaek/pado.git
-</pre></div>
-</div>
-<p>For development installation:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/shwbaek/pado.git
-<span class="nb">cd</span><span class="w"> </span>pado
+<p>Install all optional APIs together:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"pado-optics[array,viz,mat] @ https://github.com/shwbaek/pado/releases/download/1.1.0/pado_optics-1.1.0-py3-none-any.whl"</span>
 </pre></div>
 </div>
 </section>
-<section id="dependencies">
-<h2>Dependencies<a class="headerlink" href="#dependencies" title="Link to this heading">¶</a></h2>
-<p>PADO requires the following dependencies:</p>
+<section id="source-installation">
+<h2>Source installation<a class="headerlink" href="#source-installation" title="Link to this heading">¶</a></h2>
+<p>For development against the public repository:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/shwbaek/pado.git
+<span class="nb">cd</span><span class="w"> </span>pado
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[array,viz,mat]"</span>
+</pre></div>
+</div>
+<p>The installed source version follows the selected public commit; it is not
+necessarily the latest published package. No Conda package availability is
+claimed here.</p>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>Python 3.9 or higher</p></li>
-<li><p>PyTorch 1.10.0 or higher</p></li>
-<li><p>NumPy 1.16.0 or higher</p></li>
-<li><p>Matplotlib 3.3.0 or higher</p></li>
-<li><p>SciPy 1.0.0 or higher</p></li>
+<li><p><a class="reference internal" href="migration.html"><span class="doc">Migrating to PADO 1.1</span></a> explains changed numerical conventions, corrections,
+gradients, precision costs and sampling limits.</p></li>
+<li><p><a class="reference internal" href="api/index.html"><span class="doc">API Reference</span></a> documents the Python API.</p></li>
+<li><p><a class="reference internal" href="examples/index.html"><span class="doc">Examples</span></a> links existing examples.</p></li>
+<li><p><a class="reference internal" href="license.html"><span class="doc">License</span></a> describes the license.</p></li>
 </ul>
-<hr class="docutils" />
-<p>After installation, you can:</p>
-<ol class="arabic simple">
-<li><p>Check out the <a class="reference internal" href="api/index.html"><span class="doc">API Reference</span></a> for detailed documentation</p></li>
-<li><p>Explore the <a class="reference internal" href="examples/index.html"><span class="doc">Examples</span></a> for practical examples</p></li>
-<li><p>Read the <a class="reference internal" href="license.html"><span class="doc">License</span></a> for usage terms</p></li>
-</ol>
 </section>
 </section>
 
@@ -346,12 +378,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="api/index.html">
+          <a class="next-page" href="migration.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">API Reference</div>
+                <div class="title">Migrating to PADO 1.1</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -370,7 +402,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Seung-Hwan Baek, Dong-Ha Shin, and contributors
+                Copyright &#169; 2026, Seung-Hwan Baek, Dong-Ha Shin, and contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -397,8 +429,10 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Installation Guide</a><ul>
-<li><a class="reference internal" href="#basic-installation">Basic Installation</a></li>
-<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a class="reference internal" href="#basic-installation">Basic installation</a></li>
+<li><a class="reference internal" href="#optional-dependencies">Optional dependencies</a></li>
+<li><a class="reference internal" href="#source-installation">Source installation</a></li>
+<li><a class="reference internal" href="#next-steps">Next steps</a></li>
 </ul>
 </li>
 </ul>
@@ -410,7 +444,7 @@
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=8d563738"></script>
+</div><script src="_static/documentation_options.js?v=fc837d61"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

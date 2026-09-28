@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2025.09.25 -->
+    <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
         <title>pado.material - PADO Documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=580074bf" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -201,12 +201,15 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../migration.html">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../api/light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.light.Light.html">pado.light.Light</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.light.PolarizedLight.html">pado.light.PolarizedLight</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/kspace_light.html">Frequency-domain Light</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/sampler.html">K-space Sampling</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../api/optical_element.html">Optical Elements</a><input aria-label="Toggle navigation of Optical Elements" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.optical_element.OpticalElement.html">pado.optical_element.OpticalElement</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../api/_autosummary/pado.optical_element.RefractiveLens.html">pado.optical_element.RefractiveLens</a></li>
@@ -286,10 +289,10 @@
 <span class="c1"># The MIT License (MIT)</span>
 <span class="c1">#</span>
 <span class="c1"># PADO (Pytorch Automatic Differentiable Optics)</span>
-<span class="c1"># Copyright (c) 2025 by POSTECH Computer Graphics Lab</span>
+<span class="c1"># Copyright (c) 2023 by POSTECH Computer Graphics Lab</span>
 <span class="c1">#</span>
 <span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
-<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># of this software and associated documentation files (the "Software"), to deal</span>
 <span class="c1"># in the Software without restriction, including without limitation the rights</span>
 <span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
 <span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
@@ -298,7 +301,7 @@
 <span class="c1"># The above copyright notice and this permission notice shall be included in</span>
 <span class="c1"># all copies or substantial portions of the Software.</span>
 <span class="c1">#</span>
-<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
 <span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
 <span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
 <span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
@@ -312,66 +315,113 @@
 <span class="c1">#</span>
 <span class="c1">########################################################</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">_math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span> <span class="k">as</span> <span class="n">_TYPE_CHECKING</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span> <span class="k">as</span> <span class="n">_Any</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+
+<span class="k">if</span> <span class="n">_TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">ndarray</span> <span class="k">as</span> <span class="n">_NDArray</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">_NDArray</span> <span class="o">=</span> <span class="n">_Any</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_sqrt</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Dispatch without moving tensor data to the host or loading NumPy."""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="c1"># Preserve NumPy's real-valued NaN result outside the model domain.</span>
+        <span class="k">return</span> <span class="n">_math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">)</span>
+    <span class="c1"># NumPy arrays remain supported at the compatibility boundary.</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Material">
-<a class="viewcode-back" href="../../api/pado.html#pado.material.Material">[docs]</a>
+<a class="viewcode-back" href="../../api/_autosummary/pado.material.Material.html#pado.material.Material">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Material</span><span class="p">:</span>
 <div class="viewcode-block" id="Material.__init__">
-<a class="viewcode-back" href="../../api/pado.html#pado.material.Material.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_name</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;PDMS&quot;</span><span class="p">,</span> <span class="s2">&quot;FUSED_SILICA&quot;</span><span class="p">,</span> <span class="s2">&quot;VACUUM&quot;</span><span class="p">,</span> <span class="s2">&quot;NOA61&quot;</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create optical material instance with specified refractive index.</span>
+<a class="viewcode-back" href="../../api/_autosummary/pado.material.Material.html#pado.material.Material.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">material_name</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"PDMS"</span><span class="p">,</span> <span class="s2">"FUSED_SILICA"</span><span class="p">,</span> <span class="s2">"VACUUM"</span><span class="p">,</span> <span class="s2">"NOA61"</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">"""Create optical material instance with specified refractive index.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            material_name (str): Material name: PDMS, FUSED_SILICA, VACUUM, or NOA61</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            &gt;&gt;&gt; glass = Material(&quot;FUSED_SILICA&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; glass = Material("FUSED_SILICA")</span>
 <span class="sd">            &gt;&gt;&gt; ri = glass.get_RI(500e-9)  # Get RI at 500nm</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">material_name</span></div>
 
 
 <div class="viewcode-block" id="Material.get_RI">
-<a class="viewcode-back" href="../../api/pado.html#pado.material.Material.get_RI">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_RI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wvl</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return refractive index at specified wavelength.</span>
+<a class="viewcode-back" href="../../api/_autosummary/pado.material.Material.html#pado.material.Material.get_RI">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_RI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wvl</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">_NDArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">_NDArray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""Return refractive index at specified wavelength.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            wvl (float): Wavelength in meters</span>
+<span class="sd">            wvl (float, torch.Tensor, or numpy.ndarray): Wavelength in meters.</span>
+<span class="sd">                Tensor inputs are evaluated entirely in PyTorch, retaining the</span>
+<span class="sd">                input device, float32/float64 dtype, shape, and autograd connection.</span>
+<span class="sd">                Values must be real, finite, and strictly positive.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            float: Refractive index</span>
+<span class="sd">            float, torch.Tensor, or numpy.ndarray: Refractive index. Scalars</span>
+<span class="sd">                return a scalar and arrays are evaluated elementwise. VACUUM</span>
+<span class="sd">                preserves the legacy scalar 1.0 return for non-tensor inputs;</span>
+<span class="sd">                tensor inputs return ones with a zero wavelength derivative.</span>
 
 <span class="sd">        Examples:</span>
-<span class="sd">            &gt;&gt;&gt; pdms = Material(&quot;PDMS&quot;)</span>
+<span class="sd">            &gt;&gt;&gt; pdms = Material("PDMS")</span>
 <span class="sd">            &gt;&gt;&gt; n = pdms.get_RI(633e-9)  # Get RI at 633nm</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">wvl_nm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">wvl</span> <span class="o">/</span> <span class="mf">1e-9</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wvl</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">wvl</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"wvl tensors must have dtype float32 or float64"</span><span class="p">)</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">wvl</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wvl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">wvl</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">_math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">wvl</span><span class="p">)</span> <span class="ow">and</span> <span class="n">wvl</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wvl</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">generic</span><span class="p">))</span>
+                    <span class="ow">or</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">wvl</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+                    <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">iscomplexobj</span><span class="p">(</span><span class="n">wvl</span><span class="p">)):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"wvl must contain real numeric wavelengths"</span><span class="p">)</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">wvl</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">wvl</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">valid</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">valid</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span> <span class="k">else</span> <span class="n">valid</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"wvl must be finite and strictly positive"</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">&quot;PDMS&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0057</span> <span class="o">*</span> <span class="p">(</span><span class="n">wvl_nm</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">wvl_nm</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mf">0.013217</span><span class="p">))</span>
+        <span class="n">wvl_nm</span> <span class="o">=</span> <span class="n">wvl</span> <span class="o">/</span> <span class="mf">1e-9</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">"PDMS"</span><span class="p">:</span>
+            <span class="c1"># Coefficients use micrometres; the public input remains in metres.</span>
+            <span class="c1"># This equivalent form avoids cancellation in wavelength gradients.</span>
+            <span class="n">wvl_um</span> <span class="o">=</span> <span class="n">wvl</span> <span class="o">/</span> <span class="mf">1e-6</span>
+            <span class="k">return</span> <span class="n">_sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mf">1.0057</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.013217</span> <span class="o">/</span> <span class="n">wvl_um</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
         
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">&quot;FUSED_SILICA&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">"FUSED_SILICA"</span><span class="p">:</span>
             <span class="n">wvl_um</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">wvl_nm</span> <span class="o">*</span> <span class="mf">1e-3</span>
-            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+            <span class="k">return</span> <span class="n">_sqrt</span><span class="p">(</span>
                 <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.6961663</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">0.0684043</span> <span class="o">/</span> <span class="n">wvl_um</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="o">+</span> <span class="mf">0.4079426</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">0.1162414</span> <span class="o">/</span> <span class="n">wvl_um</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
                 <span class="o">+</span> <span class="mf">0.8974794</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mf">9.896161</span> <span class="o">/</span> <span class="n">wvl_um</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
             <span class="p">)</span>
-            <span class="c1"># Source: https://refractiveindex.info/?shelf=glass&amp;book=fused_silica&amp;page=Malitson</span>
+            <span class="c1"># Malitson (1965): 0.21-3.71 micrometres, 20 degrees Celsius.</span>
+            <span class="c1"># https://doi.org/10.1364/JOSA.55.001205</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">&quot;NOA61&quot;</span><span class="p">:</span>
-            <span class="n">wvl_um</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">wvl_nm</span> <span class="o">*</span> <span class="mf">1e-3</span>
-            <span class="c1"># n = 1.5375 + 0.00829045 * λ^−2 − 0.000211046 * λ^−4, λ in micrometers</span>
-            <span class="k">return</span> <span class="mf">1.5375</span> <span class="o">+</span> <span class="mf">0.00829045</span> <span class="o">*</span> <span class="p">(</span><span class="n">wvl_um</span> <span class="o">**</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.000211046</span> <span class="o">*</span> <span class="p">(</span><span class="n">wvl_um</span> <span class="o">**</span> <span class="o">-</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">"NOA61"</span><span class="p">:</span>
+            <span class="c1"># Preserve public PADO 12c57df's model (wavelength in micrometres).</span>
+            <span class="c1"># Norland NOA 61 TDS, 25 degrees Celsius; no fitted interval stated.</span>
+            <span class="c1"># https://norlandproducts.com/wp-content/uploads/2025/02/Norland-Products-NOA-61-TDS.pdf</span>
+            <span class="n">wvl_um</span> <span class="o">=</span> <span class="n">wvl_nm</span> <span class="o">*</span> <span class="mf">1e-3</span>
+            <span class="k">return</span> <span class="mf">1.5375</span> <span class="o">+</span> <span class="mf">0.00829045</span> <span class="o">*</span> <span class="n">wvl_um</span><span class="o">**-</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">0.000211046</span> <span class="o">*</span> <span class="n">wvl_um</span><span class="o">**-</span><span class="mi">4</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">&quot;VACUUM&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">1.0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">material_name</span> <span class="o">==</span> <span class="s2">"VACUUM"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">wvl</span> <span class="o">*</span> <span class="mi">0</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">wvl</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="mf">1.0</span>
         
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">material_name</span><span class="si">}</span><span class="s2"> is not in the RI list.&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">material_name</span><span class="si">}</span><span class="s2"> is not in the RI list."</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -386,7 +436,7 @@
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2025, Seung-Hwan Baek, Dong-Ha Shin, and contributors
+                Copyright &#169; 2026, Seung-Hwan Baek, Dong-Ha Shin, and contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -406,7 +456,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=8d563738"></script>
+</div><script src="../../_static/documentation_options.js?v=fc837d61"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

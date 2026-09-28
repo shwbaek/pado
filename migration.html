@@ -1,13 +1,19 @@
 <!doctype html>
 <html class="no-js" lang="en" data-content_root="./">
-  <head>
-<meta charset="utf-8">
+  <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="#">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta property="og:title" content="Migrating to PADO 1.1" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="migration.html" />
+<meta property="og:site_name" content="PADO Documentation" />
+<meta property="og:description" content="This page describes PADO 1.1.0. The distribution remains pado-optics and the Python import remains pado. Existing classes and methods remain available, but several numerical results change. A succe..." />
+<meta name="description" content="This page describes PADO 1.1.0. The distribution remains pado-optics and the Python import remains pado. Existing classes and methods remain available, but several numerical results change. A succe..." />
+<link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="API Reference" href="api/index.html"><link rel="prev" title="Installation Guide" href="installation.html">
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2025.12.19 -->
-<meta name="robots" content="noindex" />
-<title>Search - PADO Documentation</title><link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
+        <title>Migrating to PADO 1.1 - PADO Documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
@@ -179,7 +185,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -194,15 +200,15 @@
     <p class="sidebar-brand-text">PADO Documentation</p>
   </div>
 </a>
- <form class="sidebar-search-container" method="get" action="#" role="search">
+ <form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <ul>
+  <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="migration.html">Migrating to PADO 1.1</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Migrating to PADO 1.1</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2 has-children"><a class="reference internal" href="api/light.html">Light Field</a><input aria-label="Toggle navigation of Light Field" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l3"><a class="reference internal" href="api/_autosummary/pado.light.Light.html">pado.light.Light</a></li>
@@ -272,7 +278,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="_sources/migration.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -280,30 +292,154 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          
-<noscript>
-<div class="admonition error">
-  <p class="admonition-title">Error</p>
-  <p>
-    Please activate JavaScript to enable the search functionality.
-  </p>
-</div>
-</noscript>
+          <section id="migrating-to-pado-1-1">
+<h1>Migrating to PADO 1.1<a class="headerlink" href="#migrating-to-pado-1-1" title="Link to this heading">¶</a></h1>
+<p>This page describes PADO 1.1.0. The distribution remains
+<code class="docutils literal notranslate"><span class="pre">pado-optics</span></code> and the Python import remains <code class="docutils literal notranslate"><span class="pre">pado</span></code>. Existing classes and
+methods remain available, but several numerical results change. A successful
+import is not sufficient validation of a downstream optical calculation.</p>
+<section id="fields-and-physical-conventions">
+<h2>Fields and physical conventions<a class="headerlink" href="#fields-and-physical-conventions" title="Link to this heading">¶</a></h2>
+<p>Lengths are in metres; fields have shape <code class="docutils literal notranslate"><span class="pre">(batch,</span> <span class="pre">channel,</span> <span class="pre">rows,</span> <span class="pre">columns)</span></code>.
+Offsets are <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">x)</span></code> and the time convention is <code class="docutils literal notranslate"><span class="pre">Re(U</span> <span class="pre">exp(-i*omega*t))</span></code>.</p>
+<ul class="simple">
+<li><p><strong>Fresnel:</strong> The old absolute-sum kernel normalization introduced an incorrect
+distance/grid-dependent field amplitude. PADO 1.1 uses scalar paraxial
+Fourier propagation and retains the carrier. Omitting a carrier can be a
+legitimate envelope convention; the old amplitude normalization was a
+separate defect. <code class="docutils literal notranslate"><span class="pre">linear=True</span></code> pads the periodic Fourier grid and crops;
+it does not automatically establish convergence to infinite free space.</p></li>
+<li><p><strong>Fraunhofer:</strong> Results include pixel-area quadrature, the carrier,
+<code class="docutils literal notranslate"><span class="pre">1/(i*lambda*z)</span></code> and the output quadratic phase. Distance affects amplitude
+and phase as well as output pitch. Padding changes the returned sample pitch.</p></li>
+<li><p><strong>Rayleigh-Sommerfeld:</strong> Coordinates are <code class="docutils literal notranslate"><span class="pre">(index-size//2)*pitch</span></code>, with rows
+corresponding to y and columns to x. Source samples and batch members remain
+distinct. Explicit output coordinates define tilted or nonuniform planes.</p></li>
+<li><p><strong>ASM:</strong> Evanescent components decay. Negative distance retains stable decay
+rather than amplifying evanescent components. With zero offset this is the
+adjoint of positive-distance propagation; a nonzero offset must also reverse
+sign to obtain the adjoint. Reversing distance alone keeps the same shift.</p></li>
+<li><p><strong>PDMS:</strong> Wavelength inputs remain metres; coefficient evaluation converts
+to micrometres. The coefficients and material name are retained. Re-evaluate
+height-to-phase calibration. This unit correction does not validate a
+particular product or curing condition experimentally.</p></li>
+<li><p><strong>Zero distance:</strong> Plain numeric zero without a requested transform retains
+the ordinary identity shortcut for ASM/Fresnel/RS. Tensor zero retains
+distance derivatives; offsets still translate; explicit RS planes are
+evaluated; FFT still transforms. Fraunhofer rejects zero distance.</p></li>
+</ul>
+<p>Fresnel and Fraunhofer require their paraxial and far-field approximation
+regimes. Sampling pitch, field extent and padding must be converged for the
+application. Scalar propagation, local-periodic RCWA and measured optical
+validation are separate scopes. This release does not integrate RCWA.</p>
+</section>
+<section id="devices-dependencies-and-autograd">
+<h2>Devices, dependencies and autograd<a class="headerlink" href="#devices-dependencies-and-autograd" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PolarizedLight</span></code> retains the public <code class="docutils literal notranslate"><span class="pre">device=&quot;cuda:0&quot;</span></code> default for implicit
+field creation. Pass <code class="docutils literal notranslate"><span class="pre">device=&quot;cpu&quot;</span></code> explicitly for CPU construction. Supplied
+field tensors determine the device; a missing polarization component follows
+the supplied field’s device and dtype. NumPy, Matplotlib
+and SciPy are optional for their corresponding APIs. Import them directly;
+incidental <code class="docutils literal notranslate"><span class="pre">pado.np</span></code>, <code class="docutils literal notranslate"><span class="pre">pado.plt</span></code>, <code class="docutils literal notranslate"><span class="pre">pado.loadmat</span></code> and <code class="docutils literal notranslate"><span class="pre">pado.savemat</span></code>
+exports are removed. See <a class="reference internal" href="installation.html"><span class="doc">Installation Guide</span></a> for extras.</p>
+<p>Phase/amplitude setters keep the other component’s value with its graph
+detached, as in the previous public release. For joint optimization compose
+the field explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pado</span><span class="w"> </span><span class="kn">import</span> <span class="n">Light</span><span class="p">,</span> <span class="n">Propagator</span>
 
-<div id="search-results"></div>
+<span class="n">device</span> <span class="o">=</span> <span class="s2">"cuda"</span> <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">is_available</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"cpu"</span>
+<span class="n">amplitude</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">phase</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">amplitude</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">light</span> <span class="o">=</span> <span class="n">Light</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">amplitude</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="mf">2e-6</span><span class="p">,</span> <span class="mf">532e-9</span><span class="p">,</span>
+              <span class="n">field</span><span class="o">=</span><span class="n">amplitude</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">))</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">Propagator</span><span class="p">(</span><span class="s2">"ASM"</span><span class="p">)</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">light</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">)</span><span class="o">.</span><span class="n">field</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">square</span><span class="p">()[</span><span class="o">...</span><span class="p">,</span> <span class="mi">48</span><span class="p">:</span><span class="mi">80</span><span class="p">,</span> <span class="mi">48</span><span class="p">:</span><span class="mi">80</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Replacing one channel preserves untouched-channel gradients and avoids
+modifying a borrowed autograd leaf in place. New frequency-domain APIs are
+documented in <a class="reference internal" href="api/kspace_light.html"><span class="doc">Frequency-domain Light</span></a> and <a class="reference internal" href="api/sampler.html"><span class="doc">K-space Sampling</span></a>.</p>
+</section>
+<section id="repeated-geometry-and-precision">
+<h2>Repeated geometry and precision<a class="headerlink" href="#repeated-geometry-and-precision" title="Link to this heading">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Propagator(&quot;ASM&quot;).prepare(light,</span> <span class="pre">z=1e-3,</span> <span class="pre">linear=True,</span> <span class="pre">band_limit=True)</span></code>
+to create a callable for repeated input fields at fixed wavelength, pitch,
+distance, offset, shape, dtype and device. Batch size may vary. Field autograd
+is retained. Use ordinary <code class="docutils literal notranslate"><span class="pre">forward</span></code> when optimizing geometry. The callable
+retains the transfer H; release it when no longer needed. This is explicit
+reuse, not a global cache.</p>
+<p>Complex64 is the performance-oriented path. Complex128 ASM compensates geometry
+and phase construction to preserve bits lost at long distances. This increases
+setup time and temporary memory. Preparation amortizes setup over repeated
+fields; it does not eliminate the initial cost. The default backend is Torch;
+the optional fused CUDA backend is experimental. Parameter derivatives and
+<code class="docutils literal notranslate"><span class="pre">torch.func</span></code> transformations use Torch. Complex128 input alone does not mean
+every optical-element buffer or operation is evaluated at that precision.</p>
+</section>
+<section id="validation-and-measured-costs">
+<h2>Validation and measured costs<a class="headerlink" href="#validation-and-measured-costs" title="Link to this heading">¶</a></h2>
+<p>Installed-package checks and numerical-model validation cover different
+properties. CUDA measurements below use one RTX 5070 and CUDA 12.8; they do not
+establish performance or support for untested GPUs, macOS/MPS or ROCm.
+The numerical and timing figures cover the stated implementations and sampled
+conditions, rather than arbitrary optical systems.</p>
+<p>The 2048-square ASM audit passes 120 sampled conditions per backend over
+400/450/532/633/700 nm, pitches 2 micrometres and 0.4 wavelength, distances
+0.1/1/100 mm, ordinary/band-limited ASM and complex64/128. Maximum field phase
+residual above 1e-4 of reference peak amplitude is 1.160e-3 rad for complex64
+and 2.368e-12 rad for complex128. References use MP80 transfer values for
+difficult geometries and calibrated extended geometry elsewhere with extended
+FFTs. These are not 80-digit FFTs, and the residual is not a certified true
+phase-error bound. Illuminating all bins of a finite periodic grid is not
+continuous-band or arbitrary-aperture validation.</p>
+<p>A contained-Gaussian optical pipeline at 400/532/700 nm refines from 2048 to
+4096 at fixed extent with full-coarse-grid relative field L2 2.24e-8 to
+2.42e-8, without fitting phase or scale. This is one specified input and
+geometry family. Six 2048 cases have exact ordinary/prepared fields, losses
+and gradients; 12 fresh graphs show no retained-allocation growth.</p>
+<p>For warmed complex128 transfer construction at 2048, 532 nm, 2-micrometre
+pitch and 100 mm on RTX 5070 / Windows / Torch 2.11+cu128, median setup is
+29.65 ms Torch / 8.57 ms fused, versus 2.56 ms for the previous less accurate
+construction. Fixed peak extra allocation is 680.2 / 128.0 MiB; H retains
+64 MiB per unpadded channel, or 256 MiB when both dimensions are doubled.
+These timings exclude FFT application and cold compilation. Trainable geometry
+uses Torch and requires additional saved autograd storage. Performance depends
+on dtype, geometry, padding, device and reuse.</p>
+</section>
+</section>
 
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="api/index.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">API Reference</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="installation.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Installation Guide</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -322,8 +458,30 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Migrating to PADO 1.1</a><ul>
+<li><a class="reference internal" href="#fields-and-physical-conventions">Fields and physical conventions</a></li>
+<li><a class="reference internal" href="#devices-dependencies-and-autograd">Devices, dependencies and autograd</a></li>
+<li><a class="reference internal" href="#repeated-geometry-and-precision">Repeated geometry and precision</a></li>
+<li><a class="reference internal" href="#validation-and-measured-costs">Validation and measured costs</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -336,8 +494,5 @@
     <script src="_static/copybutton.js?v=3ceafa3f"></script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    
-<script src="_static/searchtools.js"></script>
-<script src="_static/language_data.js"></script>
-<script src="searchindex.js"></script></body>
+    </body>
 </html>
