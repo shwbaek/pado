@@ -1,77 +1,144 @@
-# PADO
+<div align="center">
+  <img src="docs/images/banner_1.0.0.svg" width="100%">
+</div>
 
-Pytorch Automatic Differentiable Optics, developed by the POSTECH Computer Graphics Lab.
+<h1 align="center">PADO</h1>
+<h3 align="center">Pytorch Automatic Differentiable Optics</h3>
 
-[Documentation](https://shwbaek.github.io/pado) · [Source](https://github.com/shwbaek/pado)
+<p align="center">
+  <a href="https://shwbaek.github.io/pado">📚 Documentation</a>•
+  <a href="#-quickstart">🚀 Quickstart</a> •
+  <a href="#-features">✨ Features</a> •
+  <a href="#%EF%B8%8F-installation">⚙️ Installation</a> •
+  <a href="#-license">📄 License</a>
+</p>
+<p align="center">
+  <img alt="Python Version" src="https://img.shields.io/badge/python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-2.10%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white">
+  <img alt="NumPy" src="https://img.shields.io/badge/NumPy-1.24%2B-013243?style=for-the-badge&logo=numpy&logoColor=white">
+  <img alt="Matplotlib" src="https://img.shields.io/badge/Matplotlib-3.7%2B-FF5733?style=for-the-badge&logo=matplotlib&logoColor=white">
+  <img alt="SciPy" src="https://img.shields.io/badge/SciPy-1.10%2B-8CAAE6?style=for-the-badge&logo=scipy&logoColor=white">
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-F7DF1E?style=for-the-badge">
+</p>
 
-This is the 1.1.0 release. It keeps the `pado-optics`
-distribution and `pado` import names. Scalar optical propagation runs in PyTorch
-on the input device, with CPU and CUDA support and automatic differentiation
-through supported Tensor parameters. K-space sampling is included; RCWA is not.
+---
 
-## Installation
+## 📋 Overview
 
-Python 3.10 or later and PyTorch 2.10 or later are required. Install the PyTorch
-build appropriate to your CPU or CUDA system, then install PADO. NumPy array/NPY
-operations, plotting and MAT files have optional dependencies:
+🌊**PADO** (파도) is a cutting-edge framework for differentiable optical simulations powered by PyTorch. Inspired by the Korean word for "wave," PADO enables seamless and fully differentiable simulation workflows, perfect for researchers and developers in optical physics, computational imaging, and beyond.
+
+<div align="center">
+  <img src="docs/images/interconnection.svg" width="100%">
+</div>
+
+---
+
+## ✨ Features
+
+- 🔥 **Fully Differentiable:** Integrates effortlessly with PyTorch Autograd.
+- 🏎️ **CUDA Acceleration:** Leverages GPU hardware for ultra-fast simulations.
+- 🧩 **Modular Components:** Easily customizable optical elements and simulation environments.
+- 📊 **Visualization Tools:** Rich visualization with Matplotlib.
+- ⚡ **Easy-to-use API:** Beginner-friendly API for rapid experimentation.
+
+---
+
+## ⚙️ Installation
+
+PADO 1.1.0 requires Python 3.10 or later and PyTorch 2.10 or later. Install the
+PyTorch build appropriate to your CPU or CUDA system, then install the release:
 
 ```bash
 python -m pip install "https://github.com/shwbaek/pado/releases/download/1.1.0/pado_optics-1.1.0-py3-none-any.whl"
-python -m pip install "pado-optics[array,viz,mat] @ https://github.com/shwbaek/pado/releases/download/1.1.0/pado_optics-1.1.0-py3-none-any.whl"  # optional APIs
 ```
 
-The core dependency is PyTorch. Optional extras are `array` (NumPy), `viz`
-(Matplotlib) and `mat` (SciPy). These packages are still needed when their
-corresponding APIs are used.
-PyPI publication is separate; an unpinned PyPI install may still select an
-earlier release.
+PyTorch is the only required dependency. NumPy array/file operations, Matplotlib
+plots and SciPy MAT files are optional; install these APIs together with:
 
-## Minimal differentiable propagation
-
-```python
-import torch
-from pado import Light, Propagator
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-phase = torch.zeros((1, 1, 128, 128), device=device, requires_grad=True)
-field = torch.exp(1j * phase)
-light = Light(tuple(field.shape), pitch=2e-6, wvl=532e-9, field=field)
-output = Propagator("ASM").forward(light, z=1e-3).field
-loss = output.abs().square()[..., 48:80, 48:80].mean()
-loss.backward()
+```bash
+python -m pip install "pado-optics[array,viz,mat] @ https://github.com/shwbaek/pado/releases/download/1.1.0/pado_optics-1.1.0-py3-none-any.whl"
 ```
 
-Complex64 is the performance-oriented field type. Complex128 ASM uses
-compensated transfer geometry and phase, which costs additional construction
-time and memory. For repeated fields at fixed geometry, `Propagator.prepare`
-reuses the transfer; it does not remove the initial construction cost.
-Performance depends on dtype, grid, padding, device and whether geometry is reused.
+This version is released on GitHub; PyPI publication is separate.
 
+Or install the tagged source directly from GitHub:
 
-Lengths are in metres and fields have shape `(batch, channel, row, column)`.
-Fresnel and Fraunhofer have their respective paraxial/far-field approximations;
-sampling, aperture and padding must be converged for the intended problem.
-Numerical agreement does not establish physical measurement accuracy.
+```bash
+pip install git+https://github.com/shwbaek/pado.git@1.1.0
+```
 
-## Migrating from 1.0.1
+For development installation:
 
-This release intentionally changes some numerical results: Fresnel kernel
-normalization is corrected, Fraunhofer includes pixel area and physical
-amplitude/phase, RS uses the declared sample pitch, and PDMS coefficient units
-are corrected. Revalidate downstream field/intensity comparisons. PolarizedLight
-retains its `device="cuda:0"` default for newly allocated fields; pass
-`device="cpu"` for explicit CPU construction. Supplied fields retain their actual
-device and dtype, including when the other polarization component is created.
-Phase/amplitude setters preserve the other component's value with a detached
-graph. For joint optimization use `light.set_field(amplitude * torch.exp(1j*phase))`.
-The optional fused ASM backend is experimental; the default backend is Torch.
+```bash
+git clone https://github.com/shwbaek/pado.git
+cd pado
+pip install -e .
+```
 
-## License and citation
+---
 
-PADO is distributed under the [MIT license](https://github.com/shwbaek/pado/blob/main/LICENSE).
-Copyright and author credits remain in the source and package metadata.
+## 📚 Documentation
 
-```bibtex
+Comprehensive documentation is available at [https://shwbaek.github.io/pado](https://shwbaek.github.io/pado).
+
+For 1.1.0, read the [migration notes](https://shwbaek.github.io/pado/migration.html):
+existing APIs remain available, but corrected numerical results require
+revalidation of downstream simulations.
+
+---
+
+## 🚀 Quickstart
+
+PADO includes a comprehensive set of example notebooks organized by topic:
+
+### Exploring Examples
+
+Browse our examples by category:
+
+- **[1. Basics](./example/1_Basics/)**
+  - [1.1 Pado fundamentals](./example/1_Basics/1.1_Pado_fundamentals.ipynb) - Learn about core components and building blocks
+  - [1.2 RGB multi-wavelength](./example/1_Basics/1.2_RGB_multi_wavelength.ipynb) - Working with multiple wavelengths
+  - [1.3 4-F with batch](./example/1_Basics/1.3_4-F_with_batch.ipynb) - Batch processing in 4-F systems
+  - [1.4 How to use ASM options](./example/1_Basics/1.4_How2use_ASM_options.ipynb) - Angular Spectrum Method configuration
+
+- **[2. Computer Generated Holography](./example/2_Computer_Generated_Holography/)**
+  - [2.1 DPAC](./example/2_Computer_Generated_Holography/2.1_DPAC.ipynb) - Double Phase Amplitude Coding
+  - [2.2 Multi-depth CGH](./example/2_Computer_Generated_Holography/2.2_multi_depth_cgh.ipynb) - Multi-plane holography
+  - [2.3 CGH optimization](./example/2_Computer_Generated_Holography/2.3_cgh_optimization_gs_sgd_adam.ipynb) - GS, SGD, and Adam methods
+  - [2.4 Multi-depth hologram with Adam](./example/2_Computer_Generated_Holography/2.4_multi_depth_hologram_generation_using_adam.ipynb) - Complex loss-based optimization
+  - [2.5 Phase-only SLM optimization](./example/2_Computer_Generated_Holography/2.5_cgh_optimization_with_phase_only_slm.ipynb) - Optimization with phase-only spatial light modulators
+  - [2.6 Multi-depth hologram with phase-only SLM](./example/2_Computer_Generated_Holography/2.6_multi_depth_hologram_generation_using_adam_with_phase_only_slm.ipynb) - Multi-plane optimization with phase-only SLMs
+
+- **[3. Coded Imaging](./example/3_Coded_Imaging/)**
+  - [3.1 Lens comparison](./example/3_Coded_Imaging/3.1_lens_comparison.ipynb) - Different lens models and wavefront observation
+  - [3.2 Coded aperture comparison](./example/3_Coded_Imaging/3.2_coded_aperture_comparison.ipynb) - Coded aperture techniques
+  - [3.3 Seeing through DOE](./example/3_Coded_Imaging/3.3_seeing_through_doe.ipynb) - Imaging through diffractive optical elements
+
+- **[4. Polarization Imaging](./example/4_Polarization_Imaging/)**
+  - [4.1 Polarization light](./example/4_Polarization_Imaging/4.1_polarization_light.ipynb) - Polarized light simulation
+
+- **[5. Advanced Applications](./example/5_Advanced_Applications/)**
+  - [5.1 Chromatic aberration singlet](./example/5_Advanced_Applications/5.1_chromatic_aberration_singlet.ipynb) - Chromatic aberration simulation
+
+---
+
+## ℹ️ About
+
+Developed and maintained by the [POSTECH Computer Graphics Lab](http://cg.postech.ac.kr/).
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 📝 Citation
+
+If you use Pado in your research, please cite Pado using the following BibText template:
+
+```bib
 @misc{Pado,
    Author = {Seung-Hwan Baek, Dong-Ha Shin, Yujin Jeon, Seung-Woo Yoon, Eunsue Choi, Gawoon Ban, Hyunmo Kang},
    Year = {2025},
@@ -79,3 +146,7 @@ Copyright and author credits remain in the source and package metadata.
    Title = {Pado: Pytorch Automatic Differentiable Optics}
 }
 ```
+
+<div align="center">
+  <img src="docs/images/footer_1.0.0.svg" width="100%">
+</div>
