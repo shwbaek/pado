@@ -1,6 +1,8 @@
 Optical Elements
 ==============================
 
+.. py:module:: pado.optical_element
+
 .. currentmodule:: pado.optical_element
 
 Base Optical Element

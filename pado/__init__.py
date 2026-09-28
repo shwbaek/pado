@@ -2,7 +2,7 @@
 # The MIT License (MIT)
 #
 # PADO (Pytorch Automatic Differentiable Optics)
-# Copyright (c) 2025 by POSTECH Computer Graphics Lab
+# Copyright (c) 2023 by POSTECH Computer Graphics Lab
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,10 +28,12 @@
 #
 ########################################################
 
-__version__ = '1.0.1'
+__version__ = '1.1.0'
 
 from .light import *
+from .kspace_light import *
 from .optical_element import *
 from .propagator import *
+from .sampler import *
 from .material import *
 from .math import *

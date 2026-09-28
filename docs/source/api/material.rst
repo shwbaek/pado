@@ -1,6 +1,8 @@
 Optical Materials
 ==============================
 
+.. py:module:: pado.material
+
 .. currentmodule:: pado.material
 
 Core Classes

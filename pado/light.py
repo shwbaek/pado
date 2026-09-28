@@ -2,7 +2,7 @@
 # The MIT License (MIT)
 #
 # PADO (Pytorch Automatic Differentiable Optics)
-# Copyright (c) 2025 by POSTECH Computer Graphics Lab
+# Copyright (c) 2023 by POSTECH Computer Graphics Lab
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +28,45 @@
 #
 ########################################################
 
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.io import savemat, loadmat
+import math as _math
 from typing import Tuple, Union, List, Optional
 
 import torch
 import torch.nn.functional as F
 import os
+
+from ._propagation import real_tensor as _real_tensor
+
+def _channel_wavelengths(wvl, channels, device):
+    """Return float64 channel wavelengths without detaching tensor inputs."""
+    values = _real_tensor(wvl, device)
+    if values.ndim == 0:
+        values = values.expand(channels)
+    elif values.ndim != 1 or values.numel() != channels:
+        raise ValueError(f"wvl must be a scalar or have one value per channel ({channels})")
+    if not torch.isfinite(values).all() or (values <= 0).any():
+        raise ValueError("Wavelengths must be finite and positive")
+    return values
+
+
+def _stack_wavelengths(values, device):
+    """Stack a tensor-containing list without pre-rounding Python float entries."""
+    tensors = [value for value in values if isinstance(value, torch.Tensor)]
+    dtype = tensors[0].dtype
+    for tensor in tensors[1:]:
+        dtype = torch.promote_types(dtype, tensor.dtype)
+    if not dtype.is_floating_point and not dtype.is_complex:
+        dtype = torch.get_default_dtype()
+    return torch.stack([torch.as_tensor(value, device=device, dtype=dtype) for value in values])
+
+
+def _scalar_parameter(value, name, device):
+    """Preserve scalar tensor gradients while using optical-phase precision."""
+    result = _real_tensor(value, device)
+    if result.ndim != 0 or not torch.isfinite(result):
+        raise ValueError(f"{name} must be a finite scalar")
+    return result
+
 
 class Light:
     """Light wave with complex field wavefront.
@@ -64,20 +95,30 @@ class Light:
             raise ValueError(f"dim must be a 4-element tuple (B,Ch,R,C), got {dim}")
         if dim[0] < 1 or dim[1] < 1 or dim[2] < 1 or dim[3] < 1:
             raise ValueError(f"All dimensions must be positive, got {dim}")
-        if not isinstance(pitch, (int, float)) or pitch <= 0:
+        if not isinstance(pitch, (int, float)) or not _math.isfinite(pitch) or pitch <= 0:
             raise ValueError(f"pitch must be a positive number, got {pitch}")
-        if not (isinstance(wvl, (int, float)) or (hasattr(wvl, "__iter__") and len(wvl) == dim[1])):
-            raise ValueError(f"wvl must be a number or a list with length equal to channels ({dim[1]})")
-        if hasattr(wvl, "__iter__") and any(w <= 0 for w in wvl):
-            raise ValueError(f"All wavelengths must be positive")
-        if isinstance(wvl, (int, float)) and wvl <= 0:
-            raise ValueError(f"Wavelength must be positive, got {wvl}")
-        
+        if field is not None:
+            if not isinstance(field, torch.Tensor):
+                raise TypeError("field must be a torch.Tensor")
+            if tuple(field.shape) != dim:
+                raise ValueError(f"Expected field shape {dim}, got {tuple(field.shape)}")
+            # A supplied tensor is authoritative; the default device='cpu' must
+            # not mislabel a CUDA field or move/detach an existing graph.
+            device = str(field.device)
+        # The common scalar/list input can be validated on the host without
+        # allocating a CUDA tensor or synchronizing on every Light clone.
+        if isinstance(wvl, (int, float)):
+            if not _math.isfinite(wvl) or wvl <= 0:
+                raise ValueError("Wavelengths must be finite and positive")
+        else:
+            validation_device = wvl.device if isinstance(wvl, torch.Tensor) else next(
+                (value.device for value in wvl if isinstance(value, torch.Tensor)), 'cpu')
+            _channel_wavelengths(wvl, dim[1], validation_device)
+
         self.dim: Tuple[int, int, int, int] = dim
         self.pitch: float = pitch
-        self.device: str = device
-        self.wvl: Union[float, List[float]] = wvl
-    
+        self.device: str = str(device)
+        self.wvl = wvl
         if field is None:
             field = torch.ones(dim, device=device, dtype=torch.cfloat)
         self.field: torch.Tensor = field
@@ -98,7 +139,7 @@ class Light:
         if crop_width[0] + crop_width[1] >= self.dim[3] or crop_width[2] + crop_width[3] >= self.dim[2]:
             raise ValueError(f"Crop width {crop_width} too large for dimensions {self.dim}")
         
-        self.field = self.field[..., crop_width[2]:-crop_width[3], crop_width[0]:-crop_width[1]]
+        self.field = self.field[..., crop_width[2]:self.dim[2]-crop_width[3], crop_width[0]:self.dim[3]-crop_width[1]]
         # Update dim as a new tuple since tuples are immutable
         dim_list = list(self.dim)
         dim_list[2], dim_list[3] = self.field.shape[2], self.field.shape[3]
@@ -134,10 +175,7 @@ class Light:
             self.field = torch.nn.functional.pad(self.field, pad_width)
         else:
             raise NotImplementedError('only zero padding supported')
-        dim_list = list(self.dim)
-        dim_list[2] = dim_list[2] + pad_width[0] + pad_width[1]
-        dim_list[3] = dim_list[3] + pad_width[2] + pad_width[3]
-        self.dim = tuple(dim_list)
+        self.dim = tuple(self.field.shape)
 
     def set_real(self, real: torch.Tensor, c: Optional[int] = None) -> None:
         """Set real part of light wavefront.
@@ -169,7 +207,7 @@ class Light:
             if real.shape != self.field[:, c, ...].real.shape:
                 raise ValueError(f"Expected real tensor of shape {self.field[:, c, ...].real.shape}, got {real.shape}")
             imag_part = self.field[:, c, ...].imag.detach()
-            self.field[:, c, ...] = torch.complex(real, imag_part)
+            self.set_field(torch.complex(real, imag_part), c)
         else:
             if real.shape != self.field.real.shape:
                 raise ValueError(f"Expected real tensor of shape {self.field.real.shape}, got {real.shape}")
@@ -207,7 +245,7 @@ class Light:
                 raise ValueError(f"Expected imag tensor of shape {self.field[:, c, ...].imag.shape}, got {imag.shape}")
 
             real_part = self.field[:, c, ...].real.detach()
-            self.field[:, c, ...] = torch.complex(real_part, imag)
+            self.set_field(torch.complex(real_part, imag), c)
         else:
             if imag.shape != self.field.imag.shape:
                 raise ValueError(f"Expected imag tensor of shape {self.field.imag.shape}, got {imag.shape}")
@@ -233,7 +271,7 @@ class Light:
                 raise ValueError(f"Expected amplitude tensor of shape {self.field[:, c, ...].shape}, got {amplitude.shape}")
             
             phase = self.field[:, c, ...].angle().detach()
-            self.field[:, c, ...] = amplitude * torch.exp(phase * 1j)
+            self.set_field(amplitude * torch.exp(phase * 1j), c)
         else:
             if amplitude.shape != self.field.shape:
                 raise ValueError(f"Expected amplitude tensor of shape {self.field.shape}, got {amplitude.shape}")
@@ -272,7 +310,7 @@ class Light:
                 raise ValueError(f"Expected phase tensor of shape {self.field[:, c, ...].shape}, got {phase.shape}")
             
             amplitude = self.field[:, c, ...].abs().detach()
-            self.field[:, c, ...] = amplitude * torch.exp(phase * 1j)
+            self.set_field(amplitude * torch.exp(phase * 1j), c)
         else:
             if phase.shape != self.field.shape:
                 raise ValueError(f"Expected phase tensor of shape {self.field.shape}, got {phase.shape}")
@@ -282,6 +320,9 @@ class Light:
 
     def set_field(self, field: torch.Tensor, c: Optional[int] = None) -> None:
         """Set complex field of light wavefront.
+
+        Channel replacement copies the containing field, so a borrowed tensor
+        or autograd leaf is not modified. Untouched channels retain their graph.
 
         Args:
             field (torch.Tensor): Complex field tensor.
@@ -311,12 +352,15 @@ class Light:
                 raise IndexError(f"Channel index {c} out of bounds for tensor with {self.dim[1]} channels")
             if field.shape != self.field[:, c, ...].shape:
                 raise ValueError(f"Expected field tensor of shape {self.field[:, c, ...].shape}, got {field.shape}")
-            self.field[:, c, ...] = field
+            updated = self.field.clone()
+            updated[:, c, ...] = field
+            self.field = updated
         else:
             if field.shape != self.field.shape:
                 raise ValueError(f"Expected field tensor of shape {self.field.shape}, got {field.shape}")
                 
             self.field = field
+            self.device = str(field.device)
 
     def set_pitch(self, pitch: float) -> None:
         """Set pixel pitch of light field.
@@ -327,7 +371,7 @@ class Light:
         Examples:
             >>> light.set_pitch(6.4e-6)  # Set 6.4μm pitch
         """
-        if not isinstance(pitch, (int, float)) or pitch <= 0:
+        if not isinstance(pitch, (int, float)) or not _math.isfinite(pitch) or pitch <= 0:
             raise ValueError(f"pitch must be a positive number, got {pitch}")
         self.pitch = pitch
 
@@ -476,7 +520,7 @@ class Light:
         """
         return self.pitch*self.dim[2], self.pitch*self.dim[3]
     
-    def get_ideal_angle_limit(self) -> float:
+    def get_ideal_angle_limit(self) -> Union[float, torch.Tensor]:
         """Return ideal angle limit of light wavefront based on optical axis.
 
         Calculate the maximum diffraction angle supported by the current sampling,
@@ -484,19 +528,25 @@ class Light:
         Use the shortest wavelength for multi-wavelength cases.
         
         Returns:
-            float: Ideal angle limit in degrees
+            float or torch.Tensor: Ideal angle limit in degrees. Tensor wavelength
+                inputs retain their device, dtype and gradient.
 
         Examples:
             >>> angle_limit = light.get_ideal_angle_limit()
         """
-        if hasattr(self.wvl, "__iter__") and not isinstance(self.wvl, str):
-            min_wvl = min(self.wvl)
+        if isinstance(self.wvl, torch.Tensor):
+            min_wvl = self.wvl.amin()
+        elif isinstance(self.wvl, (list, tuple)) and any(isinstance(w, torch.Tensor) for w in self.wvl):
+            min_wvl = _stack_wavelengths(self.wvl, self.device).amin()
         else:
-            min_wvl = self.wvl
+            min_wvl = min(self.wvl) if hasattr(self.wvl, "__iter__") else self.wvl
 
         sin_val = (min_wvl / self.pitch) * 0.5
-        ideal_angle_limit = np.arcsin(sin_val) * 180 / np.pi
-        
+        if isinstance(sin_val, torch.Tensor):
+            ideal_angle_limit = torch.asin(sin_val) * (180 / _math.pi)
+        else:
+            # Retain NaN outside the historical real-valued arcsine domain.
+            ideal_angle_limit = _math.asin(sin_val) * (180 / _math.pi) if abs(sin_val) <= 1 else float('nan')
         return ideal_angle_limit - 0.0001
 
     def magnify(self, scale_factor: float, interp_mode: str = 'nearest', c: Optional[int] = None) -> None:
@@ -523,13 +573,11 @@ class Light:
                 raise TypeError(f"Channel index c must be an integer, got {type(c)}")
             if c < 0 or c >= self.dim[1]:
                 raise IndexError(f"Channel index {c} out of bounds for tensor with {self.dim[1]} channels")
-            self.field.real[:, c, ...] = F.interpolate(self.field.real[:, c, ...], 
-                                                      scale_factor=scale_factor, mode=interp_mode)
-            self.field.imag[:, c, ...] = F.interpolate(self.field.imag[:, c, ...], 
-                                                      scale_factor=scale_factor, mode=interp_mode)
-        else:
-            self.field.real = F.interpolate(self.field.real, scale_factor=scale_factor, mode=interp_mode)
-            self.field.imag = F.interpolate(self.field.imag, scale_factor=scale_factor, mode=interp_mode)
+            if self.dim[1] > 1 and scale_factor != 1:
+                raise ValueError("A single channel cannot have a different spatial shape; resize all channels")
+        self.field = torch.complex(
+            F.interpolate(self.field.real, scale_factor=scale_factor, mode=interp_mode),
+            F.interpolate(self.field.imag, scale_factor=scale_factor, mode=interp_mode))
         self.dim = (self.dim[0], self.dim[1], self.field.shape[2], self.field.shape[3])
 
     def resize(self, target_pitch: float, interp_mode: str = 'nearest') -> None:
@@ -544,7 +592,7 @@ class Light:
         """
         if not isinstance(target_pitch, (int, float)):
             raise TypeError(f"target_pitch must be a number, got {type(target_pitch)}")
-        if target_pitch <= 0:
+        if not _math.isfinite(target_pitch) or target_pitch <= 0:
             raise ValueError(f"target_pitch must be positive, got {target_pitch}")
         if interp_mode not in ['nearest', 'bilinear']:
             raise ValueError(f"interp_mode must be 'nearest' or 'bilinear', got {interp_mode}")
@@ -554,84 +602,45 @@ class Light:
         self.set_pitch(target_pitch)
 
     def set_spherical_light(self, z: float, dx: float = 0.0, dy: float = 0.0) -> None:
-        """Set spherical wavefront from point source.
+        """Set a unit-amplitude spherical phase front from a point source.
 
-        Args:
-            z (float): Distance from source along optical axis
-            dx (float): Lateral x-offset of source
-            dy (float): Lateral y-offset of source
-
-        Examples:
-            >>> light.set_spherical_light(z=0.1)  # Source at 10cm
-            >>> light.set_spherical_light(z=0.05, dx=1e-3)  # Offset source
+        Coordinates are (index - size//2)*pitch. dx offsets columns and dy
+        offsets rows, in meters. This initializer retains the absolute optical
+        carrier phase; it does not apply geometric 1/r amplitude decay.
+        Scalar or channel wavelengths and scalar tensor parameters retain
+        gradients. Phase is evaluated in float64 before final field storage.
         """
-        if not isinstance(z, (int, float)):
-            raise TypeError(f"z must be a number, got {type(z)}")
+        z = _scalar_parameter(z, "z", self.device)
+        dx = _scalar_parameter(dx, "dx", self.device)
+        dy = _scalar_parameter(dy, "dy", self.device)
         if z == 0:
-            raise ValueError("z cannot be zero (would cause division by zero)")
-        if not isinstance(dx, (int, float)):
-            raise TypeError(f"dx must be a number, got {type(dx)}")
-        if not isinstance(dy, (int, float)):
-            raise TypeError(f"dy must be a number, got {type(dy)}")
-        
-        # Create coordinate grids directly in PyTorch
-        y = torch.arange(-self.dim[2]//2, self.dim[2]//2, device=self.device, dtype=torch.float32)
-        x = torch.arange(-self.dim[3]//2, self.dim[3]//2, device=self.device, dtype=torch.float32)
-        
-        # Create 2D grid
-        y_grid, x_grid = torch.meshgrid(y, x, indexing='ij')
-        
-        # Scale by pitch
-        x_grid = x_grid * self.pitch
-        y_grid = y_grid * self.pitch
-        
-        # Calculate distance from source to each point
-        r = torch.sqrt((x_grid - dx) ** 2 + (y_grid - dy) ** 2 + z ** 2)
-        
-        # Calculate phase
-        theta = 2 * torch.pi * r / self.wvl
-        # Ensure 4D tensor shape [B, Ch, R, C]
-        theta = theta.unsqueeze(0).unsqueeze(0) % (2*torch.pi)
-        
-        # Create magnitude (all ones)
-        mag = torch.ones_like(theta)
-        
-        # Set the field
-        self.set_field(mag * torch.exp(theta*1j))
+            raise ValueError("z cannot be zero")
+        rows, cols = self.dim[-2:]
+        row = (torch.arange(rows, device=self.device, dtype=torch.float64) - rows//2) * self.pitch
+        col = (torch.arange(cols, device=self.device, dtype=torch.float64) - cols//2) * self.pitch
+        radius = torch.sqrt((row[:, None]-dy)**2 + (col[None, :]-dx)**2 + z**2)
+        wavelengths = _channel_wavelengths(self.wvl, self.dim[1], self.device)
+        phase = (2 * torch.pi * radius[None, None]) / wavelengths[None, :, None, None]
+        dtype = self.field.dtype if self.field.is_complex() else torch.complex64 if self.field.dtype == torch.float32 else torch.complex128
+        self.set_field(torch.exp(1j * phase).to(dtype).expand(self.dim).clone())
 
     def set_plane_light(self, theta: float = 0) -> None:
-        """Set plane wave with unit amplitude.
+        """Set a unit-amplitude plane wave with angle theta in degrees.
 
-        Args:
-            theta (float): Incident angle in degrees
-
-        Examples:
-            >>> light.set_plane_light(theta=15)  # 15° incident angle
+        The historical tilt axis is rows. Coordinates are now spaced by the
+        declared pitch: (index - rows//2)*pitch, including odd-sized fields.
+        This intentionally replaces endpoint-inclusive linspace, whose actual
+        spacing was rows/(rows-1)*pitch. Optical phase is evaluated in float64
+        before casting the complex field to its original storage dtype.
         """
-        if not isinstance(theta, (int, float)):
-            raise TypeError(f"theta must be a number, got {type(theta)}")
-        
-        R, C = self.dim[-2], self.dim[-1]
-        amplitude = torch.ones((1, 1, R, C), device=self.device)
-        phase = torch.zeros((1, 1, R, C), device=self.device)
-
-        # Create coordinate grids with correct dimensions
-        x = torch.linspace(-C * self.pitch / 2, C * self.pitch / 2, C).to(self.device)
-        y = torch.linspace(-R * self.pitch / 2, R * self.pitch / 2, R).to(self.device)
-        
-        # Use indexing='xy' to match expected behavior
-        y_grid, x_grid = torch.meshgrid(y, x, indexing='xy')
-        
-        # Add batch and channel dimensions
-        x_grid = x_grid[None, None, :, :]
-        y_grid = y_grid[None, None, :, :]
-
-        # Calculate phase term for plane wave at angle theta
-        theta_rad = np.deg2rad(theta)
-        term = -2 * torch.pi * x_grid * np.sin(theta_rad) / self.wvl
-        phase = phase - term.to(torch.float32)
-
-        self.set_field(amplitude * torch.exp(phase * 1j))
+        theta = _scalar_parameter(theta, "theta", self.device)
+        rows = self.dim[-2]
+        row = (torch.arange(rows, device=self.device, dtype=torch.float64) - rows//2) * self.pitch
+        wavelengths = _channel_wavelengths(self.wvl, self.dim[1], self.device)
+        phase = (2 * torch.pi * row[None, None, :, None] * torch.sin(theta * torch.pi / 180)
+                 / wavelengths[None, :, None, None])
+        dtype = self.field.dtype if self.field.is_complex() else torch.complex64 if self.field.dtype == torch.float32 else torch.complex128
+        self.set_field(torch.exp(1j * phase).to(dtype).expand(self.dim).clone())
 
     def set_amplitude_ones(self) -> None:
         """Set amplitude to ones.
@@ -657,7 +666,7 @@ class Light:
         """
         self.set_phase(torch.zeros_like(self.get_phase()))
 
-    def set_phase_random(self, std: float = np.pi/2, distribution: str = 'gaussian', c: Optional[int] = None) -> None:
+    def set_phase_random(self, std: float = _math.pi/2, distribution: str = 'gaussian', c: Optional[int] = None) -> None:
         """Set random phase with specified distribution.
 
         Args:
@@ -671,12 +680,19 @@ class Light:
                 Defaults to 'gaussian'.
             c (int, optional): Channel index to modify. If None, all channels are modified.
 
+        Notes:
+            All-channel mode draws one complete phase tensor. For more than one
+            channel, seeded outputs and the subsequent RNG stream differ from
+            versions that redundantly redrew the full tensor per channel.
+            The von Mises sampler now uses an unbiased independent sign draw;
+            its seeded outputs also change. Selected-channel scope is unchanged.
+
         Raises:
             ValueError: If distribution is not one of the supported types.
 
         Examples:
             >>> light.set_phase_random()  # Default gaussian with π/2 std for all channels
-            >>> light.set_phase_random(std=np.pi/4)  # Reduced randomness
+            >>> light.set_phase_random(std=torch.pi/4)  # Reduced randomness
             >>> light.set_phase_random(distribution='uniform')  # Uniform distribution
             >>> light.set_phase_random(std=0.25, distribution='von_mises')  # von Mises with κ=4
             >>> light.set_phase_random(c=0)  # Only modify first channel
@@ -696,70 +712,25 @@ class Light:
             if c < 0 or c >= self.dim[1]:
                 raise IndexError(f"Channel index {c} out of bounds for tensor with {self.dim[1]} channels")
 
-        # Determine which channels to process
-        channels = [c] if c is not None else range(self.dim[1])
-        
-        for channel in channels:
-            # Get the shape needed for this specific channel
-            if c is not None:
-                # For specific channel, we need [B, H, W] 
-                target_shape = (self.dim[0], self.dim[2], self.dim[3])
-            else:
-                # For all channels, we keep full tensor shape [B, Ch, H, W]
-                target_shape = self.dim
-            
-            if distribution == 'uniform':
-                # Create uniform random values between -std and std
-                if c is not None:
-                    phase = (torch.rand(target_shape, device=self.device) - 0.5) * (2 * std)
-                else:
-                    phase = (torch.rand(target_shape, device=self.device) - 0.5) * (2 * std)
-                
-            elif distribution == 'gaussian':
-                # Create Gaussian random values with std deviation
-                if c is not None:
-                    phase = torch.randn(target_shape, device=self.device) * std
-                else:
-                    phase = torch.randn(target_shape, device=self.device) * std
-                
-            elif distribution == 'von_mises':
-                # von Mises distribution implementation
-                # μ = 0 (mean direction)
-                # κ = 1/std (concentration parameter)
-                kappa = torch.tensor(1/std, device=self.device)
-                
-                if c is not None:
-                    u1 = torch.rand(target_shape, device=self.device)
-                    u2 = torch.rand(target_shape, device=self.device)
-                else:
-                    u1 = torch.rand(target_shape, device=self.device)
-                    u2 = torch.rand(target_shape, device=self.device)
-                
-                a = 1 + torch.sqrt(1 + 4 * kappa**2)
-                b = (a - torch.sqrt(2 * a)) / (2 * kappa)
-                r = (1 + b**2) / (2 * b)
-                
-                while True:
-                    z = torch.cos(np.pi * u1)
-                    f = (1 + r * z) / (r + z)
-                    c_param = kappa * (r - f)
-                    
-                    accept = c_param * (2 - c_param) - u2 > 0
-                    if accept.all():
-                        break
-                    
-                    mask = ~accept
-                    u1[mask] = torch.rand_like(u1[mask])
-                    u2[mask] = torch.rand_like(u2[mask])
-                
-                phase = torch.sign(u2 - 0.5) * torch.arccos(f)
+        target_shape = self.dim if c is None else (self.dim[0], self.dim[2], self.dim[3])
 
-            if c is not None:
-                # For a specific channel, we need to correctly reshape the phase
-                # to match the expected shape in set_phase method
-                self.field[:, channel, ...] = self.field[:, channel, ...].abs() * torch.exp(phase * 1j)
-            else:
-                self.set_phase(phase)
+        if distribution == 'uniform':
+            phase = (torch.rand(target_shape, device=self.device) - 0.5) * (2 * std)
+        elif distribution == 'gaussian':
+            phase = torch.randn(target_shape, device=self.device) * std
+        elif distribution == 'von_mises':
+            # PyTorch implements the complete Best-Fisher rejection rule and an
+            # independent sign draw. The previous sign reused the acceptance
+            # variate, which biased the supposedly zero-centered distribution.
+            loc = torch.zeros((), device=self.device, dtype=self.field.real.dtype)
+            phase = torch.distributions.VonMises(loc, loc.new_tensor(1/std)).sample(target_shape)
+
+        if c is not None:
+            # Preserve the selected amplitude graph and untouched channels,
+            # while avoiding in-place writes into a borrowed/autograd leaf field.
+            self.set_field(self.field[:, c, ...].abs() * torch.exp(phase * 1j), c)
+        else:
+            self.set_phase(phase)
 
     def save(self, fn: str) -> None:
         """Save light field to file.
@@ -788,10 +759,12 @@ class Light:
             }, fn)
         else:
             # Save in NumPy/MATLAB format
-            field_np = self.get_field().data.cpu().numpy()
+            field_np = self.get_field().detach().cpu().numpy()
             if fn[-3:] == 'npy':
+                import numpy as np
                 np.save(fn, field_np)
             elif fn[-3:] == 'mat':
+                from scipy.io import savemat
                 savemat(fn, {'field':field_np})
             else:
                 raise ValueError(f'Unsupported file extension in {fn}. Use .pt, .pth, .npy, or .mat')
@@ -821,7 +794,7 @@ class Light:
         scale_factor = other_avg / current_avg
         self.set_amplitude(self.get_amplitude() * scale_factor)
 
-    def load_image(self, image_path: str, random_phase: bool = False, std: float = np.pi, distribution: str = 'uniform', batch_idx: Optional[int] = None) -> None:
+    def load_image(self, image_path: str, random_phase: bool = False, std: float = _math.pi, distribution: str = 'uniform', batch_idx: Optional[int] = None) -> None:
         """Load image as amplitude pattern with optional random phase.
 
         Args:
@@ -842,10 +815,11 @@ class Light:
         Examples:
             >>> light.load_image("target.png")  # No random phase, all batches
             >>> light.load_image("target.png", random_phase=True)  # Default uniform, all batches
-            >>> light.load_image("target.png", random_phase=True, std=np.pi/4)
+            >>> light.load_image("target.png", random_phase=True, std=torch.pi/4)
             >>> light.load_image("target.png", random_phase=True, distribution='gaussian')
             >>> light.load_image("target.png", batch_idx=0)  # Load only into first batch
         """
+        import matplotlib.pyplot as plt
         if not isinstance(image_path, str):
             raise TypeError(f"image_path must be a string, got {type(image_path)}")
         if not os.path.exists(image_path):
@@ -939,6 +913,8 @@ class Light:
             >>> light.visualize(fix_noise=False)  # Don't fix numerical noise
             >>> light.visualize(b=1)  # Visualize the second batch
         """
+        import numpy as np
+        import matplotlib.pyplot as plt
         if not isinstance(b, int) or b < 0 or b >= self.dim[0]:
             raise ValueError(f"Batch index b must be in range [0, {self.dim[0]-1}], got {b}")
         if c is not None and (not isinstance(c, int) or c < 0 or c >= self.dim[1]):
@@ -956,9 +932,9 @@ class Light:
         vmin_amplitude, vmax_amplitude = None, None
 
         # Move data to CPU once to avoid multiple transfers
-        amplitude_all = self.get_amplitude().cpu()
-        phase_all = self.get_phase().cpu()
-        intensity_all = self.get_intensity().cpu()
+        amplitude_all = self.get_amplitude().detach().cpu()
+        phase_all = self.get_phase().detach().cpu()
+        intensity_all = self.get_intensity().detach().cpu()
         
         # Fix numerical noise in amplitude if requested
         if fix_noise and self.device != 'cpu':
@@ -996,7 +972,7 @@ class Light:
             plt.subplot(132)
             phase = phase_all[b, chan].numpy().squeeze() if c is not None else phase_all[b, chan].numpy().squeeze()
             plt.imshow(phase, extent=[0, float(bw[1]*1e3), 0, float(bw[0]*1e3)],
-                      cmap='hsv', vmin=-np.pi, vmax=np.pi)
+                      cmap='hsv', vmin=-_math.pi, vmax=_math.pi)
             plt.title(f'Phase (Batch {b}, Channel {chan})')
             plt.xlabel('mm')
             plt.ylabel('mm')
@@ -1031,15 +1007,16 @@ class Light:
             >>> light.visualize_image()
             >>> light.visualize_image(b=1)  # Visualize the second batch
         """
+        import matplotlib.pyplot as plt
         if not isinstance(b, int) or b < 0 or b >= self.dim[0]:
             raise ValueError(f"Batch index b must be in range [0, {self.dim[0]-1}], got {b}")
             
         bw = self.get_bandwidth()
 
         # Move data to CPU once to avoid multiple transfers
-        amplitude_cpu = self.get_amplitude().data.cpu()
-        phase_cpu = self.get_phase().data.cpu()
-        intensity_cpu = self.get_intensity().data.cpu()
+        amplitude_cpu = self.get_amplitude().detach().cpu()
+        phase_cpu = self.get_phase().detach().cpu()
+        intensity_cpu = self.get_intensity().detach().cpu()
 
         fig, axes = plt.subplots(1, 3, figsize=(20, 5))
         
@@ -1056,7 +1033,7 @@ class Light:
         # Phase as RGB, normalized from -π to π
         phase = phase_cpu[b, ...].permute(1, 2, 0).squeeze()
         # Normalize from 0 to 1 for color mapping
-        phase_normalized = (phase + np.pi) / (2 * np.pi)
+        phase_normalized = (phase + _math.pi) / (2 * _math.pi)
         img1 = axes[1].imshow(phase_normalized, extent=[0, bw[1]*1e3, 0, bw[0]*1e3], 
                               cmap='hsv')
         axes[1].set_title(f'Phase as RGB Image (Batch {b})')
@@ -1124,13 +1101,16 @@ class Light:
             else:
                 # Load NumPy/MATLAB format
                 if fn[-3:] == 'npy':
+                    import numpy as np
                     field_np = np.load(fn)
                 elif fn[-3:] == 'mat':
+                    from scipy.io import loadmat
                     field_np = loadmat(fn)['field']
                 else:
                     raise ValueError(f'Unknown file extension: {fn}')
                 
                 self.field = torch.tensor(field_np, device=self.device)
+                self.dim = tuple(self.field.shape)
         except Exception as e:
             raise IOError(f"Error loading file {fn}: {e}")
         
@@ -1143,10 +1123,15 @@ class PolarizedLight(Light):
     manipulated through various optical operations.
     """
 
-    def __init__(self, dim: Tuple[int, int, int, int], pitch: float, wvl: float, 
-                 fieldX: Optional[torch.Tensor] = None, fieldY: Optional[torch.Tensor] = None, 
+    def __init__(self, dim: Tuple[int, int, int, int], pitch: float, wvl: float,
+                 fieldX: Optional[torch.Tensor] = None, fieldY: Optional[torch.Tensor] = None,
                  device: str = 'cuda:0') -> None:
         """Create polarized light wave instance with X and Y field components.
+
+        Supplied fields determine the device and must share it. A missing
+        component is initialized on that device with the supplied field's dtype.
+        Without supplied fields, the default is cuda:0; pass device='cpu'
+        explicitly for CPU construction.
 
         Args:
             dim (tuple): Field dimensions (B, Ch, R, C) for batch, channels, rows, cols
@@ -1166,14 +1151,13 @@ class PolarizedLight(Light):
             raise ValueError(f"dim must be a 4-element tuple (B,Ch,R,C), got {dim}")
         if dim[0] < 1 or dim[1] < 1 or dim[2] < 1 or dim[3] < 1:
             raise ValueError(f"All dimensions must be positive, got {dim}")
-        if not isinstance(pitch, (int, float)) or pitch <= 0:
+        if not isinstance(pitch, (int, float)) or not _math.isfinite(pitch) or pitch <= 0:
             raise ValueError(f"pitch must be a positive number, got {pitch}")
         if not isinstance(wvl, (int, float)) or wvl <= 0:
             raise ValueError(f"wvl must be a positive number, got {wvl}")
         
         self.dim = dim
         self.pitch = pitch
-        self.device = device
         self.wvl = wvl
         
         # Check fieldX and fieldY if provided
@@ -1193,8 +1177,14 @@ class PolarizedLight(Light):
             if not fieldY.is_complex():
                 raise TypeError("fieldY must be a complex tensor")
         
-        fieldX = torch.ones(dim, device=device, dtype=torch.cfloat) if fieldX is None else fieldX 
-        fieldY = torch.ones(dim, device=device, dtype=torch.cfloat) if fieldY is None else fieldY 
+        reference = fieldX if fieldX is not None else fieldY
+        if fieldX is not None and fieldY is not None and fieldX.device != fieldY.device:
+            raise ValueError("Polarization fields must share a device")
+        device = reference.device if reference is not None else device
+        dtype = reference.dtype if reference is not None else torch.complex64
+        self.device = str(device)
+        fieldX = torch.ones(dim, device=device, dtype=dtype) if fieldX is None else fieldX
+        fieldY = torch.ones(dim, device=device, dtype=dtype) if fieldY is None else fieldY
         self.lightX = Light(dim, pitch, wvl, fieldX, device)
         self.lightY = Light(dim, pitch, wvl, fieldY, device)
 
@@ -1207,7 +1197,7 @@ class PolarizedLight(Light):
         Examples:
             >>> light_copy = light.clone()
         """
-        return PolarizedLight(self.dim, self.pitch, self.wvl, self.get_fieldX().clone(), self.get_fieldX().clone(), device=self.device)
+        return PolarizedLight(self.dim, self.pitch, self.wvl, self.get_fieldX().clone(), self.get_fieldY().clone(), device=self.device)
 
     def crop(self, crop_width: Tuple[int, int, int, int]) -> None:
         """Crop light wavefront.
@@ -1221,7 +1211,7 @@ class PolarizedLight(Light):
         self.lightX.crop(crop_width)
         self.lightY.crop(crop_width)
         
-        self.dim[2], self.dim[3] = self.lightX.dim[2], self.lightX.dim[3]
+        self.dim = self.lightX.dim
 
     def get_amplitude(self) -> torch.Tensor:
         """Return total amplitude of polarized field.
@@ -1395,7 +1385,7 @@ class PolarizedLight(Light):
         """
         self.lightX.magnify(scale_factor, interp_mode)
         self.lightY.magnify(scale_factor, interp_mode)
-        self.dim[2], self.dim[3] = self.lightX.dim[2], self.lightY.dim[3]
+        self.dim = self.lightX.dim
 
     def pad(self, pad_width: Tuple[int, int, int, int], padval: complex = 0) -> None:
         """Pad light field.
@@ -1648,7 +1638,7 @@ class PolarizedLight(Light):
         Args:
             pitch (float): Pixel pitch in meters
         """
-        if not isinstance(pitch, (int, float)) or pitch <= 0:
+        if not isinstance(pitch, (int, float)) or not _math.isfinite(pitch) or pitch <= 0:
             raise ValueError(f"pitch must be a positive number, got {pitch}")
         self.pitch = pitch
         self.lightX.set_pitch(pitch)
@@ -1738,20 +1728,21 @@ class PolarizedLight(Light):
         Examples:
             >>> light.visualize(b=0, c=0)
         """
+        import matplotlib.pyplot as plt
         bw = self.get_bandwidth()
         std = 3
         
         # Transfer data to CPU once for all visualizations
-        amplitude_x_cpu = self.get_amplitudeX().data.cpu()[b, c, ...].squeeze()
-        phase_x_cpu = self.get_phaseX().data.cpu()[b, c, ...].squeeze()
-        intensity_x_cpu = self.get_intensityX().data.cpu()[b, c, ...].squeeze()
+        amplitude_x_cpu = self.get_amplitudeX().detach().cpu()[b, c, ...].squeeze()
+        phase_x_cpu = self.get_phaseX().detach().cpu()[b, c, ...].squeeze()
+        intensity_x_cpu = self.get_intensityX().detach().cpu()[b, c, ...].squeeze()
         
-        amplitude_y_cpu = self.get_amplitudeY().data.cpu()[b, c, ...].squeeze()
-        phase_y_cpu = self.get_phaseY().data.cpu()[b, c, ...].squeeze()
-        intensity_y_cpu = self.get_intensityY().data.cpu()[b, c, ...].squeeze()
+        amplitude_y_cpu = self.get_amplitudeY().detach().cpu()[b, c, ...].squeeze()
+        phase_y_cpu = self.get_phaseY().detach().cpu()[b, c, ...].squeeze()
+        intensity_y_cpu = self.get_intensityY().detach().cpu()[b, c, ...].squeeze()
         
-        amplitude_cpu = self.get_amplitude().data.cpu()[b, c, ...].squeeze()
-        intensity_cpu = self.get_intensity().data.cpu()[b, c, ...].squeeze()
+        amplitude_cpu = self.get_amplitude().detach().cpu()[b, c, ...].squeeze()
+        intensity_cpu = self.get_intensity().detach().cpu()[b, c, ...].squeeze()
         
         # Calculate ratio once
         ratio = amplitude_x_cpu / amplitude_y_cpu
@@ -1768,7 +1759,7 @@ class PolarizedLight(Light):
 
         plt.subplot(332)
         plt.imshow(phase_x_cpu.squeeze(),
-                   extent=[0, bw[1]*1e3, 0, bw[0]*1e3], cmap='hsv', vmin=-np.pi, vmax=np.pi)  # cyclic colormap
+                   extent=[0, bw[1]*1e3, 0, bw[0]*1e3], cmap='hsv', vmin=-_math.pi, vmax=_math.pi)  # cyclic colormap
         plt.title('phase X')
         plt.xlabel('mm')
         plt.ylabel('mm')
@@ -1792,7 +1783,7 @@ class PolarizedLight(Light):
 
         plt.subplot(335)
         plt.imshow(phase_y_cpu.squeeze(),
-                   extent=[0, bw[1]*1e3, 0, bw[0]*1e3], cmap='hsv', vmin=-np.pi, vmax=np.pi)  # cyclic colormap
+                   extent=[0, bw[1]*1e3, 0, bw[0]*1e3], cmap='hsv', vmin=-_math.pi, vmax=_math.pi)  # cyclic colormap
         plt.title('phase Y')
         plt.xlabel('mm')
         plt.ylabel('mm')

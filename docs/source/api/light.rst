@@ -1,6 +1,8 @@
 Light Field
 ======================
 
+.. py:module:: pado.light
+
 .. currentmodule:: pado.light
 
 Core Classes

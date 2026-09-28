@@ -1,6 +1,7 @@
 import os
 import sys
 from datetime import datetime
+from importlib.metadata import version as _package_version
 
 # Add the project root directory to the Python path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -10,7 +11,8 @@ sys.path.insert(0, project_root)
 project = 'PADO Documentation'
 copyright = f'{datetime.now().year}, Seung-Hwan Baek, Dong-Ha Shin, and contributors'
 author = 'Seung-Hwan Baek, Dong-Ha Shin, and contributors'
-release = '1.0.0'
+release = _package_version('pado-optics')
+version = release
 
 # General configuration
 extensions = [
@@ -28,6 +30,11 @@ extensions = [
     'myst_parser',
     'nbsphinx',
 ]
+
+# Curated API pages already document these objects; exclude duplicate apidoc output.
+exclude_patterns = ['api/modules.rst', 'api/pado.rst']
+# Keep authored API wrappers, including explicit phase2height documentation.
+autosummary_generate_overwrite = False
 
 # Try to import optional extensions
 try:
