@@ -1,6 +1,8 @@
 Light Propagation
 ====================================
 
+.. py:module:: pado.propagator
+
 .. currentmodule:: pado.propagator
 
 Propagator Class

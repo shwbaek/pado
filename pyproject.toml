@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pado-optics"
-version = "1.0.1"
+version = "1.1.0"
 description = "Pytorch Automatic Differentiable Optics"
 readme = "README.md"
 license = "MIT"
@@ -18,13 +18,13 @@ authors = [
     { name = "Gawoon Ban" },
     { name = "Hyunmo Kang" }
 ]
-requires-python = ">=3.9"
-dependencies = [
-    "torch>=1.10.0",
-    "numpy>=1.16.0",
-    "matplotlib>=3.3.0",
-    "scipy>=1.0.0",
-]
+requires-python = ">=3.10"
+dependencies = ["torch>=2.10"]
+
+[project.optional-dependencies]
+array = ["numpy>=1.24"]
+viz = ["matplotlib>=3.7"]
+mat = ["scipy>=1.10"]
 
 [project.urls]
 Homepage = "https://github.com/shwbaek/pado"
@@ -32,4 +32,5 @@ Repository = "https://github.com/shwbaek/pado.git"
 Documentation = "https://shwbaek.github.io/pado"
 
 [tool.setuptools]
-packages = ["pado"] 
+packages = ["pado"]
+include-package-data = false
